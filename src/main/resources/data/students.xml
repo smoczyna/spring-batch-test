@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+<students>
+    <student>
+        <studentName>Tony Tester</studentName>
+        <emailAddress>tony.tester@gmail.com</emailAddress>
+        <purchasedPackage>master</purchasedPackage>
+    </student>
+    <student>
+        <studentName>Nick Newbie</studentName>
+        <emailAddress>nick.newbie@gmail.com</emailAddress>
+        <purchasedPackage>starter</purchasedPackage>
+    </student>
+    <student>
+        <studentName>Ian Intermediate</studentName>
+        <emailAddress>ian.intermediate@gmail.com</emailAddress>
+        <purchasedPackage>intermediate</purchasedPackage>
+    </student>
+</students>
