@@ -53,21 +53,6 @@ public class SpringBatchTestApplicationInit {
     }
 
     /**
-     * returns ready to use data source
-     *
-     * @return
-     */
-    @Bean(name = "appDataSource")    
-    public DataSource appDataSource() {
-        try {
-            return DerbyDbConfig.getBasicDS("app", "app");
-        } catch (SQLException ex) {
-            Logger.getLogger(SpringBatchTestApplicationInit.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
-    }
-    
-    /**
      * 
      * @return 
      */

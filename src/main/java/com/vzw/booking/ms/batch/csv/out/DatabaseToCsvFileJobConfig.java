@@ -11,7 +11,6 @@ import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
-import org.springframework.batch.item.database.JdbcPagingItemReader;
 import org.springframework.batch.item.database.Order;
 import org.springframework.batch.item.database.PagingQueryProvider;
 import org.springframework.batch.item.file.FlatFileItemWriter;
@@ -24,7 +23,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import com.vzw.booking.ms.batch.domain.CustomerDTO;
 import java.sql.SQLException;
 
@@ -32,7 +30,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.springframework.batch.item.database.JdbcPagingItemReader;
 import org.springframework.batch.item.database.support.DerbyPagingQueryProvider;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 
 /**
  * @author Petri Kainulainen
@@ -43,6 +43,12 @@ public class DatabaseToCsvFileJobConfig {
     private static final String PROPERTY_CSV_EXPORT_FILE_HEADER = "database.to.csv.job.export.file.header";
     private static final String PROPERTY_CSV_EXPORT_FILE_PATH = "database.to.csv.job.export.file.path";
 
+    /**
+     * this bean is not great, it ONLY reads as many records as the size of the
+     * page no page size means 10 by default
+     *
+     * @return
+     */
     @Bean
     ItemReader<CustomerDTO> databaseCsvItemReader() {
         JdbcPagingItemReader<CustomerDTO> databaseReader = new JdbcPagingItemReader<>();
@@ -59,6 +65,10 @@ public class DatabaseToCsvFileJobConfig {
 
         return databaseReader;
     }
+    
+//    @Autowired
+//    CustomItmReader databaseCsvItemReader;
+
 
     private PagingQueryProvider createQueryProvider() {
         //H2PagingQueryProvider queryProvider = new H2PagingQueryProvider();
