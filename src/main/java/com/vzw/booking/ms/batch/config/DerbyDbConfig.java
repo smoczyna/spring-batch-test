@@ -38,16 +38,6 @@ public class DerbyDbConfig {
         return ds;
     }
 
-//    public static DataSource getBatchDS() throws SQLException {
-//        BasicDataSource ds = new BasicDataSource();
-//        ds.setDriverClassName("org.apache.derby.jdbc.ClientDriver");
-//        ds.setUrl("jdbc:derby://localhost:1527/spring-batch-internal");
-//        ds.setUsername("batch");
-//        ds.setPassword("batch");
-//        //ds.set
-//        return ds;
-//    }
-    
     /**
      * apache basic data source for migration
      *
@@ -77,7 +67,7 @@ public class DerbyDbConfig {
             }
         };
     }
-
+    
 //    /**
 //     *
 //     * @return

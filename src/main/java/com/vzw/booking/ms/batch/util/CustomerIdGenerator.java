@@ -18,6 +18,7 @@ public class CustomerIdGenerator {
     private static final AtomicInteger ID_COUNT = new AtomicInteger(1000);  
     
     public Integer generateId() {
+        //System.out.println("Current Generated No: "+ID_COUNT);
         return ID_COUNT.incrementAndGet(); 
     }
 }

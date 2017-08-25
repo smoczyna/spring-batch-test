@@ -51,7 +51,7 @@ public class DatabaseToCsvFileJobConfig {
         } catch (SQLException ex) {
             Logger.getLogger(CsvFileToDatabaseJobConfig.class.getName()).log(Level.SEVERE, null, ex);
         }
-        databaseReader.setPageSize(1);
+        databaseReader.setPageSize(0);
         databaseReader.setRowMapper(new BeanPropertyRowMapper<>(CustomerDTO.class));
 
         PagingQueryProvider queryProvider = createQueryProvider();
@@ -66,7 +66,6 @@ public class DatabaseToCsvFileJobConfig {
         queryProvider.setSelectClause("SELECT customer_id, discount_code, zip, name, email");
         queryProvider.setFromClause("FROM customer");
         queryProvider.setSortKeys(sortByCustomerIdAsc());
-
         return queryProvider;
     }
 

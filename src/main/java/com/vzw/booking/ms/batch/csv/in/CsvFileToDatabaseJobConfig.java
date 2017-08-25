@@ -32,7 +32,6 @@ import org.springframework.core.io.ClassPathResource;
 import javax.sql.DataSource;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
@@ -99,7 +98,7 @@ public class CsvFileToDatabaseJobConfig {
         } catch (SQLException ex) {
             Logger.getLogger(CsvFileToDatabaseJobConfig.class.getName()).log(Level.SEVERE, null, ex);
         }
-        //JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        
         NamedParameterJdbcOperations jdbcOps = new NamedParameterJdbcTemplate(dataSource);
         databaseItemWriter.setDataSource(dataSource);
         databaseItemWriter.setJdbcTemplate(jdbcOps);

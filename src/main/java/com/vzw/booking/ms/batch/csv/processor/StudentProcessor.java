@@ -8,8 +8,6 @@ package com.vzw.booking.ms.batch.csv.processor;
 import com.vzw.booking.ms.batch.domain.CustomerDTO;
 import com.vzw.booking.ms.batch.domain.StudentDTO;
 import com.vzw.booking.ms.batch.util.CustomerIdGenerator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,7 +19,6 @@ public class StudentProcessor implements ItemProcessor<StudentDTO, CustomerDTO> 
 
 //    @Autowired
 //    private VlfLogger logger;
-    private static final Logger LOGGER = LoggerFactory.getLogger(StudentProcessor.class);
     
     @Autowired
     public CustomerIdGenerator idGenerator;
@@ -31,7 +28,7 @@ public class StudentProcessor implements ItemProcessor<StudentDTO, CustomerDTO> 
         //this.logger.write("Processig data", "OUT", VlfLogger.Severity.INFO, "Processing student information: " + item, VlfLogger.LogLevel.NONE);        
         //LOGGER.info("Processing student information: {}", item);
 
-        this.prettyPrint(student);
+        //this.prettyPrint(student);
         
         CustomerDTO customer = new CustomerDTO();
         customer.setCustomerId(idGenerator.generateId());
@@ -42,11 +39,13 @@ public class StudentProcessor implements ItemProcessor<StudentDTO, CustomerDTO> 
         return customer;
     }
     
-    private void prettyPrint(StudentDTO item) {
-        LOGGER.info("*** Processing student record: ***");
-        LOGGER.info("       student name: " + item.getStudentName());
-        LOGGER.info("       student email: " + item.getStudentName());
-        LOGGER.info("       student assignment: " + item.getStudentName());
-        LOGGER.info("*** end of student ***");
-    }
+//    private void prettyPrint(StudentDTO item) {
+//        logger.newLogSet();
+//        logger.write("", "", Severity.INFO, "*** Processing student record: ***", LogLevel.INFO);
+//        logger.write("", "", Severity.INFO, "       student name: " + item.getStudentName(), LogLevel.INFO);
+//        logger.write("", "", Severity.INFO, "       student email: " + item.getStudentName(), LogLevel.INFO);
+//        logger.write("", "", Severity.INFO, "       student assignment: " + item.getStudentName(), LogLevel.INFO);
+//        logger.write("", "", Severity.INFO, "*** end of student record ***", LogLevel.INFO);
+//        logger.endLogSet();
+//    }
 }

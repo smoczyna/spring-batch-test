@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import com.vzw.booking.ms.batch.config.LoggerConfig;
+import com.vzw.booking.ms.batch.util.CustomerIdGenerator;
 import com.vzw.vlf.lib.logger.VlfLogger;
 import com.vzw.vlf.lib.logger.VlfLogger.LogLevel;
 import java.sql.SQLException;
@@ -31,6 +32,11 @@ public class SpringBatchTestApplicationInit {
     private LoggerConfig loggerConfig;
 
     /**
+     * Statefull bean holding customerId 
+     */
+    public CustomerIdGenerator idGenerator = new CustomerIdGenerator();
+    
+    /**
      * Define a Bean to initialize the logger.
      *
      * @return Verizon Logger
@@ -53,17 +59,6 @@ public class SpringBatchTestApplicationInit {
      */
     @Bean(name = "appDataSource")    
     public DataSource appDataSource() {
-        
-            //        EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
-//        EmbeddedDatabase db = builder
-//                .setType(EmbeddedDatabaseType.H2) //.H2 or .HSQL or .DERBY
-//                .addScript("data/meta/schema-h2.sql")
-//                .addScript("data/meta/students_table.sql")
-//                .build();
-//        return db;
-
-//javax.sql.DataSource ds = getDS("mydb;create=true", "app", "app");
-
         try {
             return DerbyDbConfig.getBasicDS("app", "app");
         } catch (SQLException ex) {
@@ -72,11 +67,24 @@ public class SpringBatchTestApplicationInit {
         }
     }
     
+    /**
+     * 
+     * @return 
+     */
     @Bean(name = "metaDataSource")
     @Primary
-    @ConfigurationProperties(prefix = "spring.datasource") //assuming connection, credentials configured in application.properties
+    @ConfigurationProperties(prefix = "spring.datasource") //connection and credentials configured in application.properties
     public DataSource metaDataSource() {
         return DataSourceBuilder.create().build();
     }
     
+//    public DataSource memoryDataSource() {
+//        EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
+//        EmbeddedDatabase db = builder
+//                .setType(EmbeddedDatabaseType.H2) //.H2 or .HSQL or .DERBY
+//                .addScript("data/meta/schema-h2.sql")
+//                .addScript("data/meta/students_table.sql")
+//                .build();
+//        return db;
+//    }
 }
