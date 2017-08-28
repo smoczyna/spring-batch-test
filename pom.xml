@@ -61,15 +61,11 @@
         <dependency>
             <groupId>org.apache.derby</groupId>
             <artifactId>derby</artifactId>
-            <!--            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/derby.jar</systemPath>-->
         </dependency>
         <dependency>
             <groupId>org.apache.derby</groupId>
             <artifactId>derbyclient</artifactId>
             <version>10.13.1.1</version>
-            <!--             <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/derbyclient.jar</systemPath>-->
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

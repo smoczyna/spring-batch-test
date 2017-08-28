@@ -53,7 +53,8 @@ public class SpringBatchTestApplicationInit {
     }
 
     /**
-     * 
+     * This is meta data source
+     * this source is used by Spring Batch internally to control processing
      * @return 
      */
     @Bean(name = "metaDataSource")

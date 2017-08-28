@@ -7,20 +7,26 @@ package com.vzw.booking.ms.batch.csv.out;
 
 import com.vzw.booking.ms.batch.domain.CustomerDTO;
 import java.util.List;
-import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
+import org.springframework.batch.item.database.JdbcPagingItemReader;
 
 /**
  *
  * @author smorcja
  */
-public class CustomItmReader implements ItemReader<CustomerDTO> {
+public class CustomItemReader extends JdbcPagingItemReader<CustomerDTO> {
     
     private List<CustomerDTO> recordList;
     private int recordCount = 0;
+    //private int pageSize;
+    private int nextCustomerIndex;
 
+//    public CustomItemReader(int pageSize) {
+//        this.pageSize = pageSize;
+//    }
+    
     @Override
     public CustomerDTO read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
         if (recordCount < recordList.size()) {

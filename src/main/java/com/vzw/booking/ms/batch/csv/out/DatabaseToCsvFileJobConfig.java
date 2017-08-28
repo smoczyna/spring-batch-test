@@ -30,7 +30,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.springframework.batch.item.database.JdbcPagingItemReader;
+import org.springframework.batch.core.StepExecutionListener;
+import org.springframework.batch.item.database.JdbcCursorItemReader;
 import org.springframework.batch.item.database.support.DerbyPagingQueryProvider;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 
@@ -42,48 +43,71 @@ public class DatabaseToCsvFileJobConfig {
 
     private static final String PROPERTY_CSV_EXPORT_FILE_HEADER = "database.to.csv.job.export.file.header";
     private static final String PROPERTY_CSV_EXPORT_FILE_PATH = "database.to.csv.job.export.file.path";
+    private static final String PROPERTY_CSV_EXPORT_QUERY = "database.to.csv.job.export.query";
 
     /**
-     * this bean is not great, it ONLY reads as many records as the size of the
-     * page no page size means 10 by default
+     * this bean is not great, it ONLY reads as many records as the size of the page,
+     * no page size means 10 by default, 
+     * need to be fixed to loop through all records in the table 
      *
      * @return
      */
     @Bean
-    ItemReader<CustomerDTO> databaseCsvItemReader() {
-        JdbcPagingItemReader<CustomerDTO> databaseReader = new JdbcPagingItemReader<>();
+    ItemReader<CustomerDTO> databaseCsvItemReader(Environment environment) throws Exception {
+        //JdbcPagingItemReader<CustomerDTO> databaseReader = new JdbcPagingItemReader<>();
+        JdbcCursorItemReader<CustomerDTO> databaseReader = new JdbcCursorItemReader(); 
         try {
             databaseReader.setDataSource(DerbyDbConfig.getBasicDS("APP", "APP"));            
         } catch (SQLException ex) {
             Logger.getLogger(CsvFileToDatabaseJobConfig.class.getName()).log(Level.SEVERE, null, ex);
         }
-        databaseReader.setPageSize(0);
+        //databaseReader.setPageSize(10000);
+        //databaseReader.setFetchSize(5);
+        //databaseReader.setMaxItemCount(0);
         databaseReader.setRowMapper(new BeanPropertyRowMapper<>(CustomerDTO.class));
+        databaseReader.setSql(environment.getRequiredProperty(PROPERTY_CSV_EXPORT_QUERY));
+        //PagingQueryProvider queryProvider = createQueryProvider();
+        //databaseReader.setQueryProvider(queryProvider);
 
-        PagingQueryProvider queryProvider = createQueryProvider();
-        databaseReader.setQueryProvider(queryProvider);
-
+//        int recordCount = 0;
+//        ExecutionContext executionContext = new ExecutionContext();
+//        databaseReader.open(executionContext);
+//        Object pageCredit = new Object();
+//        while (pageCredit != null) {
+//            pageCredit = databaseReader.read();
+//            System.out.println("pageCredit:" + pageCredit);
+//            recordCount++;
+//        }
+//        databaseReader.close();
+        
         return databaseReader;
     }
     
 //    @Autowired
 //    CustomItmReader databaseCsvItemReader;
 
+    @Bean
+    DbReaderListener customerdbReaderListener() {
+        return new DbReaderListener();
+    };
 
-    private PagingQueryProvider createQueryProvider() {
-        //H2PagingQueryProvider queryProvider = new H2PagingQueryProvider();
-        DerbyPagingQueryProvider queryProvider = new DerbyPagingQueryProvider();
-        queryProvider.setSelectClause("SELECT customer_id, discount_code, zip, name, email");
-        queryProvider.setFromClause("FROM customer");
-        queryProvider.setSortKeys(sortByCustomerIdAsc());
-        return queryProvider;
-    }
+//    private PagingQueryProvider createQueryProvider() {
+//        //H2PagingQueryProvider queryProvider = new H2PagingQueryProvider();
+//        DerbyPagingQueryProvider queryProvider = new DerbyPagingQueryProvider();
+//        queryProvider.setSelectClause("SELECT customer_id, discount_code, zip, name, email");
+//        queryProvider.setFromClause("FROM customer");
+//        queryProvider.setSortKeys(sortByCustomerIdAsc());
+//        //queryProvider.generateFirstPageQuery(0)
+//        //queryProvider.generateJumpToItemQuery(0, 0)
+//        //queryProvider.generateRemainingPagesQuery(0)
+//        return queryProvider;
+//    }
 
-    private Map<String, Order> sortByCustomerIdAsc() {
-        Map<String, Order> sortConfiguration = new HashMap<>();
-        sortConfiguration.put("customer_id", Order.ASCENDING);
-        return sortConfiguration;
-    }
+//    private Map<String, Order> sortByCustomerIdAsc() {
+//        Map<String, Order> sortConfiguration = new HashMap<>();
+//        sortConfiguration.put("customer_id", Order.ASCENDING);
+//        return sortConfiguration;
+//    }
 
     @Bean
     ItemProcessor<CustomerDTO, CustomerDTO> databaseCsvItemProcessor() {
@@ -124,15 +148,18 @@ public class DatabaseToCsvFileJobConfig {
     }
 
     @Bean
-    Step databaseToCsvFileStep(ItemReader<CustomerDTO> databaseCsvItemReader,
+    Step databaseToCsvFileStep(StepExecutionListener databaseCsvReaderListener,
+                               ItemReader<CustomerDTO> databaseCsvItemReader,
                                ItemProcessor<CustomerDTO, CustomerDTO> databaseCsvItemProcessor,
                                ItemWriter<CustomerDTO> databaseCsvItemWriter,
                                StepBuilderFactory stepBuilderFactory) {
+        
         return stepBuilderFactory.get("databaseToCsvFileStep")
                 .<CustomerDTO, CustomerDTO>chunk(1)
                 .reader(databaseCsvItemReader)
                 .processor(databaseCsvItemProcessor)
                 .writer(databaseCsvItemWriter)
+                .listener(databaseCsvReaderListener)
                 .build();
     }
 
