@@ -17,7 +17,7 @@ public class DbReaderListener implements StepExecutionListener {
 
     @Override
     public void beforeStep(StepExecution se) {
-        System.out.println("Before step method executed, ste name: "+se.getStepName());
+        System.out.println("Before step method executed, step name: "+se.getStepName());
     }
 
     @Override

@@ -37,7 +37,7 @@ public class CsvFileToDatabaseJobLauncher {
         this.jobLauncher = jobLauncher;
     }
 
-    @Scheduled(cron = "${csv.to.database.job.cron}")
+    //@Scheduled(cron = "${csv.to.database.job.cron}")
     void launchCsvFileToDatabaseJob() throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
         LOGGER.info("Starting csvFileToDatabase job");
 

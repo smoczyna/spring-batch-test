@@ -50,7 +50,7 @@ public class CsvFileToDatabaseJobConfig {
     @Bean
     ItemReader<StudentDTO> csvFileItemReader(Environment environment) {
         FlatFileItemReader<StudentDTO> csvFileReader = new FlatFileItemReader<>();
-        csvFileReader.setResource(new ClassPathResource(environment.getRequiredProperty(PROPERTY_CSV_SOURCE_FILE_PATH)));
+        csvFileReader.setResource(new ClassPathResource(environment.getRequiredProperty(PROPERTY_CSV_SOURCE_FILE_PATH).concat("customer.csv")));
         csvFileReader.setLinesToSkip(1);
 
         LineMapper<StudentDTO> studentLineMapper = createStudentLineMapper();
