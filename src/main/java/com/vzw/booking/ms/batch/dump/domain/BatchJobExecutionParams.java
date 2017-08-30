@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vzw.booking.ms.batch.domain.internal;
+package com.vzw.booking.ms.batch.dump.domain;
 
 import java.util.Date;
 

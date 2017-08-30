@@ -5,14 +5,6 @@
  */
 package com.vzw.booking.ms.batch.csv.out;
 
-import com.vzw.booking.ms.batch.SpringBatchTestApplication;
-import javax.batch.runtime.BatchStatus;
-import javax.batch.runtime.JobExecution;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 //import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -29,25 +21,17 @@ public class DatabaseToCsvFileJobLauncherTest {
     public DatabaseToCsvFileJobLauncherTest() {
     }
     
-    @BeforeClass
-    public static void setUpClass() {
-    }
+//    private JdbcTemplate jdbcTemplate;
+//
+//    @Autowired
+//    public void setDataSource(DataSource dataSource) {
+//        this.jdbcTemplate = new JdbcTemplate(dataSource);
+//    }
     
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
-
     @Test
     public void launchJob() throws Exception {
-
+        
+            
 //        JobExecution jobExecution = jobLauncherTestUtils.launchJob();
 //        Assert.assertEquals(jobExecution.getStatus(), BatchStatus.COMPLETED);
 

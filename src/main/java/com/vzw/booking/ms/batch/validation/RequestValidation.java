@@ -1,10 +1,8 @@
 package com.vzw.booking.ms.batch.validation;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 //import com.mysql.jdbc.StringUtils;
-import com.vzw.vlf.lib.logger.VlfLogger;
 
 /**
  * <h1>RequestValidation</h1> RequestValidation contains the validations for the
@@ -18,8 +16,8 @@ public class RequestValidation {
     /**
      * Inject the logger.
      */
-    @Autowired
-    private VlfLogger logger;
+//    @Autowired
+//    private VlfLogger logger;
 
     private static final String MISSING_OPERAND = "Validation failed -- Missing operand";
 

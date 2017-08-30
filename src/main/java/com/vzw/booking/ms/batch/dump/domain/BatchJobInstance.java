@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vzw.booking.ms.batch.domain.internal;
+package com.vzw.booking.ms.batch.dump.domain;
 
 import java.io.Serializable;
 import java.math.BigInteger;
@@ -19,8 +19,7 @@ public class BatchJobInstance implements Serializable {
     private BigInteger version;
     private String jobName;
     private String jobKey;
-    //private Collection<BatchJobExecution> batchJobExecutionCollection;
-
+    
     public BatchJobInstance() {
     }
 
@@ -65,38 +64,4 @@ public class BatchJobInstance implements Serializable {
     public void setJobKey(String jobKey) {
         this.jobKey = jobKey;
     }
-
-//    public Collection<BatchJobExecution> getBatchJobExecutionCollection() {
-//        return batchJobExecutionCollection;
-//    }
-//
-//    public void setBatchJobExecutionCollection(Collection<BatchJobExecution> batchJobExecutionCollection) {
-//        this.batchJobExecutionCollection = batchJobExecutionCollection;
-//    }
-
-//    @Override
-//    public int hashCode() {
-//        int hash = 0;
-//        hash += (jobInstanceId != null ? jobInstanceId.hashCode() : 0);
-//        return hash;
-//    }
-//
-//    @Override
-//    public boolean equals(Object object) {
-//        // TODO: Warning - this method won't work in the case the id fields are not set
-//        if (!(object instanceof BatchJobInstance)) {
-//            return false;
-//        }
-//        BatchJobInstance other = (BatchJobInstance) object;
-//        if ((this.jobInstanceId == null && other.jobInstanceId != null) || (this.jobInstanceId != null && !this.jobInstanceId.equals(other.jobInstanceId))) {
-//            return false;
-//        }
-//        return true;
-//    }
-//
-//    @Override
-//    public String toString() {
-//        return "com.vzw.booking.ms.batch.domain.internal.BatchJobInstance[ jobInstanceId=" + jobInstanceId + " ]";
-//    }
-//    
 }

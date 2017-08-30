@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vzw.booking.ms.batch.domain.internal;
+package com.vzw.booking.ms.batch.dump.domain;
 
 import java.io.Serializable;
 import java.math.BigInteger;
@@ -26,8 +26,6 @@ public class BatchJobExecution implements Serializable {
     private String exitMessage;
     private Date lastUpdated;
     private String jobConfigurationLocation;
-    //private BatchJobExecutionContext batchJobExecutionContext;    
-    //private Collection<BatchStepExecution> batchStepExecutionCollection;
 
     public BatchJobExecution() {
     }
@@ -119,54 +117,4 @@ public class BatchJobExecution implements Serializable {
     public void setJobConfigurationLocation(String jobConfigurationLocation) {
         this.jobConfigurationLocation = jobConfigurationLocation;
     }
-
-//    public BatchJobExecutionContext getBatchJobExecutionContext() {
-//        return batchJobExecutionContext;
-//    }
-//
-//    public void setBatchJobExecutionContext(BatchJobExecutionContext batchJobExecutionContext) {
-//        this.batchJobExecutionContext = batchJobExecutionContext;
-//    }
-//
-//    public BatchJobInstance getJobInstanceId() {
-//        return jobInstanceId;
-//    }
-//
-//    public void setJobInstanceId(BatchJobInstance jobInstanceId) {
-//        this.jobInstanceId = jobInstanceId;
-//    }
-//
-//    public Collection<BatchStepExecution> getBatchStepExecutionCollection() {
-//        return batchStepExecutionCollection;
-//    }
-//
-//    public void setBatchStepExecutionCollection(Collection<BatchStepExecution> batchStepExecutionCollection) {
-//        this.batchStepExecutionCollection = batchStepExecutionCollection;
-//    }
-
-//    @Override
-//    public int hashCode() {
-//        int hash = 0;
-//        hash += (jobExecutionId != null ? jobExecutionId.hashCode() : 0);
-//        return hash;
-//    }
-//
-//    @Override
-//    public boolean equals(Object object) {
-//        // TODO: Warning - this method won't work in the case the id fields are not set
-//        if (!(object instanceof BatchJobExecution)) {
-//            return false;
-//        }
-//        BatchJobExecution other = (BatchJobExecution) object;
-//        if ((this.jobExecutionId == null && other.jobExecutionId != null) || (this.jobExecutionId != null && !this.jobExecutionId.equals(other.jobExecutionId))) {
-//            return false;
-//        }
-//        return true;
-//    }
-//
-//    @Override
-//    public String toString() {
-//        return "com.vzw.booking.ms.batch.domain.internal.BatchJobExecution[ jobExecutionId=" + jobExecutionId + " ]";
-//    }
-//    
 }

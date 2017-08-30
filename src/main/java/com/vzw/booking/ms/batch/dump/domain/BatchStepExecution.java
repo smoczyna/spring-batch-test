@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vzw.booking.ms.batch.domain.internal;
+package com.vzw.booking.ms.batch.dump.domain;
 
 import java.io.Serializable;
 import java.math.BigInteger;
@@ -33,8 +33,6 @@ public class BatchStepExecution implements Serializable {
     private String exitCode;
     private String exitMessage;
     private Date lastUpdated;
-//    private BatchJobExecution jobExecutionId;
-//    private BatchStepExecutionContext batchStepExecutionContext;
 
     public BatchStepExecution() {
     }
@@ -193,46 +191,4 @@ public class BatchStepExecution implements Serializable {
     public void setLastUpdated(Date lastUpdated) {
         this.lastUpdated = lastUpdated;
     }
-
-//    public BatchJobExecution getJobExecutionId() {
-//        return jobExecutionId;
-//    }
-//
-//    public void setJobExecutionId(BatchJobExecution jobExecutionId) {
-//        this.jobExecutionId = jobExecutionId;
-//    }
-//
-//    public BatchStepExecutionContext getBatchStepExecutionContext() {
-//        return batchStepExecutionContext;
-//    }
-//
-//    public void setBatchStepExecutionContext(BatchStepExecutionContext batchStepExecutionContext) {
-//        this.batchStepExecutionContext = batchStepExecutionContext;
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        int hash = 0;
-//        hash += (stepExecutionId != null ? stepExecutionId.hashCode() : 0);
-//        return hash;
-//    }
-//
-//    @Override
-//    public boolean equals(Object object) {
-//        // TODO: Warning - this method won't work in the case the id fields are not set
-//        if (!(object instanceof BatchStepExecution)) {
-//            return false;
-//        }
-//        BatchStepExecution other = (BatchStepExecution) object;
-//        if ((this.stepExecutionId == null && other.stepExecutionId != null) || (this.stepExecutionId != null && !this.stepExecutionId.equals(other.stepExecutionId))) {
-//            return false;
-//        }
-//        return true;
-//    }
-//
-//    @Override
-//    public String toString() {
-//        return "com.vzw.booking.ms.batch.domain.internal.BatchStepExecution[ stepExecutionId=" + stepExecutionId + " ]";
-//    }
-//    
 }

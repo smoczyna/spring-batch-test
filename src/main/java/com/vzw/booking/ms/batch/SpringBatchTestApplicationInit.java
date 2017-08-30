@@ -1,17 +1,9 @@
 package com.vzw.booking.ms.batch;
 
-import com.vzw.booking.ms.batch.config.DerbyDbConfig;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
-import com.vzw.booking.ms.batch.config.LoggerConfig;
 import com.vzw.booking.ms.batch.util.CustomerIdGenerator;
-import com.vzw.vlf.lib.logger.VlfLogger;
-import com.vzw.vlf.lib.logger.VlfLogger.LogLevel;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.sql.DataSource;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -28,8 +20,8 @@ import org.springframework.context.annotation.Primary;
 @Component
 public class SpringBatchTestApplicationInit {
 
-    @Autowired
-    private LoggerConfig loggerConfig;
+//    @Autowired
+//    private LoggerConfig loggerConfig;
 
     /**
      * Statefull bean holding customerId 
@@ -41,16 +33,16 @@ public class SpringBatchTestApplicationInit {
      *
      * @return Verizon Logger
      */
-    @Bean
-    public VlfLogger vlfLogger() {
-        VlfLogger logger = new VlfLogger();
-        logger.setAppName(this.loggerConfig.getAppname());
-        logger.setServiceName(this.loggerConfig.getServicename());
-        logger.setRegion(this.loggerConfig.getRegion());
-        logger.setZone(this.loggerConfig.getZone());
-        VlfLogger.setLogLevel(LogLevel.INFO);
-        return logger;
-    }
+//    @Bean
+//    public VlfLogger vlfLogger() {
+//        VlfLogger logger = new VlfLogger();
+//        logger.setAppName(this.loggerConfig.getAppname());
+//        logger.setServiceName(this.loggerConfig.getServicename());
+//        logger.setRegion(this.loggerConfig.getRegion());
+//        logger.setZone(this.loggerConfig.getZone());
+//        VlfLogger.setLogLevel(LogLevel.INFO);
+//        return logger;
+//    }
 
     /**
      * This is meta data source

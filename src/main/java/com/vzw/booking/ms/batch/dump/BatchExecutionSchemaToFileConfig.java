@@ -6,14 +6,15 @@
 package com.vzw.booking.ms.batch.dump;
 
 import com.vzw.booking.ms.batch.csv.processor.JobCompletionNotificationListener;
-import com.vzw.booking.ms.batch.domain.internal.BatchJobExecution;
-import com.vzw.booking.ms.batch.domain.internal.BatchJobExecutionContext;
-import com.vzw.booking.ms.batch.domain.internal.BatchJobExecutionParams;
-import com.vzw.booking.ms.batch.domain.internal.BatchJobInstance;
-import com.vzw.booking.ms.batch.domain.internal.BatchStepExecution;
-import com.vzw.booking.ms.batch.domain.internal.BatchStepExecutionContext;
-import com.vzw.vlf.lib.logger.VlfLogger;
+import com.vzw.booking.ms.batch.dump.domain.BatchJobExecution;
+import com.vzw.booking.ms.batch.dump.domain.BatchJobExecutionContext;
+import com.vzw.booking.ms.batch.dump.domain.BatchJobExecutionParams;
+import com.vzw.booking.ms.batch.dump.domain.BatchJobInstance;
+import com.vzw.booking.ms.batch.dump.domain.BatchStepExecution;
+import com.vzw.booking.ms.batch.dump.domain.BatchStepExecutionContext;
 import javax.sql.DataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -34,6 +35,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  *
@@ -44,22 +46,13 @@ public class BatchExecutionSchemaToFileConfig {
     
     private static final String PROPERTY_CSV_EXPORT_FILE_PATH = "database.to.csv.job.export.file.path";
     
-    private static final String PROPERTY_JOB_INSTANCE_COL_NAMES = "batch.database.jobinstance.table.columns";
-    private static final String PROPERTY_JOB_EXECUTION_COL_NAMES = "batch.database.jobexecution.table.columns";
-    private static final String PROPERTY_JOB_EXECUTION_PARAMS_COL_NAMES = "batch.database.jobexecutionparams.table.columns";
-    private static final String PROPERTY_JOB_EXECUTION_CONTEXT_COL_NAMES = "batch.database.jobexecutioncontext.table.columns";
-    private static final String PROPERTY_STEP_INSTANCE_COL_NAMES = "batch.database.stepxecution.table.columns";
-     private static final String PROPERTY_STEP_EXECUTION_CONTEXT_COL_NAMES = "batch.database.stepexecutioncontext.table.columns";
-    
-    @Autowired
-    private VlfLogger logger;
+    private static final Logger LOGGER = LoggerFactory.getLogger(BatchExecutionSchemaToFileConfig.class);
     
     @Autowired
     private DataSource metaDataSource;
     
     /**
-     * 
-     * readers      
+     * database readers      
      */
     
     @Bean
@@ -117,8 +110,7 @@ public class BatchExecutionSchemaToFileConfig {
     }
     
     /**
-     * 
-     * writers      
+     * file writers      
      */
     
     @Bean
@@ -239,7 +231,7 @@ public class BatchExecutionSchemaToFileConfig {
     
     private FieldExtractor<BatchStepExecution> createBatchStepExecutioFieldExtractor() {
         BeanWrapperFieldExtractor<BatchStepExecution> extractor = new BeanWrapperFieldExtractor<>();
-        extractor.setNames(new String[] {"jobExecutionId", "stepExecutionId", "version", "stepName", "startTime", "endTime", "status", 
+        extractor.setNames(new String[] {"stepExecutionId", "version", "stepName", "jobExecutionId", "startTime", "endTime", "status", 
                                          "commitCount", "readCount", "filterCount", "writeCount", "readSkipCount", "writeSkipCount", 
                                          "processSkipCount", "rollbackCount", "exitCode", "exitMessage", "lastUpdated"});
         return extractor;

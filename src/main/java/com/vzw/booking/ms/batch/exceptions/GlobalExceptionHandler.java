@@ -1,10 +1,9 @@
 package com.vzw.booking.ms.batch.exceptions;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.vzw.vlf.lib.logger.VlfLogger;
+//import com.vzw.vlf.lib.logger.VlfLogger;
 
 /**
  * <h1>GlobalExceptionHandler</h1> The GlobalExceptionHandler class provides consistent exception
@@ -22,8 +21,8 @@ import com.vzw.vlf.lib.logger.VlfLogger;
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-	@Autowired
-	private VlfLogger logger;
+//	@Autowired
+//	private VlfLogger logger;
 
 	/**
 	 * Exception handler for IllegalArgumentException and IllegalStateException exceptions.

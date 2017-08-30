@@ -41,7 +41,7 @@ public class BatchExecutionSchemaDumpLauncher {
     }
     
     @Scheduled(cron = "${database.to.csv.job.cron}")
-    void launchDatabaseToCsvFileJob() throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
+    void batchSchemaDumpJob() throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
         LOGGER.info("Starting batch schema dump job");
         jobLauncher.run(job, newExecution());
         LOGGER.info("Stopping batch schema dump job");
