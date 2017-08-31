@@ -1,5 +1,6 @@
 package com.vzw.booking.ms.batch.csv.out;
 
+import com.vzw.booking.ms.batch.csv.in.CsvFileReaderListener;
 import com.vzw.booking.ms.batch.config.DerbyDbConfig;
 import com.vzw.booking.ms.batch.csv.in.CsvFileToDatabaseJobConfig;
 import com.vzw.booking.ms.batch.csv.processor.CustomerProcessor;
@@ -58,11 +59,6 @@ public class DatabaseToCsvFileJobConfig {
     }
 
     @Bean
-    DbReaderListener customerdbReaderListener() {
-        return new DbReaderListener();
-    };
-
-    @Bean
     ItemProcessor<CustomerDTO, CustomerDTO> databaseCsvItemProcessor() {
         return new CustomerProcessor();
     }
@@ -101,8 +97,7 @@ public class DatabaseToCsvFileJobConfig {
     }
 
     @Bean
-    Step databaseToCsvFileStep(StepExecutionListener databaseCsvReaderListener,
-                               ItemReader<CustomerDTO> databaseCsvItemReader,
+    Step databaseToCsvFileStep(ItemReader<CustomerDTO> databaseCsvItemReader,
                                ItemProcessor<CustomerDTO, CustomerDTO> databaseCsvItemProcessor,
                                ItemWriter<CustomerDTO> databaseCsvItemWriter,
                                StepBuilderFactory stepBuilderFactory) {
@@ -111,8 +106,7 @@ public class DatabaseToCsvFileJobConfig {
                 .<CustomerDTO, CustomerDTO>chunk(1)
                 .reader(databaseCsvItemReader)
                 .processor(databaseCsvItemProcessor)
-                .writer(databaseCsvItemWriter)
-                .listener(databaseCsvReaderListener)
+                .writer(databaseCsvItemWriter)                
                 .build();
     }
 

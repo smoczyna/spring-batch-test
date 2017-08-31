@@ -27,11 +27,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.core.io.ClassPathResource;
 
 import javax.sql.DataSource;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
@@ -47,10 +48,15 @@ public class CsvFileToDatabaseJobConfig {
             "INTO customer(customer_id, discount_code, zip, name, email) " +
             "VALUES (:customerId, :discountCode, :zip, :name, :email)";
 
+    private Resource getFileFromSftpSever() {
+        return null;
+    }
+    
     @Bean
     ItemReader<StudentDTO> csvFileItemReader(Environment environment) {
         FlatFileItemReader<StudentDTO> csvFileReader = new FlatFileItemReader<>();
-        csvFileReader.setResource(new ClassPathResource(environment.getRequiredProperty(PROPERTY_CSV_SOURCE_FILE_PATH).concat("customer.csv")));
+        csvFileReader.setResource(new ClassPathResource(environment.getRequiredProperty(PROPERTY_CSV_SOURCE_FILE_PATH).concat("students.csv")));
+        //csvFileReader.setResource(getFileFromSftpSever());
         csvFileReader.setLinesToSkip(1);
 
         LineMapper<StudentDTO> studentLineMapper = createStudentLineMapper();
@@ -116,15 +122,22 @@ public class CsvFileToDatabaseJobConfig {
     }
 
     @Bean
-    Step csvFileToDatabaseStep(ItemReader<StudentDTO> csvFileItemReader,
+    CsvFileReaderListener csvFileItemReaderListener() {
+        return new CsvFileReaderListener();
+    };
+    
+    @Bean
+    Step csvFileToDatabaseStep(CsvFileReaderListener csvFileItemReaderListener,
+                               ItemReader<StudentDTO> csvFileItemReader,
                                ItemProcessor<StudentDTO, CustomerDTO> csvFileItemProcessor,
                                ItemWriter<CustomerDTO> csvFileDatabaseItemWriter,
                                StepBuilderFactory stepBuilderFactory) {
         return stepBuilderFactory.get("csvFileToDatabaseStep")
-                .<StudentDTO, CustomerDTO>chunk(1)
-                .reader(csvFileItemReader)
+                .<StudentDTO, CustomerDTO>chunk(1)                
+                .reader(csvFileItemReader)                
                 .processor(csvFileItemProcessor)
-                .writer(csvFileDatabaseItemWriter)
+                .writer(csvFileDatabaseItemWriter)    
+                .listener(csvFileItemReaderListener)
                 .build();
     }
 

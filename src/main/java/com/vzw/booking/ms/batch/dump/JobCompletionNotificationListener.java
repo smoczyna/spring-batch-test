@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vzw.booking.ms.batch.csv.processor;
+package com.vzw.booking.ms.batch.dump;
 
-import com.vzw.booking.ms.batch.dump.BatchExecutionSchemaDumpLauncher;
+import com.vzw.booking.ms.batch.launchers.BatchExecutionSchemaDumpLauncher;
 import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,50 +48,39 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
             LOGGER.info("*** Transfer completed, it's time to cleanup ***");
             
             JobInstance instance = jobExecution.getJobInstance();
-            String sql = "DELETE FROM BATCH.BATCH_STEP_EXECUTION_CONTEXT where step_execution_id in ( " +
-                         "SELECT step_execution_id FROM BATCH.BATCH_STEP_EXECUTION where job_execution_id < ?)";            
+            
+            LOGGER.info("Clearing BATCH_STEP_EXECUTION_CONTEXT table");
+            String sql = "delete from batch.batch_step_execution_context where STEP_EXECUTION_ID in (\n" +
+                         "select step_execution_id from batch.batch_step_execution step, batch.batch_job_execution job\n" +
+                         "where step.job_execution_id = job.job_execution_id\n" +
+                         "and job.job_instance_id < ?)";            
             this.jdbcTemplate.update(sql, new Object[]{instance.getInstanceId()});
             
-            sql = "DELETE FROM BATCH.BATCH_STEP_EXECUTION where job_execution_id < ?";
+            LOGGER.info("Clearing BATCH_STEP_EXECUTION table");
+            sql = "delete from batch.batch_step_execution where job_execution_id in (\n" +
+                  "select job.job_execution_id from batch.batch_job_execution job\n" +
+                  "where job.job_instance_id < ?) ";
             this.jdbcTemplate.update(sql, new Object[]{instance.getInstanceId()});
             
-            sql = "DELETE FROM BATCH.BATCH_JOB_EXECUTION_PARAMS where job_execution_id < ?";
+            LOGGER.info("Clearing BATCH_JOB_EXECUTION_PARAMS table");
+            sql = "delete from BATCH.BATCH_JOB_EXECUTION_PARAMS where job_execution_id in (\n" +
+                  "select job.job_execution_id from batch.batch_job_execution job\n" +
+                  "where job.job_instance_id < ?)";
             this.jdbcTemplate.update(sql, new Object[]{instance.getInstanceId()});
             
-            sql = "DELETE FROM BATCH.BATCH_JOB_EXECUTION_CONTEXT where job_execution_id < ?";
+            LOGGER.info("Clearing BATCH_JOB_EXECUTION_CONTEXT table");
+            sql = "delete from BATCH.BATCH_JOB_EXECUTION_CONTEXT where job_execution_id in (\n" +
+                  "select job.job_execution_id from batch.batch_job_execution job\n" +
+                  "where job.job_instance_id < ?)";
             this.jdbcTemplate.update(sql, new Object[]{instance.getInstanceId()});
             
-            sql = "DELETE FROM BATCH.BATCH_JOB_EXECUTION where job_execution_id < ?";
+            LOGGER.info("Clearing BATCH_JOB_EXECUTION table");
+            sql = "DELETE FROM BATCH.BATCH_JOB_EXECUTION where job_instance_id < ?";
             this.jdbcTemplate.update(sql, new Object[]{instance.getInstanceId()});
             
-            sql = "DELETE FROM BATCH.BATCH_JOB_INSTANCE where job_execution_id < ?";
+            LOGGER.info("Clearing BATCH_JOB_INSTANCE table");
+            sql = "DELETE FROM BATCH.BATCH_JOB_INSTANCE where job_instance_id < ?";
             this.jdbcTemplate.update(sql, new Object[]{instance.getInstanceId()});
         }
     }
-
-            //TreeSet<StepExecution> executions = (TreeSet<StepExecution>) jobExecution.getStepExecutions();
-            //Collections.sort(executions, new StepExecutionComparator());
-            
-            //LOGGER.info("Smallest execution is: " + executions.first(). )
-            
-            //logger.write("Transfer completed, it's time to verify results but how to do that actually?", VlfLogger.Severity.INFO, null);
-            
-//            
-//            this.jdbcTemplate.update("delete from batch_step_execution");
-//            this.jdbcTemplate.update("delete from batch_job_execution_context");
-//            this.jdbcTemplate.update("delete from batch_job_execution_params");
-//            this.jdbcTemplate.update("delete from batch_job_execution");
-//            this.jdbcTemplate.update("delete from batch_job_instance");
-//            LOGGER.info("*** Cleanup completed, all batch tables are empty now ***");
-    
-//    private class StepExecutionComparator<StepExecution> implements Comparator {
-//
-//        @Override
-//        public int compare(Object o1, Object o2) {
-//            StepExecution seLeft = (StepExecution) o1;
-//            StepExecution seRight = (StepExecution) o2;
-//            seLeft.
-//        }
-//        
-//    }
 }

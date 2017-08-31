@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vzw.booking.ms.batch.dump;
+package com.vzw.booking.ms.batch.launchers;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -40,7 +40,7 @@ public class BatchExecutionSchemaDumpLauncher {
         this.jobLauncher = jobLauncher;
     }
     
-    @Scheduled(cron = "${database.to.csv.job.cron}")
+    @Scheduled(cron = "${database.cleanup.job.cron}")
     void batchSchemaDumpJob() throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
         LOGGER.info("Starting batch schema dump job");
         jobLauncher.run(job, newExecution());

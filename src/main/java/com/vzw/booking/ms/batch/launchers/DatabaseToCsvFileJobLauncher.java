@@ -1,4 +1,4 @@
-package com.vzw.booking.ms.batch.csv.in;
+package com.vzw.booking.ms.batch.launchers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,35 +23,31 @@ import java.util.Map;
  * @author Petri Kainulainen
  */
 @Component
-public class CsvFileToDatabaseJobLauncher {
+public class DatabaseToCsvFileJobLauncher {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CsvFileToDatabaseJobLauncher.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseToCsvFileJobLauncher.class);
 
     private final Job job;
 
     private final JobLauncher jobLauncher;
 
     @Autowired
-    CsvFileToDatabaseJobLauncher(@Qualifier("csvFileToDatabaseJob") Job job, JobLauncher jobLauncher) {
+    DatabaseToCsvFileJobLauncher(@Qualifier("databaseToCsvFileJob") Job job, JobLauncher jobLauncher) {
         this.job = job;
         this.jobLauncher = jobLauncher;
     }
 
-    //@Scheduled(cron = "${csv.to.database.job.cron}")
-    void launchCsvFileToDatabaseJob() throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
-        LOGGER.info("Starting csvFileToDatabase job");
-
+    @Scheduled(cron = "${database.to.csv.job.cron}")
+    void launchDatabaseToCsvFileJob() throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
+        LOGGER.info("Starting databaseToCsvFile job");
         jobLauncher.run(job, newExecution());
-
-        LOGGER.info("Stopping csvFileToDatabase job");
+        LOGGER.info("Stopping databaseToCsvFile job");
     }
 
     private JobParameters newExecution() {
         Map<String, JobParameter> parameters = new HashMap<>();
-
         JobParameter parameter = new JobParameter(new Date());
         parameters.put("currentTime", parameter);
-
         return new JobParameters(parameters);
     }
 }

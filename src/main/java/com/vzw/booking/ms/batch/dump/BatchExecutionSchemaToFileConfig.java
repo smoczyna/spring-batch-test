@@ -5,7 +5,6 @@
  */
 package com.vzw.booking.ms.batch.dump;
 
-import com.vzw.booking.ms.batch.csv.processor.JobCompletionNotificationListener;
 import com.vzw.booking.ms.batch.dump.domain.BatchJobExecution;
 import com.vzw.booking.ms.batch.dump.domain.BatchJobExecutionContext;
 import com.vzw.booking.ms.batch.dump.domain.BatchJobExecutionParams;
@@ -358,7 +357,8 @@ public class BatchExecutionSchemaToFileConfig {
                                     @Qualifier("jobExecutionContextToCsvFileStep") Step jobExecutionContextToCsvFileStep,
                                     @Qualifier("stepExecutionToCsvFileStep") Step stepExecutionToCsvFileStep,
                                     @Qualifier("stepExecutionContextToCsvFileStep") Step stepExecutionContextToCsvFileStep) {
-        return jobBuilderFactory.get("databaseToCsvFileJob")
+        
+        return jobBuilderFactory.get("batchSchemaDumpToCsvFileJob")
                 .incrementer(new RunIdIncrementer())
                 .listener(listener)
                 .flow(jobInstanceToCsvFileStep)
