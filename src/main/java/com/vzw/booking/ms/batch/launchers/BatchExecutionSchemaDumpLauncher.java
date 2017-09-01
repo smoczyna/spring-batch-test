@@ -40,7 +40,7 @@ public class BatchExecutionSchemaDumpLauncher {
         this.jobLauncher = jobLauncher;
     }
     
-    @Scheduled(cron = "${database.cleanup.job.cron}")
+    //@Scheduled(cron = "${database.cleanup.job.cron}")
     void batchSchemaDumpJob() throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
         LOGGER.info("Starting batch schema dump job");
         jobLauncher.run(job, newExecution());

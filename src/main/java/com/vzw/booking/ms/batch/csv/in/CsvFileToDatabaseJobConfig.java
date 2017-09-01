@@ -1,6 +1,6 @@
 package com.vzw.booking.ms.batch.csv.in;
 
-import com.vzw.booking.ms.batch.config.DerbyDbConfig;
+import com.vzw.booking.ms.batch.config.DatabasesConfig;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
@@ -18,7 +18,7 @@ import org.springframework.batch.item.file.mapping.FieldSetMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.batch.item.file.transform.LineTokenizer;
 import com.vzw.booking.ms.batch.csv.processor.StudentProcessor;
-import com.vzw.booking.ms.batch.domain.CustomerDTO;
+import com.vzw.booking.ms.batch.domain.UserDTO;
 import com.vzw.booking.ms.batch.domain.StudentDTO;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -32,7 +32,6 @@ import javax.sql.DataSource;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
@@ -43,25 +42,16 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 @Configuration
 public class CsvFileToDatabaseJobConfig {
 
-    private static final String PROPERTY_CSV_SOURCE_FILE_PATH = "csv.to.database.job.source.file.path";
-    private static final String QUERY_INSERT_CUSTOMER = "INSERT " +
-            "INTO customer(customer_id, discount_code, zip, name, email) " +
-            "VALUES (:customerId, :discountCode, :zip, :name, :email)";
+    private static final String PROPERTY_CSV_SOURCE_FILE_PATH = "csv.to.database.job.source.file.path.local";
+    private static final String QUERY_INSERT_USER = "insert into users_test(userid, name) values(:userid, :name)";
 
-    private Resource getFileFromSftpSever() {
-        return null;
-    }
-    
     @Bean
     ItemReader<StudentDTO> csvFileItemReader(Environment environment) {
         FlatFileItemReader<StudentDTO> csvFileReader = new FlatFileItemReader<>();
-        csvFileReader.setResource(new ClassPathResource(environment.getRequiredProperty(PROPERTY_CSV_SOURCE_FILE_PATH).concat("students.csv")));
-        //csvFileReader.setResource(getFileFromSftpSever());
+        csvFileReader.setResource(new ClassPathResource(environment.getRequiredProperty(PROPERTY_CSV_SOURCE_FILE_PATH)));
         csvFileReader.setLinesToSkip(1);
-
         LineMapper<StudentDTO> studentLineMapper = createStudentLineMapper();
         csvFileReader.setLineMapper(studentLineMapper);
-
         return csvFileReader;
     }
 
@@ -91,16 +81,16 @@ public class CsvFileToDatabaseJobConfig {
     }
 
     @Bean
-    ItemProcessor<StudentDTO, CustomerDTO> csvFileItemProcessor() {
+    ItemProcessor<StudentDTO, UserDTO> csvFileItemProcessor() {
         return new StudentProcessor();
     }
 
     @Bean
-    ItemWriter<CustomerDTO> csvFileDatabaseItemWriter() {
-        JdbcBatchItemWriter<CustomerDTO> databaseItemWriter = new JdbcBatchItemWriter<>();
+    ItemWriter<UserDTO> csvFileDatabaseItemWriter() {
+        JdbcBatchItemWriter<UserDTO> databaseItemWriter = new JdbcBatchItemWriter<>();
         DataSource dataSource = null;        
         try {
-            dataSource = DerbyDbConfig.getBasicDS("APP", "APP");            
+            dataSource = DatabasesConfig.getCasandraBasicDs("j6_dev_user", "Ireland");            
         } catch (SQLException ex) {
             Logger.getLogger(CsvFileToDatabaseJobConfig.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -109,15 +99,15 @@ public class CsvFileToDatabaseJobConfig {
         databaseItemWriter.setDataSource(dataSource);
         databaseItemWriter.setJdbcTemplate(jdbcOps);
 
-        databaseItemWriter.setSql(QUERY_INSERT_CUSTOMER);
+        databaseItemWriter.setSql(QUERY_INSERT_USER);
 
-        ItemSqlParameterSourceProvider<CustomerDTO> sqlParameterSourceProvider = customerSqlParameterSourceProvider();
+        ItemSqlParameterSourceProvider<UserDTO> sqlParameterSourceProvider = customerSqlParameterSourceProvider();
         databaseItemWriter.setItemSqlParameterSourceProvider(sqlParameterSourceProvider);
 
         return databaseItemWriter;
     }
 
-    private ItemSqlParameterSourceProvider<CustomerDTO> customerSqlParameterSourceProvider() {
+    private ItemSqlParameterSourceProvider<UserDTO> customerSqlParameterSourceProvider() {
         return new BeanPropertyItemSqlParameterSourceProvider<>();
     }
 
@@ -129,11 +119,11 @@ public class CsvFileToDatabaseJobConfig {
     @Bean
     Step csvFileToDatabaseStep(CsvFileReaderListener csvFileItemReaderListener,
                                ItemReader<StudentDTO> csvFileItemReader,
-                               ItemProcessor<StudentDTO, CustomerDTO> csvFileItemProcessor,
-                               ItemWriter<CustomerDTO> csvFileDatabaseItemWriter,
+                               ItemProcessor<StudentDTO, UserDTO> csvFileItemProcessor,
+                               ItemWriter<UserDTO> csvFileDatabaseItemWriter,
                                StepBuilderFactory stepBuilderFactory) {
         return stepBuilderFactory.get("csvFileToDatabaseStep")
-                .<StudentDTO, CustomerDTO>chunk(1)                
+                .<StudentDTO, UserDTO>chunk(1)
                 .reader(csvFileItemReader)                
                 .processor(csvFileItemProcessor)
                 .writer(csvFileDatabaseItemWriter)    

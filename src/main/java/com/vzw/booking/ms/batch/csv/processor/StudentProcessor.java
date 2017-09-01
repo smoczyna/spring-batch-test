@@ -7,6 +7,7 @@ package com.vzw.booking.ms.batch.csv.processor;
 
 import com.vzw.booking.ms.batch.domain.CustomerDTO;
 import com.vzw.booking.ms.batch.domain.StudentDTO;
+import com.vzw.booking.ms.batch.domain.UserDTO;
 import com.vzw.booking.ms.batch.util.CustomerIdGenerator;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * @author smorcja
  */
-public class StudentProcessor implements ItemProcessor<StudentDTO, CustomerDTO> {
+public class StudentProcessor implements ItemProcessor<StudentDTO, UserDTO> {
 
 //    @Autowired
 //    private VlfLogger logger;
@@ -24,19 +25,24 @@ public class StudentProcessor implements ItemProcessor<StudentDTO, CustomerDTO> 
     public CustomerIdGenerator idGenerator;
 
     @Override
-    public CustomerDTO process(StudentDTO student) throws Exception {
+    public UserDTO process(StudentDTO student) throws Exception {
         //this.logger.write("Processig data", "OUT", VlfLogger.Severity.INFO, "Processing student information: " + item, VlfLogger.LogLevel.NONE);        
         //LOGGER.info("Processing student information: {}", item);
 
         //this.prettyPrint(student);
         
-        CustomerDTO customer = new CustomerDTO();
-        customer.setCustomerId(idGenerator.generateId());
-        customer.setDiscountCode("N");
-        customer.setName(student.getStudentName());
-        customer.setZip("48124");
-        customer.setEmail(student.getEmailAddress());
-        return customer;
+//        CustomerDTO customer = new CustomerDTO();
+//        customer.setCustomerId(idGenerator.generateId());
+//        customer.setDiscountCode("N");
+//        customer.setName(student.getStudentName());
+//        customer.setZip("48124");
+//        customer.setEmail(student.getEmailAddress());
+//        return customer;
+
+        UserDTO user = new UserDTO();
+        user.setUserid(idGenerator.generateId());
+        user.setName(student.getStudentName());
+        return user;
     }
     
 //    private void prettyPrint(StudentDTO item) {

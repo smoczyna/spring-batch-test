@@ -1,7 +1,7 @@
 package com.vzw.booking.ms.batch.csv.out;
 
 import com.vzw.booking.ms.batch.csv.in.CsvFileReaderListener;
-import com.vzw.booking.ms.batch.config.DerbyDbConfig;
+import com.vzw.booking.ms.batch.config.DatabasesConfig;
 import com.vzw.booking.ms.batch.csv.in.CsvFileToDatabaseJobConfig;
 import com.vzw.booking.ms.batch.csv.processor.CustomerProcessor;
 import org.springframework.batch.core.Job;
@@ -49,7 +49,7 @@ public class DatabaseToCsvFileJobConfig {
     ItemReader<CustomerDTO> databaseCsvItemReader(Environment environment) throws Exception {
         JdbcCursorItemReader<CustomerDTO> databaseReader = new JdbcCursorItemReader(); 
         try {
-            databaseReader.setDataSource(DerbyDbConfig.getBasicDS("APP", "APP"));            
+            databaseReader.setDataSource(DatabasesConfig.getSampleDerbyDS());            
         } catch (SQLException ex) {
             Logger.getLogger(CsvFileToDatabaseJobConfig.class.getName()).log(Level.SEVERE, null, ex);
         }
