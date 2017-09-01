@@ -64,30 +64,25 @@ public class DatabasesConfigTest {
         spaces.forEach((keyspace) -> {
             System.out.println("    "+keyspace.getName());
         });
-//        Session session = cluster.connect("system_schema");
-//        assertNotNull(session);
-//        
-//        ResultSet result = session.execute("select * from tables");
-//        assertTrue(result.all().size()>0);
-//        System.out.println("Tables found: "+result.all().size());
-//        for (Row row : result) {
-//            System.out.println(row.getString("table_name"));
-//        }
-        
         Session session = cluster.connect("j6_dev");
         assertNotNull(session);
+        
         ResultSet result1 = session.execute("select * from users_test");
         System.out.println("Users foud: "+result1.all().size());
         assertTrue(result1.all().isEmpty());
         
-        session.execute("insert into users_test(userid, name) values(1, 'test user')");
-        ResultSet result2 = session.execute("select * from users_test");
-        System.out.println("USers foud: "+result2.all().size());
-        assertTrue(result2.all().size()==1);
-        
-        session.execute("delete from users_test where userid = 1");
-        ResultSet result3 = session.execute("select * from users_test");
-        System.out.println("USers foud: "+result3.all().size());
-        assertTrue(result3.all().isEmpty());
+//        session.execute("insert into users_test(userid, name) values(1, 'test user')");
+//        ResultSet result2 = session.execute("select * from users_test");
+//        System.out.println("USers foud: "+result2.all().size());
+//        assertTrue(result2.all().size()==1);
+//        
+//        session.execute("delete from users_test where userid = 1");
+//        ResultSet result3 = session.execute("select * from users_test");
+//        System.out.println("USers foud: "+result3.all().size());
+//        assertTrue(result3.all().isEmpty());
+
+//        session.execute("insert into batchjobinstance(jobinstanceid, jobkey, jobname, version) values(1, 'test', 'test', 1)");
+//        ResultSet result2 = session.execute("select * from batchjobinstance");
+//        assertTrue(result2.all().size()==1);
     }
 }

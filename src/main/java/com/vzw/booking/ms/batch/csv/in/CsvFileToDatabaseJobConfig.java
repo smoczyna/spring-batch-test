@@ -18,7 +18,7 @@ import org.springframework.batch.item.file.mapping.FieldSetMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.batch.item.file.transform.LineTokenizer;
 import com.vzw.booking.ms.batch.csv.processor.StudentProcessor;
-import com.vzw.booking.ms.batch.domain.UserDTO;
+import com.vzw.booking.ms.batch.domain.CustomerDTO;
 import com.vzw.booking.ms.batch.domain.StudentDTO;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -43,15 +43,19 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 public class CsvFileToDatabaseJobConfig {
 
     private static final String PROPERTY_CSV_SOURCE_FILE_PATH = "csv.to.database.job.source.file.path.local";
-    private static final String QUERY_INSERT_USER = "insert into users_test(userid, name) values(:userid, :name)";
-
+    private static final String QUERY_INSERT_CUSTOMER = "INSERT " +
+            "INTO customer(customer_id, discount_code, zip, name, email) " +
+            "VALUES (:customerId, :discountCode, :zip, :name, :email)";
+    
     @Bean
     ItemReader<StudentDTO> csvFileItemReader(Environment environment) {
         FlatFileItemReader<StudentDTO> csvFileReader = new FlatFileItemReader<>();
         csvFileReader.setResource(new ClassPathResource(environment.getRequiredProperty(PROPERTY_CSV_SOURCE_FILE_PATH)));
         csvFileReader.setLinesToSkip(1);
+
         LineMapper<StudentDTO> studentLineMapper = createStudentLineMapper();
         csvFileReader.setLineMapper(studentLineMapper);
+
         return csvFileReader;
     }
 
@@ -81,16 +85,16 @@ public class CsvFileToDatabaseJobConfig {
     }
 
     @Bean
-    ItemProcessor<StudentDTO, UserDTO> csvFileItemProcessor() {
+    ItemProcessor<StudentDTO, CustomerDTO> csvFileItemProcessor() {
         return new StudentProcessor();
     }
 
     @Bean
-    ItemWriter<UserDTO> csvFileDatabaseItemWriter() {
-        JdbcBatchItemWriter<UserDTO> databaseItemWriter = new JdbcBatchItemWriter<>();
+    ItemWriter<CustomerDTO> csvFileDatabaseItemWriter() {
+        JdbcBatchItemWriter<CustomerDTO> databaseItemWriter = new JdbcBatchItemWriter<>();
         DataSource dataSource = null;        
         try {
-            dataSource = DatabasesConfig.getCasandraBasicDs("j6_dev_user", "Ireland");            
+             dataSource = DatabasesConfig.getSampleDerbyDS();
         } catch (SQLException ex) {
             Logger.getLogger(CsvFileToDatabaseJobConfig.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -99,15 +103,15 @@ public class CsvFileToDatabaseJobConfig {
         databaseItemWriter.setDataSource(dataSource);
         databaseItemWriter.setJdbcTemplate(jdbcOps);
 
-        databaseItemWriter.setSql(QUERY_INSERT_USER);
+        databaseItemWriter.setSql(QUERY_INSERT_CUSTOMER);
 
-        ItemSqlParameterSourceProvider<UserDTO> sqlParameterSourceProvider = customerSqlParameterSourceProvider();
+        ItemSqlParameterSourceProvider<CustomerDTO> sqlParameterSourceProvider = customerSqlParameterSourceProvider();
         databaseItemWriter.setItemSqlParameterSourceProvider(sqlParameterSourceProvider);
 
         return databaseItemWriter;
     }
 
-    private ItemSqlParameterSourceProvider<UserDTO> customerSqlParameterSourceProvider() {
+    private ItemSqlParameterSourceProvider<CustomerDTO> customerSqlParameterSourceProvider() {
         return new BeanPropertyItemSqlParameterSourceProvider<>();
     }
 
@@ -119,11 +123,11 @@ public class CsvFileToDatabaseJobConfig {
     @Bean
     Step csvFileToDatabaseStep(CsvFileReaderListener csvFileItemReaderListener,
                                ItemReader<StudentDTO> csvFileItemReader,
-                               ItemProcessor<StudentDTO, UserDTO> csvFileItemProcessor,
-                               ItemWriter<UserDTO> csvFileDatabaseItemWriter,
+                               ItemProcessor<StudentDTO, CustomerDTO> csvFileItemProcessor,
+                               ItemWriter<CustomerDTO> csvFileDatabaseItemWriter,
                                StepBuilderFactory stepBuilderFactory) {
         return stepBuilderFactory.get("csvFileToDatabaseStep")
-                .<StudentDTO, UserDTO>chunk(1)
+                .<StudentDTO, CustomerDTO>chunk(1)                
                 .reader(csvFileItemReader)                
                 .processor(csvFileItemProcessor)
                 .writer(csvFileDatabaseItemWriter)    
