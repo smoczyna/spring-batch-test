@@ -24,11 +24,6 @@ import org.springframework.core.env.Environment;
 @Configuration
 public class DatabaseToCsvFileJobConfig {
 
-    /**
-     * this bean is fixed now, it reads all records in the table 
-     *
-     * @return
-     */
     @Bean
     ItemReader<CustomerDTO> databaseCsvItemReader(Environment environment) throws Exception {
         return new CustomerDbReader(environment, DatabasesConfig.getSampleDerbyDS());
