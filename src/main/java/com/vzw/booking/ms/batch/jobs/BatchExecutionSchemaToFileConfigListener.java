@@ -22,16 +22,14 @@ import org.springframework.stereotype.Component;
  * @author smorcja
  */
 @Component
-public class JobCompletionNotificationListener extends JobExecutionListenerSupport {
+public class BatchExecutionSchemaToFileConfigListener extends JobExecutionListenerSupport {
 
-//    @Autowired
-//    private VlfLogger logger;
     private static final Logger LOGGER = LoggerFactory.getLogger(BatchExecutionSchemaDumpLauncher.class);
 
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public JobCompletionNotificationListener(DataSource dataSource) {
+    public BatchExecutionSchemaToFileConfigListener(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
