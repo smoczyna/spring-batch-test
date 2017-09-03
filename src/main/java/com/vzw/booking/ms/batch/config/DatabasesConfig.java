@@ -53,8 +53,8 @@ public class DatabasesConfig {
         BasicDataSource ds = new BasicDataSource();
         ds.setDriverClassName("org.apache.derby.jdbc.ClientDriver");
         ds.setUrl("jdbc:derby://localhost:1527/sample");
-        ds.setUsername("APP");
-        ds.setPassword("APP");
+        ds.setUsername("app");
+        ds.setPassword("app");
         return ds;
     }
 
@@ -69,14 +69,14 @@ public class DatabasesConfig {
      * @return
      * @throws SQLException 
      */
-    public static DataSource getCasandraBasicDs(String user, String password) throws SQLException {
-        String host = "170.127.114.154";
-        int port = 9042;
-        String keyspace = "j6_dev";
-        String version = null;        
-        CassandraDataSource ds = new CassandraDataSource(host, port, keyspace, user, password, version);
-        return ds;       
-    }
+//    public static DataSource getCasandraBasicDs(String user, String password) throws SQLException {
+//        String host = "170.127.114.154";
+//        int port = 9042;
+//        String keyspace = "j6_dev";
+//        String version = null;        
+//        CassandraDataSource ds = new CassandraDataSource(host, port, keyspace, user, password, version);
+//        return ds;       
+//    }
 
     /**
      * Datastax driver way

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vzw.booking.ms.batch.csv.out;
+package com.vzw.booking.ms.batch.prototypes;
 
 import com.vzw.booking.ms.batch.domain.CustomerDTO;
 import java.util.List;
