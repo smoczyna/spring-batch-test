@@ -13,8 +13,6 @@ import org.springframework.batch.item.ItemProcessor;
  * @author smorcja
  */
 public class CustomerProcessor implements ItemProcessor<CustomerDTO, CustomerDTO> {
-    
-//    private static final Logger LOGGER = LoggerFactory.getLogger(StudentProcessor.class);
 
     @Override
     public CustomerDTO process(CustomerDTO item) throws Exception {

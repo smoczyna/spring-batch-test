@@ -349,7 +349,7 @@ public class BatchExecutionSchemaToFileConfig {
     
     @Bean
     Job batchSchemaDumpToCsvFileJob(JobBuilderFactory jobBuilderFactory, 
-                                    JobCompletionNotificationListener listener,
+                                    BatchExecutionSchemaToFileConfigListener listener,
                                     @Qualifier("jobInstanceToCsvFileStep") Step jobInstanceToCsvFileStep,
                                     @Qualifier("jobExecutionToCsvFileStep") Step jobExecutionToCsvFileStep,                                    
                                     @Qualifier("jobExecutionParamsToCsvFileStep") Step jobExecutionParamsToCsvFileStep,

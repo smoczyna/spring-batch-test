@@ -17,17 +17,11 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class StudentProcessor implements ItemProcessor<StudentDTO, CustomerDTO> {
 
-//    @Autowired
-//    private VlfLogger logger;
-    
     @Autowired
     public CustomerIdGenerator idGenerator;
 
     @Override
     public CustomerDTO process(StudentDTO student) throws Exception {
-        //this.logger.write("Processig data", "OUT", VlfLogger.Severity.INFO, "Processing student information: " + item, VlfLogger.LogLevel.NONE);        
-        //LOGGER.info("Processing student information: {}", item);
-
         //this.prettyPrint(student);
         
         CustomerDTO customer = new CustomerDTO();

@@ -22,8 +22,6 @@ import org.springframework.core.env.Environment;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 
 
 /**
@@ -61,10 +59,10 @@ public class CsvFileToDatabaseJobConfig {
                                ItemWriter<CustomerDTO> csvFileDatabaseItemWriter,
                                StepBuilderFactory stepBuilderFactory) {
         return stepBuilderFactory.get("csvFileToDatabaseStep")
-                .<StudentDTO, CustomerDTO>chunk(1)                
-                .reader(csvFileItemReader)                
+                .<StudentDTO, CustomerDTO>chunk(1)
+                .reader(csvFileItemReader)       
                 .processor(csvFileItemProcessor)
-                .writer(csvFileDatabaseItemWriter)    
+                .writer(csvFileDatabaseItemWriter)
                 .listener(csvFileItemReaderListener)
                 .build();
     }
