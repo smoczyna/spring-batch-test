@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vzw.booking.ms.batch.dump;
+package com.vzw.booking.ms.batch.jobs;
 
 import com.vzw.booking.ms.batch.dump.domain.BatchJobExecution;
 import com.vzw.booking.ms.batch.dump.domain.BatchJobExecutionContext;
@@ -34,7 +34,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  *

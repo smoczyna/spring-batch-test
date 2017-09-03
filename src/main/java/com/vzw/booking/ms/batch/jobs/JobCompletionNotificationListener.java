@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vzw.booking.ms.batch.dump;
+package com.vzw.booking.ms.batch.jobs;
 
 import com.vzw.booking.ms.batch.launchers.BatchExecutionSchemaDumpLauncher;
 import javax.sql.DataSource;
@@ -28,9 +28,6 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
 //    private VlfLogger logger;
     private static final Logger LOGGER = LoggerFactory.getLogger(BatchExecutionSchemaDumpLauncher.class);
 
-    @Autowired
-    private DataSource metaDataSource;
-    
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -39,7 +36,7 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
     }
 
     /**
-     * this has to go to another job as clearing tables before job finish causes error: EmptyResultDataAccessException
+     * this has to leave current execution data otherwise following error occur: EmptyResultDataAccessException
      * @param jobExecution 
      */
     @Override

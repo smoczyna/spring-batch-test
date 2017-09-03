@@ -1,4 +1,4 @@
-package com.vzw.booking.ms.batch.csv.out;
+package com.vzw.booking.ms.batch.writers;
 
 import org.springframework.batch.item.file.FlatFileHeaderCallback;
 
