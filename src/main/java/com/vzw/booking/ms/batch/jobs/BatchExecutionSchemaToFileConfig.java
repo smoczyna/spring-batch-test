@@ -12,8 +12,6 @@ import com.vzw.booking.ms.batch.dump.domain.BatchJobInstance;
 import com.vzw.booking.ms.batch.dump.domain.BatchStepExecution;
 import com.vzw.booking.ms.batch.dump.domain.BatchStepExecutionContext;
 import javax.sql.DataSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -43,8 +41,6 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 public class BatchExecutionSchemaToFileConfig {
     
     private static final String PROPERTY_CSV_EXPORT_FILE_PATH = "database.to.csv.job.export.file.path";
-    
-    private static final Logger LOGGER = LoggerFactory.getLogger(BatchExecutionSchemaToFileConfig.class);
     
     @Autowired
     private DataSource metaDataSource;
@@ -347,6 +343,18 @@ public class BatchExecutionSchemaToFileConfig {
                 .build();
     }
     
+    /**
+     * Job 
+     * @param jobBuilderFactory
+     * @param listener
+     * @param jobInstanceToCsvFileStep
+     * @param jobExecutionToCsvFileStep
+     * @param jobExecutionParamsToCsvFileStep
+     * @param jobExecutionContextToCsvFileStep
+     * @param stepExecutionToCsvFileStep
+     * @param stepExecutionContextToCsvFileStep
+     * @return 
+     */
     @Bean
     Job batchSchemaDumpToCsvFileJob(JobBuilderFactory jobBuilderFactory, 
                                     BatchExecutionSchemaToFileConfigListener listener,
