@@ -14,8 +14,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.vzw.booking.ms.batch.domain.CustomerDTO;
+import com.vzw.booking.ms.batch.domain.SummarySubLedgerDTO;
 import com.vzw.booking.ms.batch.readers.CustomerDbReader;
-import com.vzw.booking.ms.batch.writers.CustomerCsvFileWriter;
+import com.vzw.booking.ms.batch.writers.SubledgerCsvFileWriter;
 import org.springframework.core.env.Environment;
 
 /**
@@ -25,40 +26,40 @@ import org.springframework.core.env.Environment;
 public class DatabaseToCsvFileJobConfig {
 
     @Bean
-    ItemReader<CustomerDTO> databaseCsvItemReader(Environment environment) throws Exception {
+    ItemReader<CustomerDTO> customerDbItemReader(Environment environment) throws Exception {
         return new CustomerDbReader(environment, DatabasesConfig.getSampleDerbyDS());
     }
 
     @Bean
-    ItemProcessor<CustomerDTO, CustomerDTO> databaseCsvItemProcessor() {
+    ItemProcessor<CustomerDTO, SummarySubLedgerDTO> customerItemProcessor() {
         return new CustomerProcessor();
     }
 
     @Bean
-    ItemWriter<CustomerDTO> databaseCsvItemWriter(Environment environment) {
-        return new CustomerCsvFileWriter(environment);
+    ItemWriter<SummarySubLedgerDTO> subledgerItemWriter(Environment environment) {
+        return new SubledgerCsvFileWriter(environment);
     }
 
     @Bean
-    Step databaseToCsvFileStep(ItemReader<CustomerDTO> databaseCsvItemReader,
-                               ItemProcessor<CustomerDTO, CustomerDTO> databaseCsvItemProcessor,
-                               ItemWriter<CustomerDTO> databaseCsvItemWriter,
-                               StepBuilderFactory stepBuilderFactory) {
+    Step customerToSubledgerStep(ItemReader<CustomerDTO> customerDbItemReader,
+                                 ItemProcessor<CustomerDTO, SummarySubLedgerDTO> customerItemProcessor,
+                                 ItemWriter<SummarySubLedgerDTO> subledgerItemWriter,
+                                 StepBuilderFactory stepBuilderFactory) {
         
         return stepBuilderFactory.get("databaseToCsvFileStep")
-                .<CustomerDTO, CustomerDTO>chunk(1)
-                .reader(databaseCsvItemReader)
-                .processor(databaseCsvItemProcessor)
-                .writer(databaseCsvItemWriter)                
+                .<CustomerDTO, SummarySubLedgerDTO>chunk(1)
+                .reader(customerDbItemReader)
+                .processor(customerItemProcessor)
+                .writer(subledgerItemWriter)                
                 .build();
     }
 
     @Bean
     Job databaseToCsvFileJob(JobBuilderFactory jobBuilderFactory,
-                             @Qualifier("databaseToCsvFileStep") Step csvStudentStep) {
+                             @Qualifier("customerToSubledgerStep") Step customerToSubledgerStep) {
         return jobBuilderFactory.get("databaseToCsvFileJob")
                 .incrementer(new RunIdIncrementer())
-                .flow(csvStudentStep)
+                .flow(customerToSubledgerStep)
                 .end()
                 .build();
     }

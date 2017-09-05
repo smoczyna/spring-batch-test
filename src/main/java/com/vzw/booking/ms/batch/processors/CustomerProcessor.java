@@ -6,27 +6,22 @@
 package com.vzw.booking.ms.batch.processors;
 
 import com.vzw.booking.ms.batch.domain.CustomerDTO;
+import com.vzw.booking.ms.batch.domain.SummarySubLedgerDTO;
 import org.springframework.batch.item.ItemProcessor;
 
 /**
  *
  * @author smorcja
  */
-public class CustomerProcessor implements ItemProcessor<CustomerDTO, CustomerDTO> {
+public class CustomerProcessor implements ItemProcessor<CustomerDTO, SummarySubLedgerDTO> {
 
     @Override
-    public CustomerDTO process(CustomerDTO item) throws Exception {
-        //this.prettyPrint(item);
-        return item;
+    public SummarySubLedgerDTO process(CustomerDTO item) throws Exception {
+        SummarySubLedgerDTO ssld = new SummarySubLedgerDTO();
+        ssld.setFinancialEventNo(1);
+        ssld.setFinancialCategory(1);
+        ssld.setFinancialMarketId("dublin");
+        
+        return ssld;
     }
-    
-//    private void prettyPrint(CustomerDTO item) {
-//        LOGGER.info("*** Processing customer record: ***");
-//        LOGGER.info("       customer ID: " + item.getCustomerId());
-//        LOGGER.info("       customer name: " + item.getName());
-//        LOGGER.info("       customer email: " + item.getEmail());
-//        LOGGER.info("       customer zip code: " + item.getZip());
-//        LOGGER.info("*** end of customer ***");
-//    }
-    
 }
