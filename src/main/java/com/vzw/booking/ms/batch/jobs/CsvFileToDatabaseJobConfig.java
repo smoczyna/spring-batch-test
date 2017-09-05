@@ -10,7 +10,7 @@ import org.springframework.batch.item.ItemWriter;
 import com.vzw.booking.ms.batch.processors.StudentProcessor;
 import com.vzw.booking.ms.batch.domain.CustomerDTO;
 import com.vzw.booking.ms.batch.domain.StudentDTO;
-import com.vzw.booking.ms.batch.readers.StrudentCsvFileReader;
+import com.vzw.booking.ms.batch.readers.CsvFileGenericReader;
 import com.vzw.booking.ms.batch.readers.CsvFileReaderListener;
 import com.vzw.booking.ms.batch.writers.CustomerDbWriter;
 import java.sql.SQLException;
@@ -32,7 +32,8 @@ public class CsvFileToDatabaseJobConfig {
     
     @Bean
     ItemReader<StudentDTO> csvFileItemReader(Environment environment) {        
-        return new StrudentCsvFileReader(environment);
+        String[] fieldNames = new String[]{"studentName", "emailAddress", "purchasedPackage"};
+        return new CsvFileGenericReader(StudentDTO.class, environment, "students.csv", fieldNames, ";");
     }
 
     @Bean
