@@ -5,25 +5,33 @@
  */
 package com.vzw.booking.ms.batch.writers;
 
+import org.springframework.batch.item.ItemWriter;
+import com.datastax.driver.core.BoundStatement;
+import com.datastax.driver.core.PreparedStatement;
 import com.datastax.driver.core.Session;
 import com.vzw.booking.ms.batch.config.DatabasesConfig;
 import com.vzw.booking.ms.batch.domain.UserDTO;
 import java.util.List;
-import org.springframework.batch.item.ItemWriter;
 
 /**
  *
  * @author smoczyna
  */
 public class CasandraDbWriter implements ItemWriter<UserDTO> {
+    
+    private final Session casandraSession;
+    private final PreparedStatement statement;
 
-    private String statement = "insert into users_test(usereid, name) values (%i, '%s')";
-    private Session casandraSession = DatabasesConfig.getCasandraSession("j6_dev");
-
+    public CasandraDbWriter() {
+        this.casandraSession  = DatabasesConfig.getCasandraSession("j6_dev");
+        statement = casandraSession.prepare("insert into users_test(userid, name) values (?, ?)");
+    }
+    
     @Override
-    public void write(List<? extends UserDTO> list) throws Exception {
+    public void write(List<? extends UserDTO> list) throws Exception {        
         list.forEach((user) -> {
-            casandraSession.execute(String.format(statement, user.getUserid(), user.getName()));
+            BoundStatement boundSt = statement.bind(user.getUserid(), user.getName());
+            casandraSession.execute(boundSt);
         });
     }
 

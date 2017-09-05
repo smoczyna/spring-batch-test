@@ -1,20 +1,17 @@
 package com.vzw.booking.ms.batch.jobs;
 
-import com.vzw.booking.ms.batch.config.DatabasesConfig;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
-import com.vzw.booking.ms.batch.processors.StudentProcessor;
-import com.vzw.booking.ms.batch.domain.CustomerDTO;
 import com.vzw.booking.ms.batch.domain.StudentDTO;
+import com.vzw.booking.ms.batch.domain.UserDTO;
+import com.vzw.booking.ms.batch.processors.StudentToUserProcessor;
 import com.vzw.booking.ms.batch.readers.CsvFileGenericReader;
 import com.vzw.booking.ms.batch.readers.CsvFileReaderListener;
-import com.vzw.booking.ms.batch.writers.CustomerDbWriter;
-import java.sql.SQLException;
-import javax.sql.DataSource;
+import com.vzw.booking.ms.batch.writers.CasandraDbWriter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,40 +28,46 @@ import org.springframework.batch.core.Step;
 public class CsvFileToDatabaseJobConfig {
     
     @Bean
-    ItemReader<StudentDTO> csvFileItemReader(Environment environment) {        
+    ItemReader<StudentDTO> studentFileItemReader(Environment environment) {        
         String[] fieldNames = new String[]{"studentName", "emailAddress", "purchasedPackage"};
-        return new CsvFileGenericReader(StudentDTO.class, environment, "students.csv", fieldNames, ";");
+        return new CsvFileGenericReader(StudentDTO.class, environment, "students.csv", fieldNames, ";", 1);
     }
 
     @Bean
-    ItemProcessor<StudentDTO, CustomerDTO> csvFileItemProcessor() {
-        return new StudentProcessor();
-    }
-
-    @Bean
-    ItemWriter<CustomerDTO> csvFileDatabaseItemWriter() throws SQLException {
-        DataSource dataSource = DatabasesConfig.getSampleDerbyDS();
-        CustomerDbWriter databaseItemWriter = new CustomerDbWriter(dataSource);
-        return databaseItemWriter;
-    }
-
-    @Bean
-    CsvFileReaderListener csvFileItemReaderListener() {
+    CsvFileReaderListener studentFileItemReaderListener() {
         return new CsvFileReaderListener();
     };
     
     @Bean
-    Step csvFileToDatabaseStep(CsvFileReaderListener csvFileItemReaderListener,
-                               ItemReader<StudentDTO> csvFileItemReader,
-                               ItemProcessor<StudentDTO, CustomerDTO> csvFileItemProcessor,
-                               ItemWriter<CustomerDTO> csvFileDatabaseItemWriter,
+    ItemProcessor<StudentDTO, UserDTO> studentItemProcessor() {
+        return new StudentToUserProcessor();
+    }
+
+//    @Bean
+//    ItemWriter<CustomerDTO> csvFileDatabaseItemWriter() throws SQLException {
+//        DataSource dataSource = DatabasesConfig.getSampleDerbyDS();
+//        CustomerDbWriter databaseItemWriter = new CustomerDbWriter(dataSource);
+//        return databaseItemWriter;
+//    }
+
+    @Bean
+    ItemWriter<UserDTO> studentToUSerWriter() {
+        CasandraDbWriter writer = new CasandraDbWriter();
+        return writer;
+    }
+    
+    @Bean
+    Step csvFileToDatabaseStep(CsvFileReaderListener studentFileItemReaderListener,
+                               ItemReader<StudentDTO> studentFileItemReader,
+                               ItemProcessor<StudentDTO, UserDTO> studentItemProcessor,
+                               ItemWriter<UserDTO> studentToUSerWriter,
                                StepBuilderFactory stepBuilderFactory) {
         return stepBuilderFactory.get("csvFileToDatabaseStep")
-                .<StudentDTO, CustomerDTO>chunk(1)
-                .reader(csvFileItemReader)       
-                .processor(csvFileItemProcessor)
-                .writer(csvFileDatabaseItemWriter)
-                .listener(csvFileItemReaderListener)
+                .<StudentDTO, UserDTO>chunk(1)
+                .reader(studentFileItemReader)
+                .processor(studentItemProcessor)
+                .writer(studentToUSerWriter)
+                .listener(studentFileItemReaderListener)
                 .build();
     }
 
