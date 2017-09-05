@@ -7,7 +7,9 @@ package com.vzw.booking.ms.batch.writers;
 
 import com.vzw.booking.ms.batch.domain.SummarySubLedgerDTO;
 import org.springframework.batch.item.file.FlatFileItemWriter;
+import org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor;
 import org.springframework.batch.item.file.transform.DelimitedLineAggregator;
+import org.springframework.batch.item.file.transform.FieldExtractor;
 import org.springframework.batch.item.file.transform.LineAggregator;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.FileSystemResource;
@@ -30,7 +32,36 @@ public class SubledgerCsvFileWriter extends FlatFileItemWriter<SummarySubLedgerD
     private LineAggregator<SummarySubLedgerDTO> createCustomerLineAggregator() {
         DelimitedLineAggregator<SummarySubLedgerDTO> lineAggregator = new DelimitedLineAggregator<>();
         lineAggregator.setDelimiter(";");
+        FieldExtractor<SummarySubLedgerDTO> fieldExtractor = createSubledgerFieldExtractor();
+        lineAggregator.setFieldExtractor(fieldExtractor);
         return lineAggregator;
     }
     
+    private FieldExtractor<SummarySubLedgerDTO> createSubledgerFieldExtractor() {
+        BeanWrapperFieldExtractor<SummarySubLedgerDTO> extractor = new BeanWrapperFieldExtractor<>();
+        extractor.setNames(new String[] {"financialEventNo",
+                                         "financialCategory",
+                                         "financialMarketId",
+                                         "jemsApplId",
+                                         "reportStartDate",
+                                         "jemsApplTransactioDate",
+                                         "subledgerSequenceNo",
+                                         "subledgerTotalDebitAmount",
+                                         "subledgerTotalCreditAmount",
+                                         "jurnalEventNo",
+                                         "jurnalEventExceptionCode",
+                                         "jurnalEventReadInd",
+                                         "jurnalLedgerTransactionNo",
+                                         "billCycleNo",
+                                         "billTypeCode",
+                                         "billCycleMonthYear",
+                                         "billPhaseType",
+                                         "billMonthInd",
+                                         "billAccrualIndicator",
+                                         "paymentSourceCode",
+                                         "discountOfferId",
+                                         "updateuserId",
+                                         "updateTimestamp"});
+        return extractor;
+    }
 }
