@@ -25,7 +25,7 @@ import org.springframework.batch.core.Step;
 
 
 /**
- * @author Petri Kainulainen
+ * @author smorcja
  */
 @Configuration
 public class CsvFileToDatabaseJobConfig {

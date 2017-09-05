@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author Petri Kainulainen
+ * @author smorcja
  */
 @Component
 public class DatabaseToCsvFileJobLauncher {

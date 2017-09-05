@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * Contains the information of a single student who has purchased
  * the course.
  *
- * @author Petri Kainulainen
+ * @author smorcja
  */
 @XmlRootElement(name="student")
 public class StudentDTO {

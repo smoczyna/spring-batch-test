@@ -9,7 +9,7 @@ import java.io.Writer;
  * This class demonstrates how we can write add a header to the first line of
  * the exported CSV file that contains the student list.
  *
- * @author Petri Kainulainen
+ * @author smorcja
  */
 class StringHeaderWriter implements FlatFileHeaderCallback {
 

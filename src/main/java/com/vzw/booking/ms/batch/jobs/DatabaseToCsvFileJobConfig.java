@@ -20,7 +20,7 @@ import com.vzw.booking.ms.batch.writers.SubledgerCsvFileWriter;
 import org.springframework.core.env.Environment;
 
 /**
- * @author Petri Kainulainen
+ * @author smorcja
  */
 @Configuration
 public class DatabaseToCsvFileJobConfig {
