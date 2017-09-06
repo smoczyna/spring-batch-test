@@ -50,7 +50,7 @@ public class DatabasesConfigTest {
 //        assertNotNull(result);
 //    }
     
-    @Test
+    //@Test
     public void testCasandraConnectivity() throws Exception {
         System.out.println("Check Casandra native connectivity using Datastax driver");
         //Session session = DatabasesConfig.getCasandraSession();
