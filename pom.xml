@@ -105,6 +105,51 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>sql-maven-plugin</artifactId>
+                <configuration>
+                    <driver>org.apache.derby.jdbc.ClientDriver</driver>
+                    <url>jdbc:derby://localhost:1527/spring-batch-internal</url>
+                    <username>batch</username>
+                    <password>batch</password>
+                    <!-- You can comment out username/password configurations and have 
+                        maven to look them up in your settings.xml using ${settingsKey} 
+                    <settingsKey>sensibleKey</settingsKey> -->
+                    <!-- All executions are ignored if -Dmaven.test.skip=true 
+                    <skip>${maven.test.skip}</skip> -->
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>create-schema</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <autocommit>true</autocommit>
+                            <srcFiles>
+                                <srcFile>src/main/resources/db/meta/schema-derby.sql</srcFile>
+                            </srcFiles>
+                        </configuration>
+                    </execution>                    
+<!--                    <execution>
+                        <id>drop-schema-before-test-if-any</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                             Need another database to drop the targeted one 
+                            <url>jdbc:derby://localhost:1527/spring-batch-internal</url>
+                            <autocommit>true</autocommit>
+                            <sqlCommand>DROP SCHEMA BATCH CASCADE</sqlCommand>
+                             Ignore error when database is not available 
+                            <onError>continue</onError>
+                        </configuration>
+                    </execution>-->
+                </executions>               
+            </plugin>
         </plugins>
     </build>
     <name>spring-batch-test</name>
