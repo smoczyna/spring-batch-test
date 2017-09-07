@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vzw.booking.ms.batch.config;
+package eu.squadd.batch.config;
 
 import com.datastax.driver.core.AuthProvider;
 import com.datastax.driver.core.Cluster;
@@ -13,6 +13,7 @@ import com.datastax.driver.core.PlainTextAuthProvider;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
+import com.vzw.booking.ms.batch.config.DatabasesConfig;
 import java.util.List;
 import javax.sql.DataSource;
 import org.junit.Test;
