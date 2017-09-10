@@ -10,7 +10,6 @@ import eu.squadd.batch.domain.StudentDTO;
 import eu.squadd.batch.domain.UserDTO;
 import com.vzw.booking.ms.batch.processors.StudentToUserProcessor;
 import eu.squadd.batch.readers.CsvFileGenericReader;
-import eu.squadd.batch.readers.CsvFileReaderListener;
 import eu.squadd.batch.writers.CasandraDbWriter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +17,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
 import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.Step;
 
 
@@ -28,27 +28,25 @@ import org.springframework.batch.core.Step;
 public class CsvFileToDatabaseJobConfig {
     
     @Bean
+    JobExecutionListener csvFileToDatabaseJObListener() {
+        return new CsvFileToDatabaseJobListener();
+    }
+    
+    @Bean
     ItemReader<StudentDTO> studentFileItemReader(Environment environment) {        
         String[] fieldNames = new String[]{"studentName", "emailAddress", "purchasedPackage"};
         return new CsvFileGenericReader(StudentDTO.class, environment, "students.csv", fieldNames, ";", 1);
     }
 
-    @Bean
-    CsvFileReaderListener studentFileItemReaderListener() {
-        return new CsvFileReaderListener();
-    };
+//    @Bean
+//    CsvFileReaderListener studentFileItemReaderListener() {
+//        return new CsvFileReaderListener();
+//    };
     
     @Bean
     ItemProcessor<StudentDTO, UserDTO> studentItemProcessor() {
         return new StudentToUserProcessor();
     }
-
-//    @Bean
-//    ItemWriter<CustomerDTO> csvFileDatabaseItemWriter() throws SQLException {
-//        DataSource dataSource = DatabasesConfig.getSampleDerbyDS();
-//        CustomerDbWriter databaseItemWriter = new CustomerDbWriter(dataSource);
-//        return databaseItemWriter;
-//    }
 
     @Bean
     ItemWriter<UserDTO> studentToUSerWriter() {
@@ -57,7 +55,7 @@ public class CsvFileToDatabaseJobConfig {
     }
     
     @Bean
-    Step csvFileToDatabaseStep(CsvFileReaderListener studentFileItemReaderListener,
+    Step csvFileToDatabaseStep(//CsvFileReaderListener studentFileItemReaderListener,
                                ItemReader<StudentDTO> studentFileItemReader,
                                ItemProcessor<StudentDTO, UserDTO> studentItemProcessor,
                                ItemWriter<UserDTO> studentToUSerWriter,
@@ -67,17 +65,19 @@ public class CsvFileToDatabaseJobConfig {
                 .reader(studentFileItemReader)
                 .processor(studentItemProcessor)
                 .writer(studentToUSerWriter)
-                .listener(studentFileItemReaderListener)
+                //.listener(studentFileItemReaderListener)
                 .build();
     }
 
     @Bean
-    Job csvFileToDatabaseJob(JobBuilderFactory jobBuilderFactory,
+    Job csvFileToDatabaseJob(JobExecutionListener csvFileToDatabaseJObListener,
+                             JobBuilderFactory jobBuilderFactory,
                              @Qualifier("csvFileToDatabaseStep") Step csvStudentStep) {
         return jobBuilderFactory.get("csvFileToDatabaseJob")
                 .incrementer(new RunIdIncrementer())
                 .flow(csvStudentStep)
                 .end()
+                .listener(csvFileToDatabaseJObListener)
                 .build();
     }
 }

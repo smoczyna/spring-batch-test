@@ -34,7 +34,7 @@ public class CsvFileGenericReader<T> extends FlatFileItemReader<T> {
         this.setLineMapper(createLineMapper(fieldNames, delimiter));        
     }
     
-    protected LineMapper<T> createLineMapper(String[] fieldNames, String delimiter) {
+    protected final LineMapper<T> createLineMapper(String[] fieldNames, String delimiter) {
         DefaultLineMapper<T> studentLineMapper = new DefaultLineMapper<>();
         if (fieldNames != null || fieldNames.length > 0) {
             LineTokenizer studentLineTokenizer = createLineTokenizer(fieldNames, delimiter);

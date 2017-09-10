@@ -54,16 +54,16 @@ public class DatabasesConfigTest {
     public void testCasandraConnectivity() throws Exception {
         System.out.println("Check Casandra native connectivity using Datastax driver");
         //Session session = DatabasesConfig.getCasandraSession();
-        AuthProvider authProvider = new PlainTextAuthProvider("j6_dev_user", "Ireland");
-        Cluster cluster = Cluster.builder().addContactPoint("170.127.114.154").withAuthProvider(authProvider).build();    
-        assertNotNull(cluster);
-        Metadata meta = cluster.getMetadata();
-        List<KeyspaceMetadata> spaces = meta.getKeyspaces();
-        assertNotNull(spaces);
-        System.out.println("Keyspaces found: "+spaces.size());
-        spaces.forEach((keyspace) -> {
-            System.out.println("    "+keyspace.getName());
-        });
+//        AuthProvider authProvider = new PlainTextAuthProvider("j6_dev_user", "Ireland");
+//        Cluster cluster = Cluster.builder().addContactPoint("170.127.114.154").withAuthProvider(authProvider).build();    
+//        assertNotNull(cluster);
+//        Metadata meta = cluster.getMetadata();
+//        List<KeyspaceMetadata> spaces = meta.getKeyspaces();
+//        assertNotNull(spaces);
+//        System.out.println("Keyspaces found: "+spaces.size());
+//        spaces.forEach((keyspace) -> {
+//            System.out.println("    "+keyspace.getName());
+//        });
 //        Session session = cluster.connect("system_schema");
 //        assertNotNull(session);
 //        

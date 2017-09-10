@@ -19,19 +19,19 @@ import java.util.List;
  */
 public class CasandraDbWriter implements ItemWriter<UserDTO> {
     
-    private final Session casandraSession;
-    private final PreparedStatement statement;
+//    private final Session casandraSession;
+//    private final PreparedStatement statement;
 
     public CasandraDbWriter() {
-        this.casandraSession  = DatabasesConfig.getCasandraSession("j6_dev");
-        statement = casandraSession.prepare("insert into users_test(userid, name) values (?, ?)");
+        //this.casandraSession  = DatabasesConfig.getCasandraSession("j6_dev");
+        //statement = casandraSession.prepare("insert into users_test(userid, name) values (?, ?)");
     }
     
     @Override
     public void write(List<? extends UserDTO> list) throws Exception {        
         list.forEach((user) -> {
-            BoundStatement boundSt = statement.bind(user.getUserid(), user.getName());
-            casandraSession.execute(boundSt);
+            //BoundStatement boundSt = statement.bind(user.getUserid(), user.getName());
+            //casandraSession.execute(boundSt);
         });
     }
 
