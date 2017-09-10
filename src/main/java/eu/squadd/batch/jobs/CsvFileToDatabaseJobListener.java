@@ -19,6 +19,7 @@ import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.BatchStatus;
+import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,30 +40,26 @@ public class CsvFileToDatabaseJobListener implements JobExecutionListener {
         LOGGER.info("Check if file exists and stop the job if not");
         File f = new File(PROPERTY_CSV_SOURCE_FILE_PATH.concat("students.csv"));
         if (!f.exists() || f.isDirectory()) {
-            try {
-                LOGGER.error("File not found, aborting job ...");
-                throw new FileNotFoundException();
-            } catch (FileNotFoundException ex) {
-                LOGGER.error(ex.getLocalizedMessage(), Level.SEVERE, null, ex);
-            }
+            LOGGER.error("File not found, aborting job ...");
+            je.addFailureException(new FileNotFoundException());
+            je.setExitStatus(ExitStatus.STOPPED);
         }
     }
 
     @Override
     public void afterJob(JobExecution je) {
         if (je.getStatus() == BatchStatus.COMPLETED) {
-            this.movFileToArchive();
+            this.moveFileToArchive();
         } else {
-            System.out.println("After job fisnishes with failure listener can dislay all exceptions:");
+            System.out.println("All encountered exceptions:");
             List<Throwable> exceptionList = je.getAllFailureExceptions();
             for (Throwable th : exceptionList) {
                 System.err.println("exception :" + th.getLocalizedMessage());
             }
         }
-
     }
 
-    private void movFileToArchive() {
+    private void moveFileToArchive() {
         InputStream inStream = null;
         OutputStream outStream = null;
         try {
@@ -77,10 +74,10 @@ public class CsvFileToDatabaseJobListener implements JobExecutionListener {
             while ((length = inStream.read(buffer)) > 0) {
                 outStream.write(buffer, 0, length);
             }
-            inStream.close();
-            outStream.close();
+//            inStream.close();
+//            outStream.close();
             srcFile.delete();
-            LOGGER.info("File moved successful!");
+            LOGGER.info("File archived successfully!");
         } catch (IOException e) {
             LOGGER.error(e.getMessage());
         }
