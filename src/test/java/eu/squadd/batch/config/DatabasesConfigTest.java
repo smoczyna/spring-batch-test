@@ -13,7 +13,6 @@ import com.datastax.driver.core.PlainTextAuthProvider;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
-import com.vzw.booking.ms.batch.config.DatabasesConfig;
 import java.util.List;
 import javax.sql.DataSource;
 import org.junit.Test;

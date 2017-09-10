@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vzw.booking.ms.batch.readers;
+package eu.squadd.batch.readers;
 
-import com.vzw.booking.ms.batch.domain.AggregateItem;
+import eu.squadd.batch.domain.AggregateItem;
 import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;

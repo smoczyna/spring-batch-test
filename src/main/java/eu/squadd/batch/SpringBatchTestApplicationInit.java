@@ -1,9 +1,9 @@
-package com.vzw.booking.ms.batch;
+package eu.squadd.batch;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
-import com.vzw.booking.ms.batch.util.CustomerIdGenerator;
+import eu.squadd.batch.util.CustomerIdGenerator;
 import javax.sql.DataSource;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;

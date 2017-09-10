@@ -1,4 +1,4 @@
-package com.vzw.booking.ms.batch.launchers;
+package eu.squadd.batch.launchers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

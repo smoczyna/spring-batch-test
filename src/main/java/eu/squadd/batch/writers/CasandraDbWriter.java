@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vzw.booking.ms.batch.writers;
+package eu.squadd.batch.writers;
 
 import org.springframework.batch.item.ItemWriter;
 import com.datastax.driver.core.BoundStatement;
 import com.datastax.driver.core.PreparedStatement;
 import com.datastax.driver.core.Session;
-import com.vzw.booking.ms.batch.config.DatabasesConfig;
-import com.vzw.booking.ms.batch.domain.UserDTO;
+import eu.squadd.batch.config.DatabasesConfig;
+import eu.squadd.batch.domain.UserDTO;
 import java.util.List;
 
 /**

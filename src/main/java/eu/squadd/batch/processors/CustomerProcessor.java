@@ -5,8 +5,8 @@
  */
 package com.vzw.booking.ms.batch.processors;
 
-import com.vzw.booking.ms.batch.domain.CustomerDTO;
-import com.vzw.booking.ms.batch.domain.SummarySubLedgerDTO;
+import eu.squadd.batch.domain.CustomerDTO;
+import eu.squadd.batch.domain.SummarySubLedgerDTO;
 import org.springframework.batch.item.ItemProcessor;
 
 /**

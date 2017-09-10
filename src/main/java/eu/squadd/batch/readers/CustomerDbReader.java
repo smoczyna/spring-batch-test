@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vzw.booking.ms.batch.readers;
+package eu.squadd.batch.readers;
 
-import com.vzw.booking.ms.batch.domain.CustomerDTO;
+import eu.squadd.batch.domain.CustomerDTO;
 import javax.sql.DataSource;
 import org.springframework.batch.item.database.JdbcCursorItemReader;
 import org.springframework.core.env.Environment;

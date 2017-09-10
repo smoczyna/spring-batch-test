@@ -5,8 +5,8 @@
  */
 package eu.squadd.batch.jobs;
 
-import com.vzw.booking.ms.batch.SpringBatchTestApplication;
-import com.vzw.booking.ms.batch.config.DatabasesConfig;
+import eu.squadd.batch.SpringBatchTestApplication;
+import eu.squadd.batch.config.DatabasesConfig;
 import org.springframework.batch.core.JobExecution;
 
 import org.junit.Assert;

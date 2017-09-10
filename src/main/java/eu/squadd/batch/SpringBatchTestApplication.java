@@ -1,4 +1,4 @@
-package com.vzw.booking.ms.batch;
+package eu.squadd.batch;
 
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.boot.SpringApplication;

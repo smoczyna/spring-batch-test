@@ -3,8 +3,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.vzw.booking.ms</groupId>
-    <artifactId>com-vzw-booking-ms-batchtest</artifactId>
+    <groupId>eu.squadd.spring-batch-test</groupId>
+    <artifactId>eu.squadd.springbatchtest</artifactId>
     <version>1.0.0</version>
 
     <parent>
@@ -96,7 +96,13 @@
             <artifactId>commons-codec</artifactId>
             <version>1.10</version>
             <type>jar</type>
-        </dependency>        
+        </dependency>
+<!--        <dependency>
+            <groupId>org.springframework.batch</groupId>
+            <artifactId>spring-batch-infrastructure</artifactId>
+            <version>3.0.8.RELEASE</version>
+            <type>jar</type>
+        </dependency>-->
     </dependencies>
 
     <build>
@@ -108,6 +114,14 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>sql-maven-plugin</artifactId>
+                <version>1.5</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.derby</groupId>
+                        <artifactId>derbyclient</artifactId>
+                        <version>10.13.1.1</version>
+                    </dependency>
+                </dependencies>
                 <configuration>
                     <driver>org.apache.derby.jdbc.ClientDriver</driver>
                     <url>jdbc:derby://localhost:1527/spring-batch-internal</url>
@@ -129,11 +143,11 @@
                         <configuration>
                             <autocommit>true</autocommit>
                             <srcFiles>
-                                <srcFile>src/main/resources/db/meta/schema-derby.sql</srcFile>
+<!--                                <srcFile>src/main/resources/db/meta/schema-derby.sql</srcFile>-->
                             </srcFiles>
                         </configuration>
                     </execution>                    
-<!--                    <execution>
+                    <!-- <execution>
                         <id>drop-schema-before-test-if-any</id>
                         <phase>process-test-resources</phase>
                         <goals>

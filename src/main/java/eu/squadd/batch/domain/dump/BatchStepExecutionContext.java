@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vzw.booking.ms.batch.dump.domain;
+package eu.squadd.batch.domain.dump;
 
 import java.io.Serializable;
 
@@ -11,30 +11,30 @@ import java.io.Serializable;
  *
  * @author smorcja
  */
-public class BatchJobExecutionContext implements Serializable {
+public class BatchStepExecutionContext implements Serializable {
 
-    private Long jobExecutionId;
+    private Long stepExecutionId;
     private String shortContext;
     private String serializedContext;
 
-    public BatchJobExecutionContext() {
+    public BatchStepExecutionContext() {
     }
 
-    public BatchJobExecutionContext(Long jobExecutionId) {
-        this.jobExecutionId = jobExecutionId;
+    public BatchStepExecutionContext(Long stepExecutionId) {
+        this.stepExecutionId = stepExecutionId;
     }
 
-    public BatchJobExecutionContext(Long jobExecutionId, String shortContext) {
-        this.jobExecutionId = jobExecutionId;
+    public BatchStepExecutionContext(Long stepExecutionId, String shortContext) {
+        this.stepExecutionId = stepExecutionId;
         this.shortContext = shortContext;
     }
 
-    public Long getJobExecutionId() {
-        return jobExecutionId;
+    public Long getStepExecutionId() {
+        return stepExecutionId;
     }
 
-    public void setJobExecutionId(Long jobExecutionId) {
-        this.jobExecutionId = jobExecutionId;
+    public void setStepExecutionId(Long stepExecutionId) {
+        this.stepExecutionId = stepExecutionId;
     }
 
     public String getShortContext() {
@@ -51,5 +51,5 @@ public class BatchJobExecutionContext implements Serializable {
 
     public void setSerializedContext(String serializedContext) {
         this.serializedContext = serializedContext;
-    }
+    }  
 }

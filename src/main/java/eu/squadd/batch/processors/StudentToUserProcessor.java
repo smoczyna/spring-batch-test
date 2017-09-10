@@ -5,9 +5,9 @@
  */
 package com.vzw.booking.ms.batch.processors;
 
-import com.vzw.booking.ms.batch.domain.StudentDTO;
-import com.vzw.booking.ms.batch.domain.UserDTO;
-import com.vzw.booking.ms.batch.util.CustomerIdGenerator;
+import eu.squadd.batch.domain.StudentDTO;
+import eu.squadd.batch.domain.UserDTO;
+import eu.squadd.batch.util.CustomerIdGenerator;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 

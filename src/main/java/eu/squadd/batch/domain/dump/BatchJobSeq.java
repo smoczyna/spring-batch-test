@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vzw.booking.ms.batch.dump.domain;
+package eu.squadd.batch.domain.dump;
 
 import java.io.Serializable;
 
@@ -11,15 +11,15 @@ import java.io.Serializable;
  *
  * @author smorcja
  */
-public class BatchStepExecutionSeq implements Serializable {
+public class BatchJobSeq implements Serializable {
 
     private Long id;
     private String dummy;
 
-    public BatchStepExecutionSeq() {
+    public BatchJobSeq() {
     }
 
-    public BatchStepExecutionSeq(Long id) {
+    public BatchJobSeq(Long id) {
         this.id = id;
     }
 
@@ -37,5 +37,5 @@ public class BatchStepExecutionSeq implements Serializable {
 
     public void setDummy(String dummy) {
         this.dummy = dummy;
-    }   
+    }
 }

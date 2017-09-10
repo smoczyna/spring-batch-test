@@ -1,6 +1,6 @@
-package com.vzw.booking.ms.batch.jobs;
+package eu.squadd.batch.jobs;
 
-import com.vzw.booking.ms.batch.config.DatabasesConfig;
+import eu.squadd.batch.config.DatabasesConfig;
 import com.vzw.booking.ms.batch.processors.CustomerProcessor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -13,10 +13,10 @@ import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.vzw.booking.ms.batch.domain.CustomerDTO;
-import com.vzw.booking.ms.batch.domain.SummarySubLedgerDTO;
-import com.vzw.booking.ms.batch.readers.CustomerDbReader;
-import com.vzw.booking.ms.batch.writers.SubledgerCsvFileWriter;
+import eu.squadd.batch.domain.CustomerDTO;
+import eu.squadd.batch.domain.SummarySubLedgerDTO;
+import eu.squadd.batch.readers.CustomerDbReader;
+import eu.squadd.batch.writers.SubledgerCsvFileWriter;
 import org.springframework.core.env.Environment;
 
 /**

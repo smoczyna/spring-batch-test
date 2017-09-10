@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vzw.booking.ms.batch.prototypes;
+package eu.squadd.batch.prototypes;
 
-import com.vzw.booking.ms.batch.domain.CustomerDTO;
+import eu.squadd.batch.domain.CustomerDTO;
 import java.util.List;
 import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;

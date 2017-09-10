@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vzw.booking.ms.batch.prototypes;
+package eu.squadd.batch.prototypes;
 
 import java.util.List;
 import org.slf4j.Logger;

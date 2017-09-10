@@ -1,4 +1,4 @@
-package com.vzw.booking.ms.batch.domain;
+package eu.squadd.batch.domain;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.lang3.builder.ToStringBuilder;

@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vzw.booking.ms.batch.jobs;
+package eu.squadd.batch.jobs;
 
-import com.vzw.booking.ms.batch.dump.domain.BatchJobExecution;
-import com.vzw.booking.ms.batch.dump.domain.BatchJobExecutionContext;
-import com.vzw.booking.ms.batch.dump.domain.BatchJobExecutionParams;
-import com.vzw.booking.ms.batch.dump.domain.BatchJobInstance;
-import com.vzw.booking.ms.batch.dump.domain.BatchStepExecution;
-import com.vzw.booking.ms.batch.dump.domain.BatchStepExecutionContext;
+import eu.squadd.batch.domain.dump.BatchJobExecution;
+import eu.squadd.batch.domain.dump.BatchJobExecutionContext;
+import eu.squadd.batch.domain.dump.BatchJobExecutionParams;
+import eu.squadd.batch.domain.dump.BatchJobInstance;
+import eu.squadd.batch.domain.dump.BatchStepExecution;
+import eu.squadd.batch.domain.dump.BatchStepExecutionContext;
 import javax.sql.DataSource;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;

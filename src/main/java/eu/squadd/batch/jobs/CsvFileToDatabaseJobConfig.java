@@ -1,4 +1,4 @@
-package com.vzw.booking.ms.batch.jobs;
+package eu.squadd.batch.jobs;
 
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
@@ -6,12 +6,12 @@ import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
-import com.vzw.booking.ms.batch.domain.StudentDTO;
-import com.vzw.booking.ms.batch.domain.UserDTO;
+import eu.squadd.batch.domain.StudentDTO;
+import eu.squadd.batch.domain.UserDTO;
 import com.vzw.booking.ms.batch.processors.StudentToUserProcessor;
-import com.vzw.booking.ms.batch.readers.CsvFileGenericReader;
-import com.vzw.booking.ms.batch.readers.CsvFileReaderListener;
-import com.vzw.booking.ms.batch.writers.CasandraDbWriter;
+import eu.squadd.batch.readers.CsvFileGenericReader;
+import eu.squadd.batch.readers.CsvFileReaderListener;
+import eu.squadd.batch.writers.CasandraDbWriter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

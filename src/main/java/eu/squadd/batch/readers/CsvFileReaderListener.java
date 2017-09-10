@@ -3,11 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vzw.booking.ms.batch.readers;
+package eu.squadd.batch.readers;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.logging.Level;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.ExitStatus;
@@ -28,22 +31,16 @@ public class CsvFileReaderListener implements StepExecutionListener {
     
     @Override
     public void beforeStep(StepExecution se) {
-        LOGGER.info("Check if file exists and stop the job if not, step name: "+se.getStepName());
-        File f = new File(PROPERTY_CSV_SOURCE_FILE_PATH.concat("students.csv"));
-        if(!f.exists() || f.isDirectory()) {
-            try {
-                LOGGER.error("File not found, aborting job ...");
-                throw new FileNotFoundException();
-            } catch (FileNotFoundException ex) {
-               LOGGER.error(ex.getLocalizedMessage(), Level.SEVERE, null, ex);
-            }
-        }
+        // file check moved to job listener
     }
 
     @Override
     public ExitStatus afterStep(StepExecution se) {
-        LOGGER.info("Step completed, read count: "+se.getReadCount() + ", write count: "+se.getWriteCount());
+        LOGGER.info("Step completed, read count: "+se.getReadCount() + ", write count: "+se.getWriteCount() + "Moving file to archive..");
+        
         return se.getExitStatus();
     }
 
+    
+    
 }

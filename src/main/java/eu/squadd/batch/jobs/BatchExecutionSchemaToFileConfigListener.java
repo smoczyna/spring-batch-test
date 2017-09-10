@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vzw.booking.ms.batch.jobs;
+package eu.squadd.batch.jobs;
 
-import com.vzw.booking.ms.batch.launchers.BatchExecutionSchemaDumpLauncher;
+import eu.squadd.batch.launchers.BatchExecutionSchemaDumpLauncher;
 import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
