@@ -3,10 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package eu.squadd.batch.readers;
+package eu.squadd.batch.jobs;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.StepExecutionListener;
@@ -15,19 +13,16 @@ import org.springframework.batch.core.StepExecutionListener;
  *
  * @author smorcja
  */
-public class CsvFileReaderListener implements StepExecutionListener {
+public class BilledBookingFileStepExecutionListener implements StepExecutionListener {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CsvFileReaderListener.class);
-    
     @Override
     public void beforeStep(StepExecution se) {
-        LOGGER.info("Summary Sub Ledger Processor - creating sub ledger records from source file");
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public ExitStatus afterStep(StepExecution se) {
-        LOGGER.info("Step completed, read count: "+se.getReadCount() + ", write count: "+se.getWriteCount());
-        return se.getExitStatus();
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
 }

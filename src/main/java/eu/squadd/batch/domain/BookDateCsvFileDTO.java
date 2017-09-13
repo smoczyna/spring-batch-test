@@ -6,61 +6,61 @@
 package eu.squadd.batch.domain;
 
 /**
- *
+ * Booking Dates source payload class. This class represents the input file of booking dates: bookdate.txt
  * @author smorcja
  */
 public class BookDateCsvFileDTO {
-    private String RPT_PER_START_DT;
-    private String RPT_PER_END_DT;
-    private String TRANS_PER_START_DT;
-    private String TRANS_PER_END_DT;
-    private String MONTH_END_CYCLE;
+    private String rptPerStartDate;
+    private String rptPerEndDate;
+    private String transPerStartDate;
+    private String transPerEndDate;
+    private String monthEndCycle;
 
     public BookDateCsvFileDTO() {        
     }
     
-    public BookDateCsvFileDTO(String RPT_PER_END_DT, String TRANS_PER_END_DT) {
-        this.RPT_PER_END_DT = RPT_PER_END_DT;
-        this.TRANS_PER_END_DT = TRANS_PER_END_DT;
-    }
-     
-    public String getRPT_PER_START_DT() {
-        return RPT_PER_START_DT;
+    public BookDateCsvFileDTO(String rptPerEndDate, String transPerEndDate) {
+        this.rptPerEndDate = rptPerEndDate;
+        this.transPerEndDate = transPerEndDate;
     }
 
-    public void setRPT_PER_START_DT(String RPT_PER_START_DT) {
-        this.RPT_PER_START_DT = RPT_PER_START_DT;
+    public String getRptPerStartDate() {
+        return rptPerStartDate;
     }
 
-    public String getRPT_PER_END_DT() {
-        return RPT_PER_END_DT;
+    public void setRptPerStartDate(String rptPerStartDate) {
+        this.rptPerStartDate = rptPerStartDate;
     }
 
-    public void setRPT_PER_END_DT(String RPT_PER_END_DT) {
-        this.RPT_PER_END_DT = RPT_PER_END_DT;
+    public String getRptPerEndDate() {
+        return rptPerEndDate;
     }
 
-    public String getTRANS_PER_START_DT() {
-        return TRANS_PER_START_DT;
+    public void setRptPerEndDate(String rptPerEndDate) {
+        this.rptPerEndDate = rptPerEndDate;
     }
 
-    public void setTRANS_PER_START_DT(String TRANS_PER_START_DT) {
-        this.TRANS_PER_START_DT = TRANS_PER_START_DT;
+    public String getTransPerStartDate() {
+        return transPerStartDate;
     }
 
-    public String getTRANS_PER_END_DT() {
-        return TRANS_PER_END_DT;
+    public void setTransPerStartDate(String transPerStartDate) {
+        this.transPerStartDate = transPerStartDate;
     }
 
-    public void setTRANS_PER_END_DT(String TRANS_PER_END_DT) {
-        this.TRANS_PER_END_DT = TRANS_PER_END_DT;
+    public String getTransPerEndDate() {
+        return transPerEndDate;
     }
 
-    public String getMONTH_END_CYCLE() {
-        return MONTH_END_CYCLE;
+    public void setTransPerEndDate(String transPerEndDate) {
+        this.transPerEndDate = transPerEndDate;
     }
 
-    public void setMONTH_END_CYCLE(String MONTH_END_CYCLE) {
-        this.MONTH_END_CYCLE = MONTH_END_CYCLE;
+    public String getMonthEndCycle() {
+        return monthEndCycle;
+    }
+
+    public void setMonthEndCycle(String monthEndCycle) {
+        this.monthEndCycle = monthEndCycle;
     }
 }

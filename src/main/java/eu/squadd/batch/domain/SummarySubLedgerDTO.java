@@ -5,18 +5,13 @@
  */
 package eu.squadd.batch.domain;
 
-import java.util.Objects;
-
 /**
- *
+ * Summary Sub Ledger internal payload class. 
+ * This class represents the output file of the application.
  * @author smorcja
  */
-public class SummarySubLedgerDTO {
-    /* main identifier fields */
-    private Integer financialEventNo;
-    private Integer financialCategory;
-    private String financialMarketId;
-    /* payload fields */ 
+public class SummarySubLedgerDTO extends SummarySubLedgerPK {
+    
     private String jemsApplId = "BL";
     private String reportStartDate;
     private String jemsApplTransactioDate;
@@ -38,39 +33,14 @@ public class SummarySubLedgerDTO {
     private String updateuserId;
     private String updateTimestamp;
 
-    public SummarySubLedgerDTO() {        
+    public SummarySubLedgerDTO(SummarySubLedgerPK pk) {
+        super(pk.getFinancialEventNo(), pk.getFinancialCategory(), pk.getFinancialMarketId());
     }
     
     public SummarySubLedgerDTO(Integer financialEventNo, Integer financialCategory, String financialMarketId) {
-        this.financialEventNo = financialEventNo;
-        this.financialCategory = financialCategory;
-        this.financialMarketId = financialMarketId;
+        super(financialEventNo, financialCategory, financialMarketId);
     }
     
-    public Integer getFinancialEventNo() {
-        return financialEventNo;
-    }
-
-    public void setFinancialEventNo(Integer financialEventNo) {
-        this.financialEventNo = financialEventNo;
-    }
-
-    public Integer getFinancialCategory() {
-        return financialCategory;
-    }
-
-    public void setFinancialCategory(Integer financialCategory) {
-        this.financialCategory = financialCategory;
-    }
-
-    public String getFinancialMarketId() {
-        return financialMarketId;
-    }
-
-    public void setFinancialMarketId(String financialMarketId) {
-        this.financialMarketId = financialMarketId;
-    }
-
     public String getJemsApplId() {
         return jemsApplId;
     }
@@ -229,38 +199,5 @@ public class SummarySubLedgerDTO {
 
     public void setUpdateTimestamp(String updateTimestamp) {
         this.updateTimestamp = updateTimestamp;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 47 * hash + Objects.hashCode(this.financialEventNo);
-        hash = 47 * hash + Objects.hashCode(this.financialCategory);
-        hash = 47 * hash + Objects.hashCode(this.financialMarketId);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final SummarySubLedgerDTO other = (SummarySubLedgerDTO) obj;
-        if (!Objects.equals(this.financialMarketId, other.financialMarketId)) {
-            return false;
-        }
-        if (!Objects.equals(this.financialEventNo, other.financialEventNo)) {
-            return false;
-        }
-        if (!Objects.equals(this.financialCategory, other.financialCategory)) {
-            return false;
-        }
-        return true;
     }
 }

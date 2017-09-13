@@ -24,7 +24,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
- *
+ * This is database dumping job, it moved all job execution data from internal Derby db to Cassandra db
+ * it has auto-execution disabled as it won't be run immediately after migration job, 
+ * it rather will be executed manually after checking migration correctness
  * @author smorcja
  */
 @Component

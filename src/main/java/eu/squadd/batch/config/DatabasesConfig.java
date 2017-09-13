@@ -5,8 +5,13 @@
  */
 package eu.squadd.batch.config;
 
+import com.datastax.driver.core.AuthProvider;
+import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.PlainTextAuthProvider;
+import com.datastax.driver.core.Session;
 import java.sql.SQLException;
 import javax.sql.DataSource;
+//import org.apache.cassandra.cql.jdbc.CassandraDataSource;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.derby.jdbc.ClientDataSource;
 import org.springframework.stereotype.Component;
@@ -39,7 +44,7 @@ public class DatabasesConfig {
     }
 
     /**
-     * apache basic data source for migration
+     * apache basic data source for migration - works fine
      *
      * @return
      * @throws SQLException
@@ -78,9 +83,9 @@ public class DatabasesConfig {
      * @param keyspace
      * @return 
      */
-//    public static Session getCasandraSession(String keyspace) {
-//        AuthProvider authProvider = new PlainTextAuthProvider("j6_dev_user", "Ireland");
-//        Cluster cluster = Cluster.builder().addContactPoint("170.127.114.154").withAuthProvider(authProvider).build();        
-//        return cluster.connect(keyspace);
-//    }
+    public static Session getCasandraSession(String keyspace) {
+        AuthProvider authProvider = new PlainTextAuthProvider("j6_dev_user", "Ireland");
+        Cluster cluster = Cluster.builder().addContactPoint("170.127.114.154").withAuthProvider(authProvider).build();        
+        return cluster.connect(keyspace);
+    }
 }
