@@ -5,12 +5,10 @@
  */
 package eu.squadd.batch.processors;
 
-import eu.squadd.batch.domain.BilledCsvFileDTO;
 import eu.squadd.batch.domain.BookDateCsvFileDTO;
 import eu.squadd.batch.domain.SummarySubLedgerDTO;
-import eu.squadd.batch.domain.SummarySubLedgerPK;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.HashSet;
+import java.util.Set;
 import org.springframework.stereotype.Component;
 
 /**
@@ -21,41 +19,38 @@ import org.springframework.stereotype.Component;
 @Component
 public class SubLedgerProcessor {
 
-    private Map<SummarySubLedgerPK, SummarySubLedgerDTO> aggregatedOutput;
+    private Set<SummarySubLedgerDTO> aggregatedOutput;
+    private BookDateCsvFileDTO dates;
 
     public SubLedgerProcessor() {
-        this.aggregatedOutput = new ConcurrentHashMap();
+        this.aggregatedOutput = new HashSet();
     }
 
-    public Map<SummarySubLedgerPK, SummarySubLedgerDTO> getAggregatedOutput() {
+    public Set< SummarySubLedgerDTO> getAggregatedOutput() {
         return aggregatedOutput;
     }
 
-    public void setAggregatedOutput(Map<SummarySubLedgerPK, SummarySubLedgerDTO> aggregatedOutput) {
+    public void setAggregatedOutput(Set<SummarySubLedgerDTO> aggregatedOutput) {
         this.aggregatedOutput = aggregatedOutput;
     }
 
-    public SummarySubLedgerDTO add(BilledCsvFileDTO fileRecord) {
-        // caclulate PK
-        // this is unknown yet so it is a fake here to prove whole stuff is working
-
-        SummarySubLedgerPK pk = new SummarySubLedgerPK(1, 1, fileRecord.getFinancialMarket());
-        SummarySubLedgerDTO value;
-        if (this.aggregatedOutput.containsKey(pk)) {
-            value = this.aggregatedOutput.get(pk);
-            // update fields accordingly
-        } else {
-            value = new SummarySubLedgerDTO(pk);
-            // assign the rest of values 
-            this.aggregatedOutput.put(pk, value);
-        }
-        return value;
+    public SummarySubLedgerDTO add() {
+        SummarySubLedgerDTO slRecord = new SummarySubLedgerDTO();
+        if (this.dates != null) {
+            slRecord.setReportStartDate(dates.getRptPerStartDate());
+            slRecord.setJemsApplTransactioDate(dates.getTransPerEndDate());
+        }        
+        if (this.aggregatedOutput.add(slRecord))
+            return slRecord;
+        else
+            return null;                    
     }
 
-    public void updateBookingDates(BookDateCsvFileDTO dates) {
-        for (SummarySubLedgerDTO item : this.aggregatedOutput.values()) {
-            item.setReportStartDate(dates.getRptPerStartDate());
-            item.setJemsApplTransactioDate(dates.getTransPerEndDate());
-        } 
+    public BookDateCsvFileDTO getDates() {
+        return dates;
+    }
+
+    public void setDates(BookDateCsvFileDTO dates) {
+        this.dates = dates;
     }
 }

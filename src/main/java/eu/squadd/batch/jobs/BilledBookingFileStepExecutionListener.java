@@ -23,6 +23,17 @@ public class BilledBookingFileStepExecutionListener implements StepExecutionList
     @Override
     public ExitStatus afterStep(StepExecution se) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//        List<SummarySubLedgerDTO> values = new ArrayList();
+//        values.addAll(tempSubLedgerOuput.getAggregatedOutput());
+//        try {
+//            writer.open(se.getExecutionContext());
+//            writer.write(values);
+//        } catch (Exception ex) {
+//            LOGGER.error(ex.getMessage());
+//        } finally {
+//            writer.close();
+//        }
+//        return ExitStatus.COMPLETED;
     }
     
 }

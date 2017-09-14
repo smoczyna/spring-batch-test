@@ -21,7 +21,7 @@ public class CsvFileReaderListener implements StepExecutionListener {
     
     @Override
     public void beforeStep(StepExecution se) {
-        LOGGER.info("Summary Sub Ledger Processor - creating sub ledger records from source file");
+        LOGGER.info("Csv File Reader Listeer - before step");
     }
 
     @Override

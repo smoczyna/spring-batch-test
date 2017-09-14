@@ -10,37 +10,40 @@ package eu.squadd.batch.domain;
  * This class represents the output file of the application.
  * @author smorcja
  */
-public class SummarySubLedgerDTO extends SummarySubLedgerPK {
+public class SummarySubLedgerDTO {
     
     private String jemsApplId = "BL";
     private String reportStartDate;
     private String jemsApplTransactioDate;
-    private Integer subledgerSequenceNo;
+    private Integer financialEventNumber;
+    private Integer financialCategory; 
+    private String financialmarketId;
+    private Integer subledgerSequenceNumber = 1;
     private Double subledgerTotalDebitAmount;
     private Double subledgerTotalCreditAmount;
-    private String jurnalEventNo;
+    private String jurnalEventNumber;
     private String jurnalEventExceptionCode;
-    private String jurnalEventReadInd;
-    private Integer jurnalLedgerTransactionNo;
-    private String billCycleNo = "00";
+    private String jurnalEventReadInd = "N";
+    private Integer generalLedgerTransactionNumber = 0;
+    private String billCycleNumber = "00";
     private String billTypeCode = "C ";
     private String billCycleMonthYear;
     private String billPhaseType = "J6";
-    private String billMonthInd;
+    private String billMonthInd = "Y";
     private String billAccrualIndicator = "N";
     private String paymentSourceCode;
-    private Integer discountOfferId;
-    private String updateuserId;
-    private String updateTimestamp;
+    private Integer discountOfferId = 0;
+    private String updateUserId = "WholesaleBookingProcessor";
+    private String updateTimestamp; // = new ZonedDateTime();
 
-    public SummarySubLedgerDTO(SummarySubLedgerPK pk) {
-        super(pk.getFinancialEventNo(), pk.getFinancialCategory(), pk.getFinancialMarketId());
-    }
+//    public SummarySubLedgerDTO(SummarySubLedgerPK pk) {
+//        super(pk.getFinancialEventNo(), pk.getFinancialCategory(), pk.getFinancialMarketId());
+//    }
     
-    public SummarySubLedgerDTO(Integer financialEventNo, Integer financialCategory, String financialMarketId) {
-        super(financialEventNo, financialCategory, financialMarketId);
-    }
-    
+//    public SummarySubLedgerDTO(Integer financialEventNo, Integer financialCategory, String financialMarketId) {
+//        super(financialEventNo, financialCategory, financialMarketId);
+//    }
+
     public String getJemsApplId() {
         return jemsApplId;
     }
@@ -65,12 +68,36 @@ public class SummarySubLedgerDTO extends SummarySubLedgerPK {
         this.jemsApplTransactioDate = jemsApplTransactioDate;
     }
 
-    public Integer getSubledgerSequenceNo() {
-        return subledgerSequenceNo;
+    public Integer getFinancialEventNumber() {
+        return financialEventNumber;
     }
 
-    public void setSubledgerSequenceNo(Integer subledgerSequenceNo) {
-        this.subledgerSequenceNo = subledgerSequenceNo;
+    public void setFinancialEventNumber(Integer financialEventNumber) {
+        this.financialEventNumber = financialEventNumber;
+    }
+
+    public Integer getFinancialCategory() {
+        return financialCategory;
+    }
+
+    public void setFinancialCategory(Integer financialCategory) {
+        this.financialCategory = financialCategory;
+    }
+
+    public String getFinancialmarketId() {
+        return financialmarketId;
+    }
+
+    public void setFinancialmarketId(String financialmarketId) {
+        this.financialmarketId = financialmarketId;
+    }
+
+    public Integer getSubledgerSequenceNumber() {
+        return subledgerSequenceNumber;
+    }
+
+    public void setSubledgerSequenceNumber(Integer subledgerSequenceNumber) {
+        this.subledgerSequenceNumber = subledgerSequenceNumber;
     }
 
     public Double getSubledgerTotalDebitAmount() {
@@ -89,12 +116,12 @@ public class SummarySubLedgerDTO extends SummarySubLedgerPK {
         this.subledgerTotalCreditAmount = subledgerTotalCreditAmount;
     }
 
-    public String getJurnalEventNo() {
-        return jurnalEventNo;
+    public String getJurnalEventNumber() {
+        return jurnalEventNumber;
     }
 
-    public void setJurnalEventNo(String jurnalEventNo) {
-        this.jurnalEventNo = jurnalEventNo;
+    public void setJurnalEventNumber(String jurnalEventNumber) {
+        this.jurnalEventNumber = jurnalEventNumber;
     }
 
     public String getJurnalEventExceptionCode() {
@@ -113,20 +140,20 @@ public class SummarySubLedgerDTO extends SummarySubLedgerPK {
         this.jurnalEventReadInd = jurnalEventReadInd;
     }
 
-    public Integer getJurnalLedgerTransactionNo() {
-        return jurnalLedgerTransactionNo;
+    public Integer getGeneralLedgerTransactionNumber() {
+        return generalLedgerTransactionNumber;
     }
 
-    public void setJurnalLedgerTransactionNo(Integer jurnalLedgerTransactionNo) {
-        this.jurnalLedgerTransactionNo = jurnalLedgerTransactionNo;
+    public void setGeneralLedgerTransactionNumber(Integer generalLedgerTransactionNumber) {
+        this.generalLedgerTransactionNumber = generalLedgerTransactionNumber;
     }
 
-    public String getBillCycleNo() {
-        return billCycleNo;
+    public String getBillCycleNumber() {
+        return billCycleNumber;
     }
 
-    public void setBillCycleNo(String billCycleNo) {
-        this.billCycleNo = billCycleNo;
+    public void setBillCycleNumber(String billCycleNumber) {
+        this.billCycleNumber = billCycleNumber;
     }
 
     public String getBillTypeCode() {
@@ -185,12 +212,12 @@ public class SummarySubLedgerDTO extends SummarySubLedgerPK {
         this.discountOfferId = discountOfferId;
     }
 
-    public String getUpdateuserId() {
-        return updateuserId;
+    public String getUpdateUserId() {
+        return updateUserId;
     }
 
-    public void setUpdateuserId(String updateuserId) {
-        this.updateuserId = updateuserId;
+    public void setUpdateUserId(String updateUserId) {
+        this.updateUserId = updateUserId;
     }
 
     public String getUpdateTimestamp() {
