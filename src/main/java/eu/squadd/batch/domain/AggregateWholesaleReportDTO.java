@@ -22,7 +22,7 @@ public class AggregateWholesaleReportDTO {
     private Integer productDiscountOfferId;
     private Short contractTermId;
     private Double peakDollarAmt;
-    private Double offPeakDollarAmt;
+    private Double offpeakDollarAmt;
     private Integer voiceMinutes;
     private Double tollDollarsAmt;
     private Integer tollMinutes;
@@ -113,13 +113,13 @@ public class AggregateWholesaleReportDTO {
     public void setPeakDollarAmt(Double peakDollarAmt) {
         this.peakDollarAmt = peakDollarAmt;
     }
-
-    public Double getOffPeakDollarAmt() {
-        return offPeakDollarAmt;
+   
+    public Double getOffpeakDollarAmt() {
+        return offpeakDollarAmt;
     }
 
-    public void setOffPeakDollarAmt(Double offPeakDollarAmt) {
-        this.offPeakDollarAmt = offPeakDollarAmt;
+    public void setOffpeakDollarAmt(Double offpeakDollarAmt) {
+        this.offpeakDollarAmt = offpeakDollarAmt;
     }
 
     public Integer getVoiceMinutes() {

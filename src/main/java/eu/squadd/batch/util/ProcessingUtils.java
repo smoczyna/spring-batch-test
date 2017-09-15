@@ -55,4 +55,9 @@ public class ProcessingUtils {
         }
         return zdtOut;
     }
+    
+    public static String dateTimeToStringWithourSpaces(Date date) {
+        String strDate = dateToString(date, SHORTDATETIME_FORMAT);
+        return strDate.replace(" ", ".");
+    }
 }

@@ -262,4 +262,36 @@ public class BilledCsvFileDTO {
     public void setWholesaleUsageBytes(Long wholesaleUsageBytes) {
         this.wholesaleUsageBytes = wholesaleUsageBytes;
     }
+
+    @Override
+    public String toString() {
+        return "BilledCsvFileDTO{" + "homeSbid=" + homeSbid 
+                + ", servingSbid=" + servingSbid 
+                + ", messageSource=" + messageSource 
+                + ", incompleteInd=" + incompleteInd 
+                + ", airProdId=" + airProdId 
+                + ", incompleteProdId=" + incompleteProdId 
+                + ", incompleteCallSurcharge=" + incompleteCallSurcharge 
+                + ", airSurchargeProductId=" + airSurchargeProductId 
+                + ", airSurcharge=" + airSurcharge 
+                + ", interExchangeCarrierCode=" + interExchangeCarrierCode 
+                + ", tollProductId=" + tollProductId 
+                + ", tollCharge=" + tollCharge 
+                + ", tollSurchargeProductId=" + tollSurchargeProductId 
+                + ", tollSurcharge=" + tollSurcharge 
+                + ", tollStateTax=" + tollStateTax 
+                + ", tollLocalTax=" + tollLocalTax 
+                + ", localAirTax=" + localAirTax 
+                + ", stateAirTax=" + stateAirTax 
+                + ", wholesalePeakAirCharge=" + wholesalePeakAirCharge 
+                + ", wholesaleOffPeakAirCharge=" + wholesaleOffPeakAirCharge 
+                + ", wholesaleTollChargeLDPeak=" + wholesaleTollChargeLDPeak 
+                + ", wholesaleTollChargeLDOther=" + wholesaleTollChargeLDOther 
+                + ", space=" + space 
+                + ", financialMarket=" + financialMarket 
+                + ", deviceType=" + deviceType 
+                + ", airBillSeconds=" + airBillSeconds 
+                + ", tollBillSeconds=" + tollBillSeconds 
+                + ", wholesaleUsageBytes=" + wholesaleUsageBytes + '}';
+    }
 }

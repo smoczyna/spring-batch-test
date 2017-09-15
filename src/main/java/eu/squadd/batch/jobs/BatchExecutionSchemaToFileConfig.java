@@ -5,6 +5,7 @@
  */
 package eu.squadd.batch.jobs;
 
+import eu.squadd.batch.listeners.BatchExecutionSchemaToFileConfigListener;
 import eu.squadd.batch.domain.dump.BatchJobExecution;
 import eu.squadd.batch.domain.dump.BatchJobExecutionContext;
 import eu.squadd.batch.domain.dump.BatchJobExecutionParams;

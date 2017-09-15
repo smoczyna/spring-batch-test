@@ -27,11 +27,11 @@ public class SubledgerCsvFileWriter extends FlatFileItemWriter<SummarySubLedgerD
     public SubledgerCsvFileWriter(Environment environment) {
         String exportFilePath = environment.getRequiredProperty(PROPERTY_CSV_EXPORT_FILE_PATH).concat("subledger_summary.csv");
         this.setResource(new FileSystemResource(exportFilePath));
-        LineAggregator<SummarySubLedgerDTO> lineAggregator = createCustomerLineAggregator();
+        LineAggregator<SummarySubLedgerDTO> lineAggregator = createSubLedgerLineAggregator();
         this.setLineAggregator(lineAggregator);
     }
     
-    private LineAggregator<SummarySubLedgerDTO> createCustomerLineAggregator() {
+    private LineAggregator<SummarySubLedgerDTO> createSubLedgerLineAggregator() {
         DelimitedLineAggregator<SummarySubLedgerDTO> lineAggregator = new DelimitedLineAggregator<>();
         lineAggregator.setDelimiter(";");
         FieldExtractor<SummarySubLedgerDTO> fieldExtractor = createSubledgerFieldExtractor();

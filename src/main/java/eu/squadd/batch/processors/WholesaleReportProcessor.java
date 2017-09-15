@@ -54,7 +54,7 @@ public class WholesaleReportProcessor implements ItemProcessor<BilledCsvFileDTO,
         //if (fileRecord.getDeviceType().trim().isEmpty() //has no spaces (is valid) -> financial market to app financial market (is this a future PK ?)
         if (inRec.getAirProdId() > 0 && (inRec.getWholesalePeakAirCharge() > 0 || inRec.getWholesaleOffPeakAirCharge() > 0)) {
             outRec.setPeakDollarAmt(inRec.getWholesalePeakAirCharge());
-            outRec.setOffPeakDollarAmt(inRec.getWholesaleOffPeakAirCharge());
+            outRec.setOffpeakDollarAmt(inRec.getWholesaleOffPeakAirCharge());
             outRec.setDollarAmtOther(0d);
             outRec.setVoiceMinutes(inRec.getAirBillSeconds() * 60);
             tmpChargeAmt = inRec.getWholesalePeakAirCharge() + inRec.getWholesaleOffPeakAirCharge();

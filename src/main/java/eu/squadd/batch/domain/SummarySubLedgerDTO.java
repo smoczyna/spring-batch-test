@@ -36,14 +36,6 @@ public class SummarySubLedgerDTO {
     private String updateUserId = "WholesaleBookingProcessor";
     private String updateTimestamp; // = new ZonedDateTime();
 
-//    public SummarySubLedgerDTO(SummarySubLedgerPK pk) {
-//        super(pk.getFinancialEventNo(), pk.getFinancialCategory(), pk.getFinancialMarketId());
-//    }
-    
-//    public SummarySubLedgerDTO(Integer financialEventNo, Integer financialCategory, String financialMarketId) {
-//        super(financialEventNo, financialCategory, financialMarketId);
-//    }
-
     public String getJemsApplId() {
         return jemsApplId;
     }
