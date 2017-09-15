@@ -59,7 +59,8 @@ public class BilledBookingFileJobListener implements JobExecutionListener {
     private void moveFileToArchive(String filename) {
         try {
             File srcFile = new File(BIILED_CSV_SOURCE_FILE_PATH.concat(filename));
-            String archiveFileName = filename.concat(".").concat(ProcessingUtils.dateTimeToStringWithourSpaces(new Date())).concat(".bak");
+            //String archiveFileName = filename.concat(".").concat(ProcessingUtils.dateTimeToStringWithourSpaces(new Date())).concat(".bak");
+            String archiveFileName = filename.concat(".").concat(ProcessingUtils.dateToString(new Date(), ProcessingUtils.SHORT_FORMAT)).concat(".bak");
             File destFile = new File(BIILED_CSV_SOURCE_FILE_PATH.concat("archive/").concat(archiveFileName));
 
             InputStream inStream = new FileInputStream(srcFile);
