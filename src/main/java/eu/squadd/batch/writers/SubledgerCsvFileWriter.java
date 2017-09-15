@@ -41,20 +41,20 @@ public class SubledgerCsvFileWriter extends FlatFileItemWriter<SummarySubLedgerD
     
     private FieldExtractor<SummarySubLedgerDTO> createSubledgerFieldExtractor() {
         BeanWrapperFieldExtractor<SummarySubLedgerDTO> extractor = new BeanWrapperFieldExtractor<>();
-        extractor.setNames(new String[] {"financialEventNo",
-                                         "financialCategory",
-                                         "financialMarketId",
-                                         "jemsApplId",
+        extractor.setNames(new String[] {"jemsApplId",
                                          "reportStartDate",
                                          "jemsApplTransactioDate",
-                                         "subledgerSequenceNo",
+                                         "financialEventNumber",
+                                         "financialCategory", 
+                                         "financialmarketId",
+                                         "subledgerSequenceNumber",
                                          "subledgerTotalDebitAmount",
                                          "subledgerTotalCreditAmount",
-                                         "jurnalEventNo",
+                                         "jurnalEventNumber",
                                          "jurnalEventExceptionCode",
                                          "jurnalEventReadInd",
-                                         "jurnalLedgerTransactionNo",
-                                         "billCycleNo",
+                                         "generalLedgerTransactionNumber",
+                                         "billCycleNumber",
                                          "billTypeCode",
                                          "billCycleMonthYear",
                                          "billPhaseType",
@@ -62,7 +62,7 @@ public class SubledgerCsvFileWriter extends FlatFileItemWriter<SummarySubLedgerD
                                          "billAccrualIndicator",
                                          "paymentSourceCode",
                                          "discountOfferId",
-                                         "updateuserId",
+                                         "updateUserId",
                                          "updateTimestamp"});
         return extractor;
     }
