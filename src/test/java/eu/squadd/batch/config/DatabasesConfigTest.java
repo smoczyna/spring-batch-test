@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vzw.booking.ms.batch.config;
+package eu.squadd.batch.config;
 
 import eu.squadd.batch.config.DatabasesConfig;
 import com.datastax.driver.core.AuthProvider;

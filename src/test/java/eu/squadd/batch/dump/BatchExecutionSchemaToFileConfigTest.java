@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vzw.booking.ms.batch.dump;
+package eu.squadd.batch.dump;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

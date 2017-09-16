@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vzw.booking.ms.batch.jobs;
+package eu.squadd.batch.jobs;
 
 import eu.squadd.batch.WholesaleBookingProcessorApplication;
 import eu.squadd.batch.config.DatabasesConfig;
