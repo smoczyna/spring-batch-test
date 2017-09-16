@@ -7,7 +7,6 @@ package eu.squadd.batch.processors;
 
 import eu.squadd.batch.domain.AggregateWholesaleReportDTO;
 import eu.squadd.batch.domain.BaseBookingDTO;
-import eu.squadd.batch.domain.BaseBookingInterface;
 import eu.squadd.batch.domain.BilledCsvFileDTO;
 import eu.squadd.batch.domain.SummarySubLedgerDTO;
 import eu.squadd.batch.domain.casandra.FinancialEventCategory;
@@ -20,12 +19,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
+import eu.squadd.batch.domain.BaseBookingInputRecord;
 
 /**
  *
  * @author smorcja
  */
-public class WholesaleReportProcessor implements ItemProcessor<BaseBookingInterface, AggregateWholesaleReportDTO> {
+public class WholesaleReportProcessor implements ItemProcessor<BaseBookingInputRecord, AggregateWholesaleReportDTO> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WholesaleReportProcessor.class);
      
@@ -37,7 +37,7 @@ public class WholesaleReportProcessor implements ItemProcessor<BaseBookingInterf
     boolean homeEqualsServingSbid = false;
 
     @Override
-    public AggregateWholesaleReportDTO process(BaseBookingInterface inRec) throws Exception {
+    public AggregateWholesaleReportDTO process(BaseBookingInputRecord inRec) throws Exception {
         double tmpChargeAmt = 0;
         final Set<Integer> PROD_IDS = new HashSet(Arrays.asList(new Integer[]{95, 1272, 12873, 13537, 13538, 36201}));
         int tmpProdId = 0;

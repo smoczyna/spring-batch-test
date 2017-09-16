@@ -8,7 +8,6 @@ package eu.squadd.batch.jobs;
 import eu.squadd.batch.listeners.BilledBookingFileJobListener;
 import eu.squadd.batch.domain.AggregateWholesaleReportDTO;
 import eu.squadd.batch.domain.BaseBookingDTO;
-import eu.squadd.batch.domain.BaseBookingInterface;
 import eu.squadd.batch.domain.BilledCsvFileDTO;
 import eu.squadd.batch.domain.BookDateCsvFileDTO;
 import eu.squadd.batch.domain.SummarySubLedgerDTO;
@@ -39,6 +38,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import eu.squadd.batch.domain.BaseBookingInputRecord;
 
 /**
  *
@@ -113,7 +113,7 @@ public class BilledBookigFileJobConfig {
     }
 
     @Bean
-    ItemProcessor<BaseBookingInterface, AggregateWholesaleReportDTO> wholesaleBookingProcessor() {
+    ItemProcessor<BaseBookingInputRecord, AggregateWholesaleReportDTO> wholesaleBookingProcessor() {
         return new WholesaleReportProcessor();
     }
 
@@ -161,7 +161,7 @@ public class BilledBookigFileJobConfig {
     Step billedBookingFileStep(StepExecutionListener billedFileStepListener,
                                ItemReader<BilledCsvFileDTO> billedFileItemReader,
                                SkipPolicy fileVerificationSkipper,
-                               ItemProcessor<BaseBookingInterface, AggregateWholesaleReportDTO> wholesaleBookingProcessor,
+                               ItemProcessor<BaseBookingInputRecord, AggregateWholesaleReportDTO> wholesaleBookingProcessor,
                                ItemWriter<AggregateWholesaleReportDTO> wholesaleReportWriter,
                                StepBuilderFactory stepBuilderFactory) {
         return stepBuilderFactory.get("billedBookingFileStep")

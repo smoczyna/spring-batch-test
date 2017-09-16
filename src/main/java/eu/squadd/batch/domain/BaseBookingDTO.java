@@ -9,7 +9,7 @@ package eu.squadd.batch.domain;
  *
  * @author smoczyna
  */
-public class BaseBookingDTO implements BaseBookingInterface {
+public class BaseBookingDTO implements BaseBookingInputRecord {
     private String homeSbid;
     private String servingSbid;
     private String messageSource;

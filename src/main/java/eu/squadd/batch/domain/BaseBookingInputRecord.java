@@ -9,7 +9,7 @@ package eu.squadd.batch.domain;
  *
  * @author smoczyna
  */
-public interface BaseBookingInterface {
+public interface BaseBookingInputRecord {
     String getHomeSbid();
     String getServingSbid();
     String getMessageSource();
