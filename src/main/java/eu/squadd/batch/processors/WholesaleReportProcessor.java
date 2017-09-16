@@ -6,6 +6,8 @@
 package eu.squadd.batch.processors;
 
 import eu.squadd.batch.domain.AggregateWholesaleReportDTO;
+import eu.squadd.batch.domain.BaseBookingDTO;
+import eu.squadd.batch.domain.BaseBookingInterface;
 import eu.squadd.batch.domain.BilledCsvFileDTO;
 import eu.squadd.batch.domain.SummarySubLedgerDTO;
 import eu.squadd.batch.domain.casandra.FinancialEventCategory;
@@ -23,7 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * @author smorcja
  */
-public class WholesaleReportProcessor implements ItemProcessor<BilledCsvFileDTO, AggregateWholesaleReportDTO> {
+public class WholesaleReportProcessor implements ItemProcessor<BaseBookingInterface, AggregateWholesaleReportDTO> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WholesaleReportProcessor.class);
      
@@ -35,11 +37,11 @@ public class WholesaleReportProcessor implements ItemProcessor<BilledCsvFileDTO,
     boolean homeEqualsServingSbid = false;
 
     @Override
-    public AggregateWholesaleReportDTO process(BilledCsvFileDTO inRec) throws Exception {
+    public AggregateWholesaleReportDTO process(BaseBookingInterface inRec) throws Exception {
         double tmpChargeAmt = 0;
         final Set<Integer> PROD_IDS = new HashSet(Arrays.asList(new Integer[]{95, 1272, 12873, 13537, 13538, 36201}));
         int tmpProdId = 0;
-        String messageSource = "B";
+        //String messageSource = "B";
         boolean bypassBooking = false;
         boolean defaultBooking = false;
         int tmpInterExchangeCarrierCode = 0;
@@ -47,17 +49,15 @@ public class WholesaleReportProcessor implements ItemProcessor<BilledCsvFileDTO,
         // check if alternate booking is applicable but what is the consequence of it ???
         AggregateWholesaleReportDTO outRec = new AggregateWholesaleReportDTO();
         outRec.setBilledInd("Y");
-
-        // add skipping logic here, it should abandin processing if any required field is null
-        
         
         //if (fileRecord.getDeviceType().trim().isEmpty() //has no spaces (is valid) -> financial market to app financial market (is this a future PK ?)
-        if (inRec.getAirProdId() > 0 && (inRec.getWholesalePeakAirCharge() > 0 || inRec.getWholesaleOffPeakAirCharge() > 0)) {
-            outRec.setPeakDollarAmt(inRec.getWholesalePeakAirCharge());
-            outRec.setOffpeakDollarAmt(inRec.getWholesaleOffPeakAirCharge());
+        
+        if (inRec.getAirProdId() > 0 && (inRec.getWholesaleAirChargePeak() > 0 || inRec.getWholesaleAirChargeOffPeak() > 0)) {
+            outRec.setPeakDollarAmt(inRec.getWholesaleAirChargePeak());
+            outRec.setOffpeakDollarAmt(inRec.getWholesaleAirChargeOffPeak());
             outRec.setDollarAmtOther(0d);
             outRec.setVoiceMinutes(inRec.getAirBillSeconds() * 60);
-            tmpChargeAmt = inRec.getWholesalePeakAirCharge() + inRec.getWholesaleOffPeakAirCharge();
+            tmpChargeAmt = inRec.getWholesaleAirChargePeak() + inRec.getWholesaleAirChargeOffPeak();
             if (inRec.getAirProdId() == 190d) {
                 tmpProdId = 1;
             } else {
@@ -72,6 +72,7 @@ public class WholesaleReportProcessor implements ItemProcessor<BilledCsvFileDTO,
         // what is that for ??? It's never used anywhere after 
 
         // move tmpChargeAmt to tmpWholesaleCost and tmpWholsaleSettlement ???
+        
         // third cassandra call goes here, should retrieve unique row of FinancialEventCategory
         FinancialEventCategory financialEventCategory = null; // this object comes from db (just one) 
         if (!financialEventCategory.getBamsaffiliateindicator().equals("N")
@@ -80,7 +81,7 @@ public class WholesaleReportProcessor implements ItemProcessor<BilledCsvFileDTO,
             bypassBooking = true;
         }
 
-        if (financialEventCategory.getHomesidequalsservingsidindicator().trim().isEmpty() && messageSource.equals("M")) // applicable only for admin fees file 
+        if (financialEventCategory.getHomesidequalsservingsidindicator().trim().isEmpty() && inRec.getMessageSource().equals("M")) // applicable only for admin fees file 
         {
             bypassBooking = false;
         }
@@ -101,8 +102,9 @@ public class WholesaleReportProcessor implements ItemProcessor<BilledCsvFileDTO,
             bypassBooking = false;        
          */
  
-        /* default booking check - basically it means population of sub leadger record */
-        if (tmpProdId == 0 || (PROD_IDS.contains(tmpProdId) && inRec.getInterExchangeCarrierCode() == 0)) {
+        /* default booking check - basically it means population of sub leadger record */   
+        /* this rule here works only for billed booking */
+        if (tmpProdId == 0 || (inRec instanceof BilledCsvFileDTO && (PROD_IDS.contains(tmpProdId) && ((BilledCsvFileDTO) inRec).getInterExchangeCarrierCode() == 0))) {
             defaultBooking = true;
         } else {
             tmpInterExchangeCarrierCode = 0; // it is already intiialized with 0, no other values used

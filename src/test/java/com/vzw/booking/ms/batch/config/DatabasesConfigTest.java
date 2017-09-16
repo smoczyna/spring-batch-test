@@ -54,7 +54,7 @@ public class DatabasesConfigTest {
 //        assertNotNull(result);
 //    }
     
-    @Test
+    //@Test
     public void testCasandraConnectivity() throws Exception {
         System.out.println("Check Casandra native connectivity using Datastax driver");
         //Session session = DatabasesConfig.getCasandraSession();
@@ -72,7 +72,7 @@ public class DatabasesConfigTest {
         assertNotNull(session); 
     }
 
-    @Test
+    //@Test
     public void testSystemSchemaAccess() throws Exception {
         Session session = DatabasesConfig.getCasandraSession("system_schema");
         assertNotNull(session);
@@ -85,7 +85,7 @@ public class DatabasesConfigTest {
         }
     }
     
-    @Test
+    //@Test
     public void testCassandraUserTablesAccess() throws Exception {
         Session session = DatabasesConfig.getCasandraSession("j6_dev");
         assertNotNull(session);
@@ -108,7 +108,7 @@ public class DatabasesConfigTest {
 //        assertEquals(userCount, userCount3);        
     }
     
-    @Test
+    //@Test
     public void testFinancialMarketTable() throws Exception {
         Session session = DatabasesConfig.getCasandraSession("j6_dev");
         assertNotNull(session);
