@@ -5,7 +5,7 @@
  */
 package eu.squadd.batch.readers;
 
-import com.vzw.booking.ms.batch.domain.BilledCsvFileDTO;
+import eu.squadd.batch.domain.BilledCsvFileDTO;
 import org.springframework.core.env.Environment;
 
 /**
