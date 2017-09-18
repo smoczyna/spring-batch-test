@@ -9,9 +9,12 @@ package eu.squadd.batch.domain;
  * Billed Bookings source payload class. This class represents the input file for billed bookings file: bmdunld.csv
  * @author smorcja
  */
-public class BilledCsvFileDTO extends BaseBookingDTO {
-
+public class BilledCsvFileDTO implements BaseBookingInputInterface {
+    private String homeSbid;
+    private String servingSbid;
+    private String messageSource;
     private String incompleteInd;
+    private Integer airProdId;
     private Integer incompleteProdId;
     private Double incompleteCallSurcharge;
     private Integer airSurchargeProductId;
@@ -25,20 +28,59 @@ public class BilledCsvFileDTO extends BaseBookingDTO {
     private Double tollLocalTax;
     private Double localAirTax;
     private Double stateAirTax;
+    private Double wholesalePeakAirCharge;
+    private Double wholesaleOffPeakAirCharge;
     private Double wholesaleTollChargeLDPeak;
     private Double wholesaleTollChargeLDOther;                   
     private String space;
+    private String financialMarket;
     private String deviceType;
+    private Integer airBillSeconds;
     private Integer tollBillSeconds;
     private Long wholesaleUsageBytes;
 
-    
+    @Override
+    public String getHomeSbid() {
+        return homeSbid;
+    }
+
+    public void setHomeSbid(String homeSbid) {
+        this.homeSbid = homeSbid;
+    }
+
+    @Override
+    public String getServingSbid() {
+        return servingSbid;
+    }
+
+    public void setServingSbid(String servingSbid) {
+        this.servingSbid = servingSbid;
+    }
+
+    @Override
+    public String getMessageSource() {
+        return messageSource;
+    }
+
+    public void setMessageSource(String messageSource) {
+        this.messageSource = messageSource;
+    }
+
     public String getIncompleteInd() {
         return incompleteInd;
     }
 
     public void setIncompleteInd(String incompleteInd) {
         this.incompleteInd = incompleteInd;
+    }
+
+    @Override
+    public Integer getAirProdId() {
+        return airProdId;
+    }
+
+    public void setAirProdId(Integer airProdId) {
+        this.airProdId = airProdId;
     }
 
     public Integer getIncompleteProdId() {
@@ -145,6 +187,24 @@ public class BilledCsvFileDTO extends BaseBookingDTO {
         this.stateAirTax = stateAirTax;
     }
 
+    @Override
+    public Double getWholesalePeakAirCharge() {
+        return wholesalePeakAirCharge;
+    }
+
+    public void setWholesalePeakAirCharge(Double wholesalePeakAirCharge) {
+        this.wholesalePeakAirCharge = wholesalePeakAirCharge;
+    }
+
+    @Override
+    public Double getWholesaleOffpeakAirCharge() {
+        return wholesaleOffPeakAirCharge;
+    }
+
+    public void setWholesaleOffpeakAirCharge(Double wholesaleOffPeakAirCharge) {
+        this.wholesaleOffPeakAirCharge = wholesaleOffPeakAirCharge;
+    }
+
     public Double getWholesaleTollChargeLDPeak() {
         return wholesaleTollChargeLDPeak;
     }
@@ -169,12 +229,30 @@ public class BilledCsvFileDTO extends BaseBookingDTO {
         this.space = space;
     }
 
+    @Override
+    public String getFinancialMarket() {
+        return financialMarket;
+    }
+
+    public void setFinancialMarket(String financialMarket) {
+        this.financialMarket = financialMarket;
+    }
+
     public String getDeviceType() {
         return deviceType;
     }
 
     public void setDeviceType(String deviceType) {
         this.deviceType = deviceType;
+    }
+
+    @Override
+    public Integer getAirBillSeconds() {
+        return airBillSeconds;
+    }
+
+    public void setAirBillSeconds(Integer airBillSeconds) {
+        this.airBillSeconds = airBillSeconds;
     }
 
     public Integer getTollBillSeconds() {
@@ -192,14 +270,14 @@ public class BilledCsvFileDTO extends BaseBookingDTO {
     public void setWholesaleUsageBytes(Long wholesaleUsageBytes) {
         this.wholesaleUsageBytes = wholesaleUsageBytes;
     }
-
+    
     @Override
     public String toString() {
-        return "BilledCsvFileDTO{" + "homeSbid=" + getHomeSbid() 
-                + ", servingSbid=" + getServingSbid() 
-                + ", messageSource=" + getMessageSource()
+        return "BilledCsvFileDTO{" + "homeSbid=" + homeSbid 
+                + ", servingSbid=" + servingSbid 
+                + ", messageSource=" + messageSource 
                 + ", incompleteInd=" + incompleteInd 
-                + ", airProdId=" + getAirProdId() 
+                + ", airProdId=" + airProdId 
                 + ", incompleteProdId=" + incompleteProdId 
                 + ", incompleteCallSurcharge=" + incompleteCallSurcharge 
                 + ", airSurchargeProductId=" + airSurchargeProductId 
@@ -213,14 +291,14 @@ public class BilledCsvFileDTO extends BaseBookingDTO {
                 + ", tollLocalTax=" + tollLocalTax 
                 + ", localAirTax=" + localAirTax 
                 + ", stateAirTax=" + stateAirTax 
-                + ", wholesalePeakAirCharge=" + getWholesaleAirChargePeak() 
-                + ", wholesaleOffPeakAirCharge=" + getWholesaleAirChargeOffPeak() 
+                + ", wholesalePeakAirCharge=" + wholesalePeakAirCharge 
+                + ", wholesaleOffPeakAirCharge=" + wholesaleOffPeakAirCharge 
                 + ", wholesaleTollChargeLDPeak=" + wholesaleTollChargeLDPeak 
                 + ", wholesaleTollChargeLDOther=" + wholesaleTollChargeLDOther 
-                + ", space=" + space
-                + ", financialMarket=" + getFinancialMarket() 
+                + ", space=" + space 
+                + ", financialMarket=" + financialMarket 
                 + ", deviceType=" + deviceType 
-                + ", airBillSeconds=" + getAirBillSeconds() 
+                + ", airBillSeconds=" + airBillSeconds 
                 + ", tollBillSeconds=" + tollBillSeconds 
                 + ", wholesaleUsageBytes=" + wholesaleUsageBytes + '}';
     }

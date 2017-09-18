@@ -31,7 +31,7 @@ public class CsvFileVerificationSkipper implements SkipPolicy {
         }
         else if (exception instanceof NullPointerException && skipCount<5) {
             NullPointerException npe = (NullPointerException) exception;
-            LOGGER.error("NULL encountered where the value was expected");
+            LOGGER.error("NULL encountered but the value was expected - skipping record ...");
             result = true;
         }
         return result;

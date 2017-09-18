@@ -43,7 +43,6 @@ public class BilledBookingFileStepExecutionListener implements StepExecutionList
 
     @Override
     public void onSkipInProcess(Object inputRecord, Throwable exception) {
-        LOGGER.error("Processing exception encountered: " + exception.getMessage());
         if (inputRecord instanceof BilledCsvFileDTO) {
             BilledCsvFileDTO rec = (BilledCsvFileDTO) inputRecord;
             // export errornous record somewhere if neccessary

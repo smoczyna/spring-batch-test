@@ -5,21 +5,45 @@
  */
 package eu.squadd.batch.readers;
 
-import eu.squadd.batch.domain.BilledCsvFileDTO;
-import org.springframework.batch.item.ItemReader;
-import org.springframework.batch.item.NonTransientResourceException;
-import org.springframework.batch.item.ParseException;
-import org.springframework.batch.item.UnexpectedInputException;
+import com.vzw.booking.ms.batch.domain.BilledCsvFileDTO;
+import org.springframework.core.env.Environment;
 
 /**
  *
  * @author smorcja
  */
-public class BilledBookingFileReader implements ItemReader<BilledCsvFileDTO> {
-
-    @Override
-    public BilledCsvFileDTO read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+public class BilledBookingFileReader extends CsvFileGenericReader<BilledCsvFileDTO> {
     
+    public BilledBookingFileReader(Environment environment) {
+        super(BilledCsvFileDTO.class, environment, "bmdunld.csv", new String[]{
+            "homeSbid",
+            "servingSbid",
+            "messageSource",
+            "incompleteInd",
+            "airProdId",
+            "incompleteProdId",
+            "incompleteCallSurcharge",
+            "airSurchargeProductId",
+            "airSurcharge",
+            "interExchangeCarrierCode",
+            "tollProductId",
+            "tollCharge",
+            "tollSurchargeProductId",
+            "tollSurcharge",
+            "tollStateTax",
+            "tollLocalTax",
+            "localAirTax",
+            "stateAirTax",
+            "wholesalePeakAirCharge",
+            "wholesaleOffPeakAirCharge",
+            "wholesaleTollChargeLDPeak",
+            "wholesaleTollChargeLDOther",
+            "space",
+            "financialMarket",
+            "deviceType",
+            "airBillSeconds",
+            "tollBillSeconds",
+            "wholesaleUsageBytes"},
+        ";");
+    }
 }

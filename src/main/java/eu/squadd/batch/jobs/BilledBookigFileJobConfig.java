@@ -7,7 +7,6 @@ package eu.squadd.batch.jobs;
 
 import eu.squadd.batch.listeners.BilledBookingFileJobListener;
 import eu.squadd.batch.domain.AggregateWholesaleReportDTO;
-import eu.squadd.batch.domain.BaseBookingDTO;
 import eu.squadd.batch.domain.BilledCsvFileDTO;
 import eu.squadd.batch.domain.BookDateCsvFileDTO;
 import eu.squadd.batch.domain.SummarySubLedgerDTO;
@@ -15,8 +14,8 @@ import eu.squadd.batch.processors.BookDateProcessor;
 import eu.squadd.batch.processors.SubLedgerProcessor;
 import eu.squadd.batch.processors.WholesaleReportProcessor;
 import eu.squadd.batch.readers.BookDateCsvFileReader;
-import eu.squadd.batch.readers.CsvFileGenericReader;
 import eu.squadd.batch.listeners.BilledBookingFileStepExecutionListener;
+import eu.squadd.batch.readers.BilledBookingFileReader;
 import eu.squadd.batch.validation.CsvFileVerificationSkipper;
 import eu.squadd.batch.writers.AggregatedSubLedgerWriter;
 import eu.squadd.batch.writers.SubledgerCsvFileWriter;
@@ -38,7 +37,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import eu.squadd.batch.domain.BaseBookingInputRecord;
 
 /**
  *
@@ -68,37 +66,8 @@ public class BilledBookigFileJobConfig {
     }
 
     @Bean
-    ItemReader<BilledCsvFileDTO> billedFileItemReader(Environment environment) {
-        String[] fieldNames = new String[]{
-            "homeSbid",
-            "servingSbid",
-            "messageSource",
-            "incompleteInd",
-            "airProdId",
-            "incompleteProdId",
-            "incompleteCallSurcharge",
-            "airSurchargeProductId",
-            "airSurcharge",
-            "interExchangeCarrierCode",
-            "tollProductId",
-            "tollCharge",
-            "tollSurchargeProductId",
-            "tollSurcharge",
-            "tollStateTax",
-            "tollLocalTax",
-            "localAirTax",
-            "stateAirTax",
-            "wholesalePeakAirCharge",
-            "wholesaleOffPeakAirCharge",
-            "wholesaleTollChargeLDPeak",
-            "wholesaleTollChargeLDOther",
-            "space",
-            "financialMarket",
-            "deviceType",
-            "airBillSeconds",
-            "tollBillSeconds",
-            "wholesaleUsageBytes"};
-        return new CsvFileGenericReader(BilledCsvFileDTO.class, environment, "bmdunld.csv", fieldNames, ";");
+    ItemReader<BilledCsvFileDTO> billedFileItemReader(Environment environment) {        
+        return new BilledBookingFileReader(environment);
     }
 
     @Bean
@@ -113,7 +82,7 @@ public class BilledBookigFileJobConfig {
     }
 
     @Bean
-    ItemProcessor<BaseBookingInputRecord, AggregateWholesaleReportDTO> wholesaleBookingProcessor() {
+    ItemProcessor<BilledCsvFileDTO, AggregateWholesaleReportDTO> wholesaleBookingProcessor() {
         return new WholesaleReportProcessor();
     }
 
@@ -126,14 +95,13 @@ public class BilledBookigFileJobConfig {
     ItemWriter<AggregateWholesaleReportDTO> wholesaleReportWriter(Environment environment) {
         return new WholesaleReportCsvWriter(environment);
     }
-        
+    
     @Bean
     ItemWriter<SummarySubLedgerDTO> subledgerItemWriter(Environment environment) {
         return new SubledgerCsvFileWriter(environment);
     }
 
     @Bean
-    //@DependsOn("com.vzw.booking.ms.batch.writers.SubledgerCsvFileWriter")
     Tasklet writeAggregatedSubLedger() {
         return new AggregatedSubLedgerWriter();
     }
@@ -161,7 +129,7 @@ public class BilledBookigFileJobConfig {
     Step billedBookingFileStep(StepExecutionListener billedFileStepListener,
                                ItemReader<BilledCsvFileDTO> billedFileItemReader,
                                SkipPolicy fileVerificationSkipper,
-                               ItemProcessor<BaseBookingInputRecord, AggregateWholesaleReportDTO> wholesaleBookingProcessor,
+                               ItemProcessor<BilledCsvFileDTO, AggregateWholesaleReportDTO> wholesaleBookingProcessor,
                                ItemWriter<AggregateWholesaleReportDTO> wholesaleReportWriter,
                                StepBuilderFactory stepBuilderFactory) {
         return stepBuilderFactory.get("billedBookingFileStep")

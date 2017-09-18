@@ -6,7 +6,7 @@
 package eu.squadd.batch.processors;
 
 import eu.squadd.batch.domain.AggregateWholesaleReportDTO;
-import eu.squadd.batch.domain.BaseBookingDTO;
+import eu.squadd.batch.domain.BaseBookingInputInterface;
 import eu.squadd.batch.domain.BilledCsvFileDTO;
 import eu.squadd.batch.domain.SummarySubLedgerDTO;
 import eu.squadd.batch.domain.casandra.FinancialEventCategory;
@@ -19,13 +19,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
-import eu.squadd.batch.domain.BaseBookingInputRecord;
 
 /**
  *
  * @author smorcja
+ * @param <I>
  */
-public class WholesaleReportProcessor implements ItemProcessor<BaseBookingInputRecord, AggregateWholesaleReportDTO> {
+public class WholesaleReportProcessor<I extends BaseBookingInputInterface> implements ItemProcessor<I, AggregateWholesaleReportDTO> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WholesaleReportProcessor.class);
      
@@ -35,9 +35,9 @@ public class WholesaleReportProcessor implements ItemProcessor<BaseBookingInputR
     String searchServingSbid = null;
     String searchHomeSbid = null;
     boolean homeEqualsServingSbid = false;
-
+    
     @Override
-    public AggregateWholesaleReportDTO process(BaseBookingInputRecord inRec) throws Exception {
+    public AggregateWholesaleReportDTO process(I inRec) throws Exception {
         double tmpChargeAmt = 0;
         final Set<Integer> PROD_IDS = new HashSet(Arrays.asList(new Integer[]{95, 1272, 12873, 13537, 13538, 36201}));
         int tmpProdId = 0;
@@ -52,12 +52,12 @@ public class WholesaleReportProcessor implements ItemProcessor<BaseBookingInputR
         
         //if (fileRecord.getDeviceType().trim().isEmpty() //has no spaces (is valid) -> financial market to app financial market (is this a future PK ?)
         
-        if (inRec.getAirProdId() > 0 && (inRec.getWholesaleAirChargePeak() > 0 || inRec.getWholesaleAirChargeOffPeak() > 0)) {
-            outRec.setPeakDollarAmt(inRec.getWholesaleAirChargePeak());
-            outRec.setOffpeakDollarAmt(inRec.getWholesaleAirChargeOffPeak());
+        if (inRec.getAirProdId() > 0 && (inRec.getWholesalePeakAirCharge() > 0 || inRec.getWholesaleOffpeakAirCharge()> 0)) {
+            outRec.setPeakDollarAmt(inRec.getWholesalePeakAirCharge());
+            outRec.setOffpeakDollarAmt(inRec.getWholesaleOffpeakAirCharge());
             outRec.setDollarAmtOther(0d);
             outRec.setVoiceMinutes(inRec.getAirBillSeconds() * 60);
-            tmpChargeAmt = inRec.getWholesaleAirChargePeak() + inRec.getWholesaleAirChargeOffPeak();
+            tmpChargeAmt = inRec.getWholesalePeakAirCharge() + inRec.getWholesaleOffpeakAirCharge();
             if (inRec.getAirProdId() == 190d) {
                 tmpProdId = 1;
             } else {
