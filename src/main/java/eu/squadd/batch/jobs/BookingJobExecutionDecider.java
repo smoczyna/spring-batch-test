@@ -18,9 +18,9 @@ import org.springframework.beans.factory.annotation.Value;
  *
  * @author smorcja
  */
-public class WholesaleBookingJobExecutionDecider implements JobExecutionDecider {
+public class BookingJobExecutionDecider implements JobExecutionDecider {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(WholesaleBookingJobExecutionDecider.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BookingJobExecutionDecider.class);
     
     @Value("${csv.to.database.job.source.file.path}")
     private String SOURCE_FILES_PATH;
