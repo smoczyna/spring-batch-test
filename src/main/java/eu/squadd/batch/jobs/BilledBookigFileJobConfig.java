@@ -67,7 +67,7 @@ public class BilledBookigFileJobConfig {
 
     @Bean
     ItemReader<BilledCsvFileDTO> billedFileItemReader(Environment environment) {        
-        return new BilledBookingFileReader(environment);
+        return new BilledBookingFileReader(environment, "bmdunld.csv");
     }
 
     @Bean

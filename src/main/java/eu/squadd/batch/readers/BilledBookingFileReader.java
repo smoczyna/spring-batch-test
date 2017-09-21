@@ -14,8 +14,8 @@ import org.springframework.core.env.Environment;
  */
 public class BilledBookingFileReader extends CsvFileGenericReader<BilledCsvFileDTO> {
     
-    public BilledBookingFileReader(Environment environment) {
-        super(BilledCsvFileDTO.class, environment, "bmdunld.csv", new String[]{
+    public BilledBookingFileReader(Environment environment, String filename) {
+        super(BilledCsvFileDTO.class, environment, filename, new String[]{
             "homeSbid",
             "servingSbid",
             "messageSource",
