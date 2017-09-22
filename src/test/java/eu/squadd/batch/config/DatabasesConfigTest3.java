@@ -5,7 +5,6 @@
  */
 package eu.squadd.batch.config;
 
-import eu.squadd.batch.config.DatabasesConfig;
 import com.datastax.driver.core.AuthProvider;
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.ColumnDefinitions;
@@ -28,7 +27,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author smorcja
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-public class DatabasesConfigTest {
+public class DatabasesConfigTest3 {
     
     /**
      * Test of getSampleDerbyDS method, of class DatabasesConfig.

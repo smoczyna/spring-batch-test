@@ -5,6 +5,7 @@
  */
 package eu.squadd.batch.listeners;
 
+import eu.squadd.batch.constants.Constants;
 import eu.squadd.batch.util.ProcessingUtils;
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,9 +26,9 @@ import org.springframework.beans.factory.annotation.Value;
  *
  * @author smorcja
  */
-public class BilledBookingFileJobListener implements JobExecutionListener {
+public class BookingFilesJobListener implements JobExecutionListener {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BilledBookingFileJobListener.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BookingFilesJobListener.class);
 
     @Value("${csv.to.database.job.source.file.path}")
     private String BIILED_CSV_SOURCE_FILE_PATH;
@@ -40,8 +41,10 @@ public class BilledBookingFileJobListener implements JobExecutionListener {
     @Override
     public void afterJob(JobExecution je) {
         if (je.getStatus() == BatchStatus.COMPLETED) {
-            String filename = je.getJobParameters().getString("billed_csv_file_name");
-            this.moveFileToArchive(filename);
+            //String filename = je.getJobParameters().getString("billed_csv_file_name");
+            this.moveFileToArchive(Constants.BOOK_DATE_FILENAME);
+            this.moveFileToArchive(Constants.BILLED_BOOKING_FILENAME);
+            //this.moveFileToArchive(Constants.UNBILLED_BOOKING_FILENAME);
         } else {
             LOGGER.info("All encountered exceptions:");
             List<Throwable> exceptionList = je.getAllFailureExceptions();
@@ -59,7 +62,6 @@ public class BilledBookingFileJobListener implements JobExecutionListener {
     private void moveFileToArchive(String filename) {
         try {
             File srcFile = new File(BIILED_CSV_SOURCE_FILE_PATH.concat(filename));
-            //String archiveFileName = filename.concat(".").concat(ProcessingUtils.dateTimeToStringWithourSpaces(new Date())).concat(".bak");
             String archiveFileName = filename.concat(".").concat(ProcessingUtils.dateToString(new Date(), ProcessingUtils.SHORT_FORMAT)).concat(".bak");
             File destFile = new File(BIILED_CSV_SOURCE_FILE_PATH.concat("archive/").concat(archiveFileName));
 
@@ -74,7 +76,7 @@ public class BilledBookingFileJobListener implements JobExecutionListener {
             inStream.close();
             outStream.close();
             srcFile.delete();
-            LOGGER.info("File archived successfully!");
+            LOGGER.info(String.format("%s file archived successfully", filename));
         } catch (IOException e) {
             LOGGER.error(e.getMessage());
         }

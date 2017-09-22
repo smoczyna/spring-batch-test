@@ -1,6 +1,6 @@
 package eu.squadd.batch.util;
 
-import eu.squadd.batch.domain.BilledCsvFileDTO;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -26,8 +26,8 @@ public class ProcessingUtils {
      * @return 
      */
     public static String zdtToString(ZonedDateTime zdt, String format) {
-        DateTimeFormatter sdtFormat = DateTimeFormatter.ofPattern(format);
-        return sdtFormat.format(zdt);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern(format);
+        return dtf.format(zdt);
     }
 
     /**
@@ -37,8 +37,8 @@ public class ProcessingUtils {
      * @return 
      */
     public static String dateToString(Date date, String format) {
-        SimpleDateFormat sdtFormat = new SimpleDateFormat(format);
-        return sdtFormat.format(date);
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        return sdf.format(date);
     }
     
     /**
@@ -54,6 +54,18 @@ public class ProcessingUtils {
             zdtOut = zdtOut.substring(0, bracketIndex);
         }
         return zdtOut;
+    }
+    
+    public static String getYearAndMonthFromStrDate(String strDate) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(SHORT_FORMAT);
+            Date date = sdf.parse(strDate);
+            SimpleDateFormat sdf2 = new SimpleDateFormat("yyyyMM");
+            return sdf2.format(date);
+        } catch (ParseException ex) {            
+            System.out.println("Parsing error occurred: "+ex.getMessage());
+            return null;
+        }
     }
     
     public static String dateTimeToStringWithourSpaces(Date date) {

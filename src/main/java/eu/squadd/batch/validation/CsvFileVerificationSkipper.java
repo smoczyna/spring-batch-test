@@ -5,6 +5,7 @@
  */
 package eu.squadd.batch.validation;
 
+import eu.squadd.batch.constants.Constants;
 import java.io.FileNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,21 +20,25 @@ import org.springframework.batch.item.file.FlatFileParseException;
 public class CsvFileVerificationSkipper implements SkipPolicy {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CsvFileVerificationSkipper.class);
-    
+
     @Override
     public boolean shouldSkip(Throwable exception, int skipCount) throws SkipLimitExceededException {
         boolean result = false;
-        if (exception instanceof FileNotFoundException) return false;
-        else if (exception instanceof FlatFileParseException && skipCount<5) {
-            FlatFileParseException ffpe = (FlatFileParseException) exception;
-            LOGGER.error("Parsing error when processing line: " + ffpe.getLineNumber());
-            result = true;
-        }
-        else if (exception instanceof NullPointerException && skipCount<5) {
-            NullPointerException npe = (NullPointerException) exception;
-            LOGGER.error("NULL encountered but the value was expected - skipping record ...");
-            result = true;
+        if (skipCount > Constants.MAX_SKIPPED_RECORDS) {
+            LOGGER.error("Maximum allowed exceptions reached, terminating...");
+        } else {
+            if (exception instanceof FileNotFoundException) {
+                LOGGER.error("File missing, terminating...");
+            } else if (exception instanceof FlatFileParseException) {
+                FlatFileParseException ffpe = (FlatFileParseException) exception;
+                LOGGER.error("Parsing error when processing line: " + ffpe.getLineNumber());
+                result = true;
+            } else if (exception instanceof NullPointerException) {
+                NullPointerException npe = (NullPointerException) exception;
+                LOGGER.error("NULL encountered but the value was expected - skipping record ...");
+                result = true;
+            }            
         }
         return result;
-    }    
+    }
 }

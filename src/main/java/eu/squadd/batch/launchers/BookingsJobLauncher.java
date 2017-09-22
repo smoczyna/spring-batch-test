@@ -35,28 +35,24 @@ public class BookingsJobLauncher {
     private final JobLauncher jobLauncher;
 
     @Autowired
-    BookingsJobLauncher(@Qualifier("billedBookingAggregateJob") Job job, JobLauncher jobLauncher) {
+    BookingsJobLauncher(@Qualifier("bookingAggregateJob") Job job, JobLauncher jobLauncher) {
         this.job = job;
         this.jobLauncher = jobLauncher;
     }
 
-    //@Scheduled(cron = "${csv.to.database.job.cron}")
+    @Scheduled(cron = "${csv.to.database.job.cron}")
     void launchCsvFileToDatabaseJob() throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
-        LOGGER.info("Starting billed booking file process job");
+        LOGGER.info("Starting booking files processing job");
         jobLauncher.run(job, newExecution());
-        LOGGER.info("Stopping billed booking file process job");
+        LOGGER.info("Stopping booking files processing job");
     }
 
     private JobParameters newExecution() {
         Map<String, JobParameter> parameters = new HashMap<>();
-        JobParameter parameter = new JobParameter(new Date());
-        parameters.put("currentTime", parameter);
-        parameter = new JobParameter("bmdunld.csv");
-        parameters.put("billed_csv_file_name", parameter);
-        parameter = new JobParameter("cmdunld.csv");
-        parameters.put("unbilled_csv_file_name", parameter);
-        parameter = new JobParameter("bookdate.txt");
-        parameters.put("bookdate_txt_file_name", parameter);
+        parameters.put("currentTime", new JobParameter(new Date()));
+//        parameters.put("billed_csv_file_name", new JobParameter("billed.csv"));
+//        parameters.put("unbilled_csv_file_name", new JobParameter("unbilled.csv"));
+//        parameters.put("bookdate_txt_file_name", new JobParameter("bookdate.txt"));
         return new JobParameters(parameters);
     }
 }

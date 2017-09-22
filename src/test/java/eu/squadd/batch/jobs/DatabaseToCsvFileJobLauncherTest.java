@@ -30,6 +30,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 //@SpringApplicationConfiguration(classes = SpringBatchTestApplication.class)
 public class DatabaseToCsvFileJobLauncherTest {
 
+    
+//    @Mock
+//    protected StepExecution stepExecution;
+//
+//    @Mock
+//    protected JobParameters jobParams;
+
     @Test
     public void launchJob() throws Exception {
 //        ApplicationContext context = new AnnotationConfigApplicationContext(SpringBatchTestApplication.class, DatabasesConfig.class, DatabaseToCsvFileJobConfig.class);

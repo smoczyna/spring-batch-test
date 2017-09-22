@@ -5,17 +5,18 @@
  */
 package eu.squadd.batch.jobs;
 
-import eu.squadd.batch.listeners.BilledBookingFileJobListener;
+import eu.squadd.batch.constants.Constants;
 import eu.squadd.batch.domain.AggregateWholesaleReportDTO;
 import eu.squadd.batch.domain.BilledCsvFileDTO;
 import eu.squadd.batch.domain.BookDateCsvFileDTO;
 import eu.squadd.batch.domain.SummarySubLedgerDTO;
+import eu.squadd.batch.listeners.BilledBookingFileStepExecutionListener;
+import eu.squadd.batch.listeners.BookingFilesJobListener;
 import eu.squadd.batch.processors.BookDateProcessor;
 import eu.squadd.batch.processors.SubLedgerProcessor;
 import eu.squadd.batch.processors.WholesaleReportProcessor;
-import eu.squadd.batch.readers.BookDateCsvFileReader;
-import eu.squadd.batch.listeners.BilledBookingFileStepExecutionListener;
 import eu.squadd.batch.readers.BilledBookingFileReader;
+import eu.squadd.batch.readers.BookDateCsvFileReader;
 import eu.squadd.batch.validation.CsvFileVerificationSkipper;
 import eu.squadd.batch.writers.AggregatedSubLedgerWriter;
 import eu.squadd.batch.writers.SubledgerCsvFileWriter;
@@ -28,11 +29,11 @@ import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.step.skip.SkipPolicy;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
-import org.springframework.batch.core.step.skip.SkipPolicy;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,16 +44,16 @@ import org.springframework.core.env.Environment;
  * @author smorcja
  */
 @Configuration
-public class BilledBookigFileJobConfig {
-
+public class BookigFilesJobConfig {
+    
     @Bean
-    JobExecutionListener billedFileJobListener() {
-        return new BilledBookingFileJobListener();
+    JobExecutionListener bookingFileJobListener() {
+        return new BookingFilesJobListener();
     }
 
     @Bean
     Tasklet sourceFilesExistanceChecker() {
-        return new SourceFilesExistanceChecker();
+        return new SourceFilesExistanceChecker(Constants.BILLED_BOOKING_FILENAME);
     }
 
     @Bean
@@ -66,8 +67,8 @@ public class BilledBookigFileJobConfig {
     }
 
     @Bean
-    ItemReader<BilledCsvFileDTO> billedFileItemReader(Environment environment) {        
-        return new BilledBookingFileReader(environment, "bmdunld.csv");
+    ItemReader<BilledCsvFileDTO> billedFileItemReader(Environment environment) {
+        return new BilledBookingFileReader(environment, Constants.BILLED_BOOKING_FILENAME);
     }
 
     @Bean
@@ -77,8 +78,7 @@ public class BilledBookigFileJobConfig {
 
     @Bean
     ItemReader<BookDateCsvFileDTO> bookDateItemReader(Environment environment) {
-        String[] fieldNames = new String[]{"rptPerStartDate", "rptPerEndDate", "transPerStartDate", "transPerEndDate", "monthEndCycle"};
-        return new BookDateCsvFileReader(environment, "bookdate.txt", fieldNames);
+        return new BookDateCsvFileReader(environment, Constants.BOOK_DATE_FILENAME);
     }
 
     @Bean
@@ -154,15 +154,15 @@ public class BilledBookigFileJobConfig {
     }
 
     @Bean
-    Job billedBookingAggregateJob(JobExecutionListener billedFileJobListener,
-                                  JobBuilderFactory jobBuilderFactory,
-                                  @Qualifier("checkIfSourceFilesExist") Step checkIfSourceFilesExist,
-                                  @Qualifier("updateBookingDatesStep") Step updateBookingDatesStep,
-                                  @Qualifier("billedBookingFileStep") Step billedBookingFileStep,
-                                  @Qualifier("saveSubLedgerToFile") Step saveSubLedgerToFile) {
-        return jobBuilderFactory.get("billedBookingAggregateJob")
+    Job bookingAggregateJob(JobExecutionListener bookingFileJobListener,
+                            JobBuilderFactory jobBuilderFactory,
+                            @Qualifier("checkIfSourceFilesExist") Step checkIfSourceFilesExist,
+                            @Qualifier("updateBookingDatesStep") Step updateBookingDatesStep,
+                            @Qualifier("billedBookingFileStep") Step billedBookingFileStep,
+                            @Qualifier("saveSubLedgerToFile") Step saveSubLedgerToFile) {
+        return jobBuilderFactory.get("bookingAggregateJob")
                 .incrementer(new RunIdIncrementer())
-                .listener(billedFileJobListener)
+                .listener(bookingFileJobListener)
                 .start(checkIfSourceFilesExist)
                 .on("COMPLETED").to(updateBookingDatesStep)
                 .on("COMPLETED").to(billedBookingFileStep)

@@ -44,6 +44,6 @@ public class BilledBookingFileReader extends CsvFileGenericReader<BilledCsvFileD
             "airBillSeconds",
             "tollBillSeconds",
             "wholesaleUsageBytes"},
-        ",");
+        ";");
     }
 }

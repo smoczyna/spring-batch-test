@@ -108,4 +108,18 @@ public class UnbilledCsvFileDTO implements BaseBookingInputInterface {
     public void setTotalWholesaleUsage(Long totalWholesaleUsage) {
         this.totalWholesaleUsage = totalWholesaleUsage;
     }
+
+    @Override
+    public String toString() {
+        return "UnbilledCsvFileDTO{" + "homeSbid=" + homeSbid 
+                + ", servingSbid=" + servingSbid 
+                + ", messageSource=" + messageSource 
+                + ", airProdId=" + airProdId 
+                + ", wholesalePeakAirCharge=" + wholesalePeakAirCharge 
+                + ", wholesaleOffpeakAirCharge=" + wholesaleOffpeakAirCharge 
+                + ", source=" + source 
+                + ", financialMarket=" + financialMarket 
+                + ", airBillSeconds=" + airBillSeconds 
+                + ", totalWholesaleUsage=" + totalWholesaleUsage + '}';
+    }
 }

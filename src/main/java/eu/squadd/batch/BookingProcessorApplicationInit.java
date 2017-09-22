@@ -8,6 +8,8 @@ import javax.sql.DataSource;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Primary;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 /**
  * <h1>WholesaleBookingProcessorApplicationInit</h1>
@@ -31,22 +33,6 @@ public class BookingProcessorApplicationInit {
     public CustomIdGenerator idGenerator = new CustomIdGenerator();
     
     /**
-     * Define a Bean to initialize the logger.
-     *
-     * @return Verizon Logger
-     */
-//    @Bean
-//    public VlfLogger vlfLogger() {
-//        VlfLogger logger = new VlfLogger();
-//        logger.setAppName(this.loggerConfig.getAppname());
-//        logger.setServiceName(this.loggerConfig.getServicename());
-//        logger.setRegion(this.loggerConfig.getRegion());
-//        logger.setZone(this.loggerConfig.getZone());
-//        VlfLogger.setLogLevel(LogLevel.INFO);
-//        return logger;
-//    }
-
-    /**
      * This is meta data source
      * this source is used by Spring Batch internally to control processing
      * connection and credentials details are configured in application.properties
@@ -57,6 +43,14 @@ public class BookingProcessorApplicationInit {
     @ConfigurationProperties(prefix = "spring.datasource")
     public DataSource metaDataSource() {
         return DataSourceBuilder.create().build();
+    }
+    
+    @Bean(name = "jobScheduler")
+    public TaskScheduler jobScheduler() {
+        ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
+        scheduler.setThreadNamePrefix("poolScheduler");
+        scheduler.setPoolSize(10);
+        return scheduler;
     }
     
 //    public DataSource memoryDataSource() {
