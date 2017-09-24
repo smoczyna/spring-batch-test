@@ -5,46 +5,71 @@
  */
 package eu.squadd.batch.readers;
 
-import org.junit.After;
-import org.junit.AfterClass;
+import eu.squadd.batch.domain.BilledCsvFileDTO;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.springframework.core.env.Environment;
+import org.junit.runner.RunWith;
+import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.item.ItemStreamException;
+import org.springframework.batch.test.MetaDataInstanceFactory;
+import org.springframework.batch.test.StepScopeTestExecutionListener;
+import org.springframework.batch.test.StepScopeTestUtils;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
 /**
  *
  * @author smorcja
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@TestExecutionListeners({DependencyInjectionTestExecutionListener.class, StepScopeTestExecutionListener.class})
+@ContextConfiguration
 public class BilledBookingFileReaderTest {
-    
-//    Environment environment;
-//    
-//    public BilledBookingFileReaderTest() {
-//    }
-//    
-//    @BeforeClass
-//    public static void setUpClass() {
-//    }
-//    
-//    @AfterClass
-//    public static void tearDownClass() {
-//    }
-//    
-//    @Before
-//    public void setUp() {
-//    }
-//    
-//    @After
-//    public void tearDown() {
-//    }
-//
-//    @Test
-//    public void testSomeMethod() {
-//        //return new BilledBookingFileReader(environment, "bmdunld.csv"); // reader testing goes to separate test file
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-    
+
+    private BilledBookingFileReader reader;
+
+    @Before
+    public void setUp() {
+        reader = new BilledBookingFileReader("/home/smoczyna/NetBeansProjects/spring-batch-test/src/main/resources/data/bmdunld.csv", "¦");
+    }
+
+    @Test
+    public void testReader() {
+        StepExecution execution = MetaDataInstanceFactory.createStepExecution();
+        int count = 0;
+        try {
+            count = StepScopeTestUtils.doInStepScope(execution, () -> {
+                reader.open(execution.getExecutionContext());
+                BilledCsvFileDTO inputRecord;
+                int readCount = 0;
+                try {
+                    while ((inputRecord = reader.read()) != null) {
+                        assertNotNull(inputRecord);
+                        System.out.println("*** Input data ***");
+                        System.out.println(inputRecord.toString());
+                        System.out.println("*** End of data ***");
+                        readCount++;
+                    }
+                } catch (Exception ex) {
+                    Logger.getLogger(BookDateCsvFileReaderTest.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+                    try {
+                        reader.close();
+                    } catch (ItemStreamException e) {
+                        fail(e.toString());
+                    }
+                }
+                return readCount;
+            });
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+        assertEquals(1, count);
+    }
+
 }

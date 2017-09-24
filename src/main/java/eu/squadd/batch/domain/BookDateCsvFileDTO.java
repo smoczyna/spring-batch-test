@@ -63,4 +63,16 @@ public class BookDateCsvFileDTO {
     public void setMonthEndCycle(String monthEndCycle) {
         this.monthEndCycle = monthEndCycle;
     }
+
+    @Override
+    public String toString() {
+        return "BookDateCsvFileDTO{" 
+                + "rptPerStartDate=" + rptPerStartDate 
+                + ", rptPerEndDate=" + rptPerEndDate 
+                + ", transPerStartDate=" + transPerStartDate 
+                + ", transPerEndDate=" + transPerEndDate 
+                + ", monthEndCycle=" + monthEndCycle + '}';
+    }
+    
+    
 }
