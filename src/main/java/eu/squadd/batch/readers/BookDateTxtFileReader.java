@@ -17,8 +17,6 @@ import org.springframework.core.env.Environment;
  */
 public class BookDateTxtFileReader extends CsvFileGenericReader<BookDateCsvFileDTO> {
     
-    //private String filename;
-    
     public BookDateTxtFileReader(Environment environment, String filename) {
         super(BookDateCsvFileDTO.class, environment, filename, new String[]{"rptPerStartDate", "rptPerEndDate", "transPerStartDate", "transPerEndDate", "monthEndCycle"}, null);        
     }

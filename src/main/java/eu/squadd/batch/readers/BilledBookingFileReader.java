@@ -6,6 +6,7 @@
 package eu.squadd.batch.readers;
 
 import eu.squadd.batch.domain.BilledCsvFileDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 
 /**
@@ -44,6 +45,7 @@ public class BilledBookingFileReader extends CsvFileGenericReader<BilledCsvFileD
             "tollBillSeconds",
             "wholesaleUsageBytes"};
     
+    @Autowired
     public BilledBookingFileReader(Environment environment, String filename) {
         super(BilledCsvFileDTO.class, environment, filename, COLUMN_NAMES, ",");
     }

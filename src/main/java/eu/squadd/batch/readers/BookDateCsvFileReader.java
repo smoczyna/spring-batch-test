@@ -6,6 +6,7 @@
 package eu.squadd.batch.readers;
 
 import eu.squadd.batch.domain.BookDateCsvFileDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 
 /**
@@ -16,6 +17,7 @@ public class BookDateCsvFileReader extends CsvFileGenericReader<BookDateCsvFileD
     
     private static final String[] COLUMN_NAMES = new String[]{"rptPerStartDate", "rptPerEndDate", "transPerStartDate", "transPerEndDate", "monthEndCycle"};
     
+    @Autowired
     public BookDateCsvFileReader(Environment environment, String filename) {
         super(BookDateCsvFileDTO.class, environment, filename, COLUMN_NAMES, ",");
     }

@@ -6,6 +6,7 @@
 package eu.squadd.batch.writers;
 
 import eu.squadd.batch.domain.SummarySubLedgerDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
@@ -39,7 +40,7 @@ public class SubledgerCsvFileWriter extends CsvFileGenericWriter<SummarySubLedge
                                                                "discountOfferId",
                                                                "updateUserId",
                                                                "updateTimestamp"};
-    
+    @Autowired
     public SubledgerCsvFileWriter(Environment environment) {
         super(environment, "subledger_summary.csv", COLUMN_NAMES);
     }

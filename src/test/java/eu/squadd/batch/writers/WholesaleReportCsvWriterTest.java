@@ -5,42 +5,61 @@
  */
 package eu.squadd.batch.writers;
 
-import org.junit.After;
-import org.junit.AfterClass;
+import eu.squadd.batch.domain.AggregateWholesaleReportDTO;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.runner.RunWith;
+import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.test.MetaDataInstanceFactory;
+import org.springframework.batch.test.StepScopeTestExecutionListener;
+import org.springframework.batch.test.StepScopeTestUtils;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
 /**
  *
  * @author smoczyna
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@TestExecutionListeners({DependencyInjectionTestExecutionListener.class, StepScopeTestExecutionListener.class})
+@ContextConfiguration
 public class WholesaleReportCsvWriterTest {
-    
-    public WholesaleReportCsvWriterTest() {
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
+
+    private WholesaleReportCsvWriter writer;
+
     @Before
     public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
+        writer = new WholesaleReportCsvWriter("/home/smoczyna/NetBeansProjects/spring-batch-test/src/main/resources/data/wholesale_report.csv");
     }
 
     @Test
-    public void testSomeMethod() {
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testReader() throws Exception {
+        List<AggregateWholesaleReportDTO> report = new LinkedList();
+        AggregateWholesaleReportDTO record = new AggregateWholesaleReportDTO();
+        record.setBilledInd("ind1");
+        record.setHomeFinancialMarketId("Dublin");
+        // populate something 
+        report.add(record);
+
+        StepExecution execution = MetaDataInstanceFactory.createStepExecution();
+        StepScopeTestUtils.doInStepScope(execution, () -> {
+            try {
+                writer.open(execution.getExecutionContext());
+                writer.write(report);
+                writer.close();
+                // verify the file was saved and its contents
+                
+            } catch (Exception ex) {
+                Logger.getLogger(WholesaleReportCsvWriterTest.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return 1;
+        });
     }
-    
+
 }
