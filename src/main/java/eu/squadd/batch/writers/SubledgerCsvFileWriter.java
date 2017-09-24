@@ -16,29 +16,35 @@ import org.springframework.stereotype.Component;
 @Component
 public class SubledgerCsvFileWriter extends CsvFileGenericWriter<SummarySubLedgerDTO> {
     
+    private static final String[] COLUMN_NAMES = new String[] {"jemsApplId",
+                                                               "reportStartDate",
+                                                               "jemsApplTransactioDate",
+                                                               "financialEventNumber",
+                                                               "financialCategory", 
+                                                               "financialmarketId",
+                                                               "subledgerSequenceNumber",
+                                                               "subledgerTotalDebitAmount",
+                                                               "subledgerTotalCreditAmount",
+                                                               "jurnalEventNumber",
+                                                               "jurnalEventExceptionCode",
+                                                               "jurnalEventReadInd",
+                                                               "generalLedgerTransactionNumber",
+                                                               "billCycleNumber",
+                                                               "billTypeCode",
+                                                               "billCycleMonthYear",
+                                                               "billPhaseType",
+                                                               "billMonthInd",
+                                                               "billAccrualIndicator",
+                                                               "paymentSourceCode",
+                                                               "discountOfferId",
+                                                               "updateUserId",
+                                                               "updateTimestamp"};
+    
     public SubledgerCsvFileWriter(Environment environment) {
-        super(environment, "subledger_summary.csv", new String[] {"jemsApplId",
-                                                                  "reportStartDate",
-                                                                  "jemsApplTransactioDate",
-                                                                  "financialEventNumber",
-                                                                  "financialCategory", 
-                                                                  "financialmarketId",
-                                                                  "subledgerSequenceNumber",
-                                                                  "subledgerTotalDebitAmount",
-                                                                  "subledgerTotalCreditAmount",
-                                                                  "jurnalEventNumber",
-                                                                  "jurnalEventExceptionCode",
-                                                                  "jurnalEventReadInd",
-                                                                  "generalLedgerTransactionNumber",
-                                                                  "billCycleNumber",
-                                                                  "billTypeCode",
-                                                                  "billCycleMonthYear",
-                                                                  "billPhaseType",
-                                                                  "billMonthInd",
-                                                                  "billAccrualIndicator",
-                                                                  "paymentSourceCode",
-                                                                  "discountOfferId",
-                                                                  "updateUserId",
-                                                                  "updateTimestamp"});
+        super(environment, "subledger_summary.csv", COLUMN_NAMES);
+    }
+    
+    public SubledgerCsvFileWriter(String filePath) {
+        super(filePath, COLUMN_NAMES);
     }
 }

@@ -20,7 +20,13 @@ import org.springframework.core.io.FileSystemResource;
  */
 public class CsvFileGenericWriter<T> extends FlatFileItemWriter<T> {
     private static final String PROPERTY_CSV_EXPORT_FILE_PATH = "database.to.csv.job.export.file.path";
-      
+    
+    public CsvFileGenericWriter(String fileName, String[] fieldNames) {
+        this.setResource(new FileSystemResource(fileName));
+        LineAggregator<T> lineAggregator = createWholesaleReportLineAggregator(fieldNames);
+        this.setLineAggregator(lineAggregator);
+    }
+    
     public CsvFileGenericWriter(Environment environment, String fileName, String[] fieldNames) {
         String exportFilePath = environment.getRequiredProperty(PROPERTY_CSV_EXPORT_FILE_PATH).concat(fileName);
         this.setResource(new FileSystemResource(exportFilePath));
