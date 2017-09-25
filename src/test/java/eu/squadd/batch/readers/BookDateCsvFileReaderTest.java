@@ -28,7 +28,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
  * @author smorcja
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@TestExecutionListeners({DependencyInjectionTestExecutionListener.class, StepScopeTestExecutionListener.class})
+@TestExecutionListeners({StepScopeTestExecutionListener.class})
 @ContextConfiguration
 //@TestPropertySource(properties = {"csv.to.database.job.source.file.path", "/home/smoczyna/NetBeansProjects/spring-batch-test/src/main/resources/data"})
 public class BookDateCsvFileReaderTest {
@@ -41,6 +41,8 @@ public class BookDateCsvFileReaderTest {
         File file = new File(classLoader.getResource("./data/bookdate.csv").getFile());
         if (file.exists())
             reader = new BookDateCsvFileReader(file.getAbsolutePath());
+        else
+            fail("Source file missing !!!");
         
         //reader = new BookDateCsvFileReader("/home/smoczyna/NetBeansProjects/spring-batch-test/src/main/resources/data/bookdate.csv");        
     }

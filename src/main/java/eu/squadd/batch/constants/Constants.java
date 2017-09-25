@@ -14,5 +14,8 @@ public class Constants {
     public static final String BOOK_DATE_FILENAME = "bookdate.csv";
     public static final String UNBILLED_BOOKING_FILENAME = "unbilled.csv";
     
+    public static final String SUBLEDGER_SUMMARY_FILENAME = "subledger_summary.csv";
+    public static final String WHOLESALE_REPORT_FILENAME = "wholesale_report.csv";
+    
     public static final Integer MAX_SKIPPED_RECORDS = 100;
 }

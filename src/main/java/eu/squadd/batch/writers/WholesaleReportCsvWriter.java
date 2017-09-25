@@ -5,6 +5,7 @@
  */
 package eu.squadd.batch.writers;
 
+import eu.squadd.batch.constants.Constants;
 import eu.squadd.batch.domain.AggregateWholesaleReportDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -43,6 +44,6 @@ public class WholesaleReportCsvWriter extends CsvFileGenericWriter<AggregateWhol
         
     @Autowired
     public WholesaleReportCsvWriter(Environment environment) {
-        super(environment, "wholesale_report.csv", COLUMN_NAMES);
+        super(environment, Constants.WHOLESALE_REPORT_FILENAME, COLUMN_NAMES);
     }
 }

@@ -9,12 +9,12 @@ import eu.squadd.batch.domain.BilledCsvFileDTO;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.batch.core.StepExecution;
-import org.springframework.batch.item.ItemStreamException;
+import org.springframework.batch.item.file.FlatFileParseException;
 import org.springframework.batch.test.MetaDataInstanceFactory;
 import org.springframework.batch.test.StepScopeTestExecutionListener;
 import org.springframework.batch.test.StepScopeTestUtils;
@@ -33,20 +33,27 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 public class BilledBookingFileReaderTest {
 
     private BilledBookingFileReader reader;
-
+    private String os;
+    private String delimiter;
+    
     @Before
-    public void setUp() {
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("./data/bmdunld.csv").getFile());
-        //System.out.println(file.getAbsolutePath());
-        if (file.exists())
-            reader = new BilledBookingFileReader(file.getAbsolutePath(), "¦");
-        
-        //reader = new BilledBookingFileReader("/home/smoczyna/NetBeansProjects/spring-batch-test/src/main/resources/data/bmdunld.csv", "¦");
+    public void setup() {
+        this.os = System.getProperty("os.name");
+        if (this.os.contains("Windows"))
+            this.delimiter = "Â¦";
+        else
+            this.delimiter = "¦";            
     }
-
+    
     @Test
     public void testReader() {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("./data/bmdunld.csv").getFile());
+        if (file.exists())
+            reader = new BilledBookingFileReader(file.getAbsolutePath(), this.delimiter);
+        else
+            fail("Source file missing !!!");
+        
         StepExecution execution = MetaDataInstanceFactory.createStepExecution();
         int count = 0;
         try {
@@ -63,20 +70,49 @@ public class BilledBookingFileReaderTest {
                         readCount++;
                     }
                 } catch (Exception ex) {
-                    Logger.getLogger(BookDateCsvFileReaderTest.class.getName()).log(Level.SEVERE, null, ex);
-                } finally {
-                    try {
-                        reader.close();
-                    } catch (ItemStreamException e) {
-                        fail(e.toString());
-                    }
+                    Logger.getLogger(BilledBookingFileReaderTest.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 return readCount;
             });
-        } catch (Exception e) {
-            fail(e.toString());
+        } catch (Exception ex) {
+            Logger.getLogger(BilledBookingFileReaderTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-        //assertEquals(1, count);
+        assertEquals(1, count);
     }
-
+    
+    @Test //(expected = FlatFileParseException.class)
+    public void readerFailTest() {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("./data/bmdunld.csv").getFile());
+        if (file.exists())
+            reader = new BilledBookingFileReader(file.getAbsolutePath(), "|");
+        else
+            fail("Source file missing !!!");
+        
+        StepExecution execution = MetaDataInstanceFactory.createStepExecution();
+        int count = 0;
+        try {
+            count = StepScopeTestUtils.doInStepScope(execution, () -> {
+                reader.open(execution.getExecutionContext());
+                BilledCsvFileDTO inputRecord;
+                int readCount = 0;
+                try {
+                    while ((inputRecord = reader.read()) != null) {
+                        assertNotNull(inputRecord);
+                        System.out.println("*** Input data ***");
+                        System.out.println(inputRecord.toString());
+                        System.out.println("*** End of data ***");
+                        readCount++;
+                    }
+                } catch (Exception ex) {
+                    Logger.getLogger(BilledBookingFileReaderTest.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                return readCount;
+            });
+        } catch (Exception ex) {
+            Logger.getLogger(BilledBookingFileReaderTest.class.getName()).log(Level.SEVERE, null, ex);
+            assertTrue(ex instanceof FlatFileParseException);
+        }
+        assertEquals(0, count);
+    }
 }
