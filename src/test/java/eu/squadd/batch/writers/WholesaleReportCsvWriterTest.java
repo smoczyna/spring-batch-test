@@ -6,6 +6,7 @@
 package eu.squadd.batch.writers;
 
 import eu.squadd.batch.domain.AggregateWholesaleReportDTO;
+import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -35,7 +36,11 @@ public class WholesaleReportCsvWriterTest {
 
     @Before
     public void setUp() {
-        writer = new WholesaleReportCsvWriter("/home/smoczyna/NetBeansProjects/spring-batch-test/src/main/resources/data/wholesale_report.csv");
+        ClassLoader classLoader = getClass().getClassLoader();
+        URL url = classLoader.getResource("./data");
+        System.out.println("write path: "+url.getPath());
+        writer = new WholesaleReportCsvWriter(url.getPath()+"/wholesale_report.csv");
+        //writer = new WholesaleReportCsvWriter("/home/smoczyna/NetBeansProjects/spring-batch-test/src/main/resources/data/wholesale_report.csv");
     }
 
     @Test
