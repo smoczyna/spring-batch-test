@@ -41,10 +41,10 @@ public class BookingFilesJobListener implements JobExecutionListener {
     @Override
     public void afterJob(JobExecution je) {
         if (je.getStatus() == BatchStatus.COMPLETED) {
-            //String filename = je.getJobParameters().getString("billed_csv_file_name");
             this.moveFileToArchive(Constants.BOOK_DATE_FILENAME);
             this.moveFileToArchive(Constants.BILLED_BOOKING_FILENAME);
-            //this.moveFileToArchive(Constants.UNBILLED_BOOKING_FILENAME);
+            this.moveFileToArchive(Constants.UNBILLED_BOOKING_FILENAME);
+            this.moveFileToArchive(Constants.ADMIN_FEES_FILENAME);            
         } else {
             LOGGER.info("All encountered exceptions:");
             List<Throwable> exceptionList = je.getAllFailureExceptions();

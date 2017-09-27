@@ -17,9 +17,9 @@ import org.springframework.batch.core.StepExecutionListener;
  *
  * @author smorcja
  */
-public class BilledBookingFileStepExecutionListener implements StepExecutionListener, SkipListener {
+public class BookingFileStepExecutionListener implements StepExecutionListener, SkipListener {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BilledBookingFileStepExecutionListener.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BookingFileStepExecutionListener.class);
     
     @Override
     public void beforeStep(StepExecution se) {        

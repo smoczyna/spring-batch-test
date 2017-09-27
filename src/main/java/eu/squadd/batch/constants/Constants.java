@@ -10,9 +10,10 @@ package eu.squadd.batch.constants;
  * @author smorcja
  */
 public class Constants {
-    public static final String BILLED_BOOKING_FILENAME = "billed.csv";
     public static final String BOOK_DATE_FILENAME = "bookdate.csv";
+    public static final String BILLED_BOOKING_FILENAME = "billed.csv";    
     public static final String UNBILLED_BOOKING_FILENAME = "unbilled.csv";
+    public static final String ADMIN_FEES_FILENAME = "adminfees.csv";
     
     public static final String SUBLEDGER_SUMMARY_FILENAME = "subledger_summary.csv";
     public static final String WHOLESALE_REPORT_FILENAME = "wholesale_report.csv";
