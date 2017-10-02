@@ -1,88 +1,102 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package eu.squadd.batch.domain.casandra;
 
-/**
- *
- * @author smorcja
+/*
+ * PRIMARY KEY((ProductId,HomeSidBid),ServeSidBid))
  */
+import com.datastax.driver.mapping.annotations.ClusteringColumn;
+import com.datastax.driver.mapping.annotations.Column;
+import com.datastax.driver.mapping.annotations.PartitionKey;
+import com.datastax.driver.mapping.annotations.Table;
+
+@Table(name = "wholesaleprice")
 public class WholesalePrice {
-    
-    private String HomeSidBid;   
-    private Integer ProductId; 
-    private String ServeSidBid;
-    private String RatePeriodClassificationId;
-    private String EffectiveDate;
-    private String EndDate;
-    private Double ProductWholesalePrice;    
-    private Double ProductDiscountPercent;
 
-    public String getHomeSidBid() {
-        return HomeSidBid;
-    }
+	@PartitionKey(value = 0)
+	@Column(name = "productid")
+	private Integer productid;
 
-    public void setHomeSidBid(String HomeSidBid) {
-        this.HomeSidBid = HomeSidBid;
-    }
+	@PartitionKey(value = 1)
+	@Column(name = "homesidbid")
+	private String homesidbid;
 
-    public Integer getProductId() {
-        return ProductId;
-    }
+	@ClusteringColumn
+	@Column(name = "servesidbid")
+	private String servesidbid;
 
-    public void setProductId(Integer ProductId) {
-        this.ProductId = ProductId;
-    }
+	private String rateperiodclassificationid;
+	private String effectivedate;
+	private String enddate;
+	private Double productwholesaleprice;
+	private Double productdiscountpercent;
 
-    public String getServeSidBid() {
-        return ServeSidBid;
-    }
+	@Override
+	public String toString() {
+		return "WholesalePrice [productwholesaleprice=" + productwholesaleprice + ", productdiscountpercent="
+				+ productdiscountpercent + "]";
+	}
 
-    public void setServeSidBid(String ServeSidBid) {
-        this.ServeSidBid = ServeSidBid;
-    }
+	public Integer getProductid() {
+		return productid;
+	}
 
-    public String getRatePeriodClassificationId() {
-        return RatePeriodClassificationId;
-    }
+	public void setProductid(Integer productid) {
+		this.productid = productid;
+	}
 
-    public void setRatePeriodClassificationId(String RatePeriodClassificationId) {
-        this.RatePeriodClassificationId = RatePeriodClassificationId;
-    }
+	public String getHomesidbid() {
+		return homesidbid;
+	}
 
-    public String getEffectiveDate() {
-        return EffectiveDate;
-    }
+	public void setHomesidbid(String homesidbid) {
+		this.homesidbid = homesidbid;
+	}
 
-    public void setEffectiveDate(String EffectiveDate) {
-        this.EffectiveDate = EffectiveDate;
-    }
+	public String getServesidbid() {
+		return servesidbid;
+	}
 
-    public String getEndDate() {
-        return EndDate;
-    }
+	public void setServesidbid(String servesidbid) {
+		this.servesidbid = servesidbid;
+	}
 
-    public void setEndDate(String EndDate) {
-        this.EndDate = EndDate;
-    }
+	public String getRateperiodclassificationid() {
+		return rateperiodclassificationid;
+	}
 
-    public Double getProductWholesalePrice() {
-        return ProductWholesalePrice;
-    }
+	public void setRateperiodclassificationid(String rateperiodclassificationid) {
+		this.rateperiodclassificationid = rateperiodclassificationid;
+	}
 
-    public void setProductWholesalePrice(Double ProductWholesalePrice) {
-        this.ProductWholesalePrice = ProductWholesalePrice;
-    }
+	public String getEffectivedate() {
+		return effectivedate;
+	}
 
-    public Double getProductDiscountPercent() {
-        return ProductDiscountPercent;
-    }
+	public void setEffectivedate(String effectivedate) {
+		this.effectivedate = effectivedate;
+	}
 
-    public void setProductDiscountPercent(Double ProductDiscountPercent) {
-        this.ProductDiscountPercent = ProductDiscountPercent;
-    }
+	public String getEnddate() {
+		return enddate;
+	}
 
-    
+	public void setEnddate(String enddate) {
+		this.enddate = enddate;
+	}
+
+	public Double getProductwholesaleprice() {
+		return productwholesaleprice;
+	}
+
+	public void setProductwholesaleprice(Double productwholesaleprice) {
+		this.productwholesaleprice = productwholesaleprice;
+	}
+
+	public Double getProductdiscountpercent() {
+		return productdiscountpercent;
+	}
+
+	public void setProductdiscountpercent(Double productdiscountpercent) {
+		this.productdiscountpercent = productdiscountpercent;
+	}
+
 }

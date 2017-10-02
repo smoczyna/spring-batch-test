@@ -39,7 +39,7 @@ public class SourceFilesExistanceChecker implements Tasklet {
             (!f3.exists() || f3.isDirectory()) ||
             (!f4.exists() || f4.isDirectory())) {
             LOGGER.error("One or more required files not found, job aborted.");
-            throw new JobInterruptedException("Source FIle does not exist");
+            throw new JobInterruptedException("Source FIle(s) do not arrived yet");
         } else {
             return RepeatStatus.FINISHED;
         }

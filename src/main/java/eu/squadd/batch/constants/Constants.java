@@ -11,6 +11,7 @@ package eu.squadd.batch.constants;
  */
 public class Constants {
     public static final String BOOK_DATE_FILENAME = "bookdate.csv";
+    public static final String FINANCIAL_EVENT_OFFSET_FILENAME = "offset.csv";
     public static final String BILLED_BOOKING_FILENAME = "billed.csv";    
     public static final String UNBILLED_BOOKING_FILENAME = "unbilled.csv";
     public static final String ADMIN_FEES_FILENAME = "adminfees.csv";

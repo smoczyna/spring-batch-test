@@ -7,6 +7,7 @@ package eu.squadd.batch.writers;
 
 import eu.squadd.batch.domain.AggregateWholesaleReportDTO;
 import eu.squadd.batch.util.ProcessingUtils;
+import eu.squadd.batch.writers.WholesaleReportCsvWriter;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -27,14 +28,13 @@ import org.springframework.batch.test.StepScopeTestUtils;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
 /**
  *
  * @author smoczyna
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@TestExecutionListeners({DependencyInjectionTestExecutionListener.class, StepScopeTestExecutionListener.class})
+@TestExecutionListeners({StepScopeTestExecutionListener.class})
 @ContextConfiguration
 public class WholesaleReportCsvWriterTest {
 
@@ -45,9 +45,8 @@ public class WholesaleReportCsvWriterTest {
     public void setUp() {
         ClassLoader classLoader = getClass().getClassLoader();
         workingFoler = classLoader.getResource("./data").getPath();
-        System.out.println("Write path: "+workingFoler);
+        Logger.getLogger(WholesaleReportCsvWriterTest.class.getName()).info("Write path: "+workingFoler);
         writer = new WholesaleReportCsvWriter(workingFoler+"/wholesale_report.csv");
-        //writer = new WholesaleReportCsvWriter("/home/smoczyna/NetBeansProjects/spring-batch-test/src/main/resources/data/wholesale_report.csv");
     }
 
     @Test
@@ -69,7 +68,6 @@ public class WholesaleReportCsvWriterTest {
                 writer.open(execution.getExecutionContext());
                 writer.write(report);
                 writer.close();
-                // verify the file was saved and check its contents eventually               
                 verifyWrittenFile();
             } catch (Exception ex) {
                 Logger.getLogger(WholesaleReportCsvWriterTest.class.getName()).log(Level.SEVERE, null, ex);
@@ -78,6 +76,14 @@ public class WholesaleReportCsvWriterTest {
         });
     }
 
+    /**
+     * verify the result file:
+     * - checking if it exists first
+     * - reading the first line and splitting it by found delimiter 
+     * - comparing the number of parsed fields with the AggregateWholesaleReportDTO java object
+     * 
+     * @throws IOException 
+     */
     private void verifyWrittenFile() throws IOException {
         File file = new File(workingFoler+"/wholesale_report.csv");
         assertNotNull(file.exists());

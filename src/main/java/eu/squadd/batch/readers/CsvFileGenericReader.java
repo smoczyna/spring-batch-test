@@ -36,12 +36,7 @@ public class CsvFileGenericReader<T> extends FlatFileItemReader<T> {
     }
     
     public CsvFileGenericReader(Class<T> payloadClass, Environment environment, String filename, String[] fieldNames, String delimiter) {
-        super();
-        this.payloadClass = payloadClass;
-        String importFilePath = environment.getRequiredProperty(PROPERTY_CSV_SOURCE_FILE_PATH).concat(filename);
-        this.setResource(new FileSystemResource(importFilePath));
-        this.setLinesToSkip(0);
-        this.setLineMapper(createLineMapper(fieldNames, delimiter));
+        this(payloadClass, environment.getRequiredProperty(PROPERTY_CSV_SOURCE_FILE_PATH).concat(filename), fieldNames, delimiter, 0);
     }
 
     protected final LineMapper<T> createLineMapper(String[] fieldNames, String delimiter) {

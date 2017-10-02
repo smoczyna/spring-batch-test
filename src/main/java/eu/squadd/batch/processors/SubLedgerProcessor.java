@@ -6,6 +6,7 @@
 package eu.squadd.batch.processors;
 
 import eu.squadd.batch.domain.BookDateCsvFileDTO;
+import eu.squadd.batch.domain.FinancialEventOffset;
 import eu.squadd.batch.domain.SummarySubLedgerDTO;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,9 +22,11 @@ public class SubLedgerProcessor {
 
     private Set<SummarySubLedgerDTO> aggregatedOutput;
     private BookDateCsvFileDTO dates;
+    private Set<FinancialEventOffset> financialEventOffset;
 
     public SubLedgerProcessor() {
         this.aggregatedOutput = new HashSet();
+        this.financialEventOffset = new HashSet();
     }
 
     public Set< SummarySubLedgerDTO> getAggregatedOutput() {
@@ -34,7 +37,7 @@ public class SubLedgerProcessor {
         this.aggregatedOutput = aggregatedOutput;
     }
 
-    public SummarySubLedgerDTO add() {
+    public SummarySubLedgerDTO addSubledger() {
         SummarySubLedgerDTO slRecord = new SummarySubLedgerDTO();
         if (this.dates != null) {
             slRecord.setReportStartDate(dates.getRptPerStartDate());
@@ -52,5 +55,17 @@ public class SubLedgerProcessor {
 
     public void setDates(BookDateCsvFileDTO dates) {
         this.dates = dates;
+    }
+
+    public Set<FinancialEventOffset> getFinancialEventOffset() {
+        return financialEventOffset;
+    }
+
+    public void setFinancialEventOffset(Set<FinancialEventOffset> financialEventOffset) {
+        this.financialEventOffset = financialEventOffset;
+    }
+    
+    public boolean addOffset(FinancialEventOffset offset) {        
+        return this.financialEventOffset.add(offset);                
     }
 }

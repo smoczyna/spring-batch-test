@@ -1,97 +1,107 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package eu.squadd.batch.domain.casandra;
 
-/**
- *
- * @author smorcja
+/*
+ * PRIMARY KEY (ProductId),DataEventSubType))
  */
+import com.datastax.driver.mapping.annotations.ClusteringColumn;
+import com.datastax.driver.mapping.annotations.Column;
+import com.datastax.driver.mapping.annotations.PartitionKey;
+import com.datastax.driver.mapping.annotations.Table;
+
+@Table(name = "dataevent")
 public class DataEvent {
-    
-    private String DataEventType;
-    private String ContentReportType;
-    private String DataEventSubType;
-    private String ProductBillLevelCode;
-    private String ProductBillFrequencyCode;
-    private String ContentComponentType;
-    private String ContentRevenueshareType;
-    private Integer ProductId;
-    private String BillSectionCode;
 
-    public String getDataEventType() {
-        return DataEventType;
-    }
+	@PartitionKey
+	@Column(name = "dataeventtype")
+	private String dataeventtype;
 
-    public void setDataEventType(String DataEventType) {
-        this.DataEventType = DataEventType;
-    }
+	@ClusteringColumn
+	@Column(name = "dataeventsubtype")
+	private String dataeventsubtype;
 
-    public String getContentReportType() {
-        return ContentReportType;
-    }
+	private String contentreporttype;
+	private String productbilllevelcode;
+	private String productbillfrequencycode;
+	private String contentcomponenttype;
+	private String contentrevenuesharetype;
+	private String billsectioncode;
+	private Integer productid;
 
-    public void setContentReportType(String ContentReportType) {
-        this.ContentReportType = ContentReportType;
-    }
+	public String getDataeventtype() {
+		return dataeventtype;
+	}
 
-    public String getDataEventSubType() {
-        return DataEventSubType;
-    }
+	public void setDataeventtype(String dataeventtype) {
+		this.dataeventtype = dataeventtype;
+	}
 
-    public void setDataEventSubType(String DataEventSubType) {
-        this.DataEventSubType = DataEventSubType;
-    }
+	public String getContentreporttype() {
+		return contentreporttype;
+	}
 
-    public String getProductBillLevelCode() {
-        return ProductBillLevelCode;
-    }
+	public void setContentreporttype(String contentreporttype) {
+		this.contentreporttype = contentreporttype;
+	}
 
-    public void setProductBillLevelCode(String ProductBillLevelCode) {
-        this.ProductBillLevelCode = ProductBillLevelCode;
-    }
+	public String getDataeventsubtype() {
+		return dataeventsubtype;
+	}
 
-    public String getProductBillFrequencyCode() {
-        return ProductBillFrequencyCode;
-    }
+	public void setDataeventsubtype(String dataeventsubtype) {
+		this.dataeventsubtype = dataeventsubtype;
+	}
 
-    public void setProductBillFrequencyCode(String ProductBillFrequencyCode) {
-        this.ProductBillFrequencyCode = ProductBillFrequencyCode;
-    }
+	public String getProductbilllevelcode() {
+		return productbilllevelcode;
+	}
 
-    public String getContentComponentType() {
-        return ContentComponentType;
-    }
+	public void setProductbilllevelcode(String productbilllevelcode) {
+		this.productbilllevelcode = productbilllevelcode;
+	}
 
-    public void setContentComponentType(String ContentComponentType) {
-        this.ContentComponentType = ContentComponentType;
-    }
+	public String getProductbillfrequencycode() {
+		return productbillfrequencycode;
+	}
 
-    public String getContentRevenueshareType() {
-        return ContentRevenueshareType;
-    }
+	public void setProductbillfrequencycode(String productbillfrequencycode) {
+		this.productbillfrequencycode = productbillfrequencycode;
+	}
 
-    public void setContentRevenueshareType(String ContentRevenueshareType) {
-        this.ContentRevenueshareType = ContentRevenueshareType;
-    }
+	public String getContentcomponenttype() {
+		return contentcomponenttype;
+	}
 
-    public Integer getProductId() {
-        return ProductId;
-    }
+	public void setContentcomponenttype(String contentcomponenttype) {
+		this.contentcomponenttype = contentcomponenttype;
+	}
 
-    public void setProductId(Integer ProductId) {
-        this.ProductId = ProductId;
-    }
+	public String getContentrevenuesharetype() {
+		return contentrevenuesharetype;
+	}
 
-    public String getBillSectionCode() {
-        return BillSectionCode;
-    }
+	public void setContentrevenuesharetype(String contentrevenuesharetype) {
+		this.contentrevenuesharetype = contentrevenuesharetype;
+	}
 
-    public void setBillSectionCode(String BillSectionCode) {
-        this.BillSectionCode = BillSectionCode;
-    }
+	public String getBillsectioncode() {
+		return billsectioncode;
+	}
 
-    
+	public void setBillsectioncode(String billsectioncode) {
+		this.billsectioncode = billsectioncode;
+	}
+
+	public Integer getProductid() {
+		return productid;
+	}
+
+	public void setProductid(Integer productid) {
+		this.productid = productid;
+	}
+
+	@Override
+	public String toString() {
+		return "DataEvent [dataeventsubtype=" + dataeventsubtype + "]";
+	}
+
 }

@@ -1,11 +1,18 @@
+package eu.squadd.batch.domain.casandra;
+
+/*
+ * PRIMARY KEY((FinancialMarketId),FccCgsaMapEndDate,FinancialMarketMapEndDate,GLMarketLegalEntityEndDate,GLMarketMapType,GLMarketEndDate,AlternateBookingType))
+ */
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package eu.squadd.batch.domain.casandra;
-
+import com.datastax.driver.mapping.annotations.Column;
+import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
+import com.datastax.driver.mapping.annotations.ClusteringColumn;
 
 /**
  *
@@ -13,202 +20,232 @@ import com.datastax.driver.mapping.annotations.Table;
  */
 @Table(name = "financialmarket")
 public class FinancialMarket {
-    private String financialmarketid;
-    private String financialmarketmapeffectivedate;
-    private String fcccgsanumber;
-    private String fcccgsamapeffectivedate;
-    private String glmarketid;
-    private String glmarketeffectivedate;
-    private String glmarketlegalentityeffectivedate;
-    private String financialmarketeffectivedate;
-    private String financialmarketenddate;
-    private String financialmarketmapenddate;
-    private String glmarketmaptype;
-    private String fcccgsamapenddate;
-    private String glmarketenddate;
-    private String alternatebookingtype;
-    private String glmarketlegalentityenddate;
-    private String financialmarketdefaultgeocode;
-    private String financialmarketname;
-    private String financialmarkettypecode;
-    private String gllegalentityid;
-    private String glmarketdescription;
-    private String multiplemarketindicator;
-    private String sidbid;
 
-    public String getFinancialmarketid() {
-        return financialmarketid;
-    }
+	@PartitionKey
+	@Column(name = "financialmarketid")
+	private String financialmarketid;
 
-    public void setFinancialmarketid(String financialmarketid) {
-        this.financialmarketid = financialmarketid;
-    }
+	@ClusteringColumn(value = 0)
+	@Column(name = "fcccgsamapenddate")
+	private String fcccgsamapenddate;
 
-    public String getFinancialmarketmapeffectivedate() {
-        return financialmarketmapeffectivedate;
-    }
+	@ClusteringColumn(value = 1)
+	@Column(name = "financialmarketmapenddate")
+	private String financialmarketmapenddate;
 
-    public void setFinancialmarketmapeffectivedate(String financialmarketmapeffectivedate) {
-        this.financialmarketmapeffectivedate = financialmarketmapeffectivedate;
-    }
+	@ClusteringColumn(value = 2)
+	@Column(name = "glmarketlegalentityenddate")
+	private String glmarketlegalentityenddate;
 
-    public String getFcccgsanumber() {
-        return fcccgsanumber;
-    }
+	@ClusteringColumn(value = 3)
+	@Column(name = "glmarketmaptype")
+	private String glmarketmaptype;
 
-    public void setFcccgsanumber(String fcccgsanumber) {
-        this.fcccgsanumber = fcccgsanumber;
-    }
+	@ClusteringColumn(value = 4)
+	@Column(name = "glmarketenddate")
+	private String glmarketenddate;
 
-    public String getFcccgsamapeffectivedate() {
-        return fcccgsamapeffectivedate;
-    }
+	@ClusteringColumn(value = 5)
+	@Column(name = "alternatebookingtype")
+	private String alternatebookingtype;
 
-    public void setFcccgsamapeffectivedate(String fcccgsamapeffectivedate) {
-        this.fcccgsamapeffectivedate = fcccgsamapeffectivedate;
-    }
+	private String financialmarketmapeffectivedate;
+	private String fcccgsanumber;
+	private String fcccgsamapeffectivedate;
+	private String glmarketid;
+	private String glmarketeffectivedate;
+	private String glmarketlegalentityeffectivedate;
+	private String financialmarketeffectivedate;
+	private String financialmarketenddate;
 
-    public String getGlmarketid() {
-        return glmarketid;
-    }
+	private String financialmarketdefaultgeocode;
+	private String financialmarketname;
+	private String financialmarkettypecode;
+	private String gllegalentityid;
+	private String glmarketdescription;
+	private String multiplemarketindicator;
+	private String sidbid;
 
-    public void setGlmarketid(String glmarketid) {
-        this.glmarketid = glmarketid;
-    }
+	public String getSidbid() {
+		return sidbid;
+	}
 
-    public String getGlmarketeffectivedate() {
-        return glmarketeffectivedate;
-    }
+	public void setSidbid(String sidbid) {
+		this.sidbid = sidbid;
+	}
 
-    public void setGlmarketeffectivedate(String glmarketeffectivedate) {
-        this.glmarketeffectivedate = glmarketeffectivedate;
-    }
+	public String getFinancialmarketid() {
+		return financialmarketid;
+	}
 
-    public String getGlmarketlegalentityeffectivedate() {
-        return glmarketlegalentityeffectivedate;
-    }
+	public void setFinancialmarketid(String financialmarketid) {
+		this.financialmarketid = financialmarketid;
+	}
 
-    public void setGlmarketlegalentityeffectivedate(String glmarketlegalentityeffectivedate) {
-        this.glmarketlegalentityeffectivedate = glmarketlegalentityeffectivedate;
-    }
+	public String getFinancialmarketmapeffectivedate() {
+		return financialmarketmapeffectivedate;
+	}
 
-    public String getFinancialmarketeffectivedate() {
-        return financialmarketeffectivedate;
-    }
+	public void setFinancialmarketmapeffectivedate(String financialmarketmapeffectivedate) {
+		this.financialmarketmapeffectivedate = financialmarketmapeffectivedate;
+	}
 
-    public void setFinancialmarketeffectivedate(String financialmarketeffectivedate) {
-        this.financialmarketeffectivedate = financialmarketeffectivedate;
-    }
+	public String getFcccgsanumber() {
+		return fcccgsanumber;
+	}
 
-    public String getFinancialmarketenddate() {
-        return financialmarketenddate;
-    }
+	public void setFcccgsanumber(String fcccgsanumber) {
+		this.fcccgsanumber = fcccgsanumber;
+	}
 
-    public void setFinancialmarketenddate(String financialmarketenddate) {
-        this.financialmarketenddate = financialmarketenddate;
-    }
+	public String getFcccgsamapeffectivedate() {
+		return fcccgsamapeffectivedate;
+	}
 
-    public String getFinancialmarketmapenddate() {
-        return financialmarketmapenddate;
-    }
+	public void setFcccgsamapeffectivedate(String fcccgsamapeffectivedate) {
+		this.fcccgsamapeffectivedate = fcccgsamapeffectivedate;
+	}
 
-    public void setFinancialmarketmapenddate(String financialmarketmapenddate) {
-        this.financialmarketmapenddate = financialmarketmapenddate;
-    }
+	public String getGlmarketid() {
+		return glmarketid;
+	}
 
-    public String getGlmarketmaptype() {
-        return glmarketmaptype;
-    }
+	public void setGlmarketid(String glmarketid) {
+		this.glmarketid = glmarketid;
+	}
 
-    public void setGlmarketmaptype(String glmarketmaptype) {
-        this.glmarketmaptype = glmarketmaptype;
-    }
+	public String getGlmarketeffectivedate() {
+		return glmarketeffectivedate;
+	}
 
-    public String getFcccgsamapenddate() {
-        return fcccgsamapenddate;
-    }
+	public void setGlmarketeffectivedate(String glmarketeffectivedate) {
+		this.glmarketeffectivedate = glmarketeffectivedate;
+	}
 
-    public void setFcccgsamapenddate(String fcccgsamapenddate) {
-        this.fcccgsamapenddate = fcccgsamapenddate;
-    }
+	public String getGlmarketlegalentityeffectivedate() {
+		return glmarketlegalentityeffectivedate;
+	}
 
-    public String getGlmarketenddate() {
-        return glmarketenddate;
-    }
+	public void setGlmarketlegalentityeffectivedate(String glmarketlegalentityeffectivedate) {
+		this.glmarketlegalentityeffectivedate = glmarketlegalentityeffectivedate;
+	}
 
-    public void setGlmarketenddate(String glmarketenddate) {
-        this.glmarketenddate = glmarketenddate;
-    }
+	public String getFinancialmarketeffectivedate() {
+		return financialmarketeffectivedate;
+	}
 
-    public String getAlternatebookingtype() {
-        return alternatebookingtype;
-    }
+	public void setFinancialmarketeffectivedate(String financialmarketeffectivedate) {
+		this.financialmarketeffectivedate = financialmarketeffectivedate;
+	}
 
-    public void setAlternatebookingtype(String alternatebookingtype) {
-        this.alternatebookingtype = alternatebookingtype;
-    }
+	public String getFinancialmarketenddate() {
+		return financialmarketenddate;
+	}
 
-    public String getGlmarketlegalentityenddate() {
-        return glmarketlegalentityenddate;
-    }
+	public void setFinancialmarketenddate(String financialmarketenddate) {
+		this.financialmarketenddate = financialmarketenddate;
+	}
 
-    public void setGlmarketlegalentityenddate(String glmarketlegalentityenddate) {
-        this.glmarketlegalentityenddate = glmarketlegalentityenddate;
-    }
+	public String getFinancialmarketmapenddate() {
+		return financialmarketmapenddate;
+	}
 
-    public String getFinancialmarketdefaultgeocode() {
-        return financialmarketdefaultgeocode;
-    }
+	public void setFinancialmarketmapenddate(String financialmarketmapenddate) {
+		this.financialmarketmapenddate = financialmarketmapenddate;
+	}
 
-    public void setFinancialmarketdefaultgeocode(String financialmarketdefaultgeocode) {
-        this.financialmarketdefaultgeocode = financialmarketdefaultgeocode;
-    }
+	public String getGlmarketmaptype() {
+		return glmarketmaptype;
+	}
 
-    public String getFinancialmarketname() {
-        return financialmarketname;
-    }
+	public void setGlmarketmaptype(String glmarketmaptype) {
+		this.glmarketmaptype = glmarketmaptype;
+	}
 
-    public void setFinancialmarketname(String financialmarketname) {
-        this.financialmarketname = financialmarketname;
-    }
+	public String getFcccgsamapenddate() {
+		return fcccgsamapenddate;
+	}
 
-    public String getFinancialmarkettypecode() {
-        return financialmarkettypecode;
-    }
+	public void setFcccgsamapenddate(String fcccgsamapenddate) {
+		this.fcccgsamapenddate = fcccgsamapenddate;
+	}
 
-    public void setFinancialmarkettypecode(String financialmarkettypecode) {
-        this.financialmarkettypecode = financialmarkettypecode;
-    }
+	public String getGlmarketenddate() {
+		return glmarketenddate;
+	}
 
-    public String getGllegalentityid() {
-        return gllegalentityid;
-    }
+	public void setGlmarketenddate(String glmarketenddate) {
+		this.glmarketenddate = glmarketenddate;
+	}
 
-    public void setGllegalentityid(String gllegalentityid) {
-        this.gllegalentityid = gllegalentityid;
-    }
+	public String getAlternatebookingtype() {
+		return alternatebookingtype;
+	}
 
-    public String getGlmarketdescription() {
-        return glmarketdescription;
-    }
+	public void setAlternatebookingtype(String alternatebookingtype) {
+		this.alternatebookingtype = alternatebookingtype;
+	}
 
-    public void setGlmarketdescription(String glmarketdescription) {
-        this.glmarketdescription = glmarketdescription;
-    }
+	public String getGlmarketlegalentityenddate() {
+		return glmarketlegalentityenddate;
+	}
 
-    public String getMultiplemarketindicator() {
-        return multiplemarketindicator;
-    }
+	public void setGlmarketlegalentityenddate(String glmarketlegalentityenddate) {
+		this.glmarketlegalentityenddate = glmarketlegalentityenddate;
+	}
 
-    public void setMultiplemarketindicator(String multiplemarketindicator) {
-        this.multiplemarketindicator = multiplemarketindicator;
-    }
+	public String getFinancialmarketdefaultgeocode() {
+		return financialmarketdefaultgeocode;
+	}
 
-    public String getSidbid() {
-        return sidbid;
-    }
+	public void setFinancialmarketdefaultgeocode(String financialmarketdefaultgeocode) {
+		this.financialmarketdefaultgeocode = financialmarketdefaultgeocode;
+	}
 
-    public void setSidbid(String sidbid) {
-        this.sidbid = sidbid;
-    }
+	public String getFinancialmarketname() {
+		return financialmarketname;
+	}
+
+	public void setFinancialmarketname(String financialmarketname) {
+		this.financialmarketname = financialmarketname;
+	}
+
+	public String getFinancialmarkettypecode() {
+		return financialmarkettypecode;
+	}
+
+	public void setFinancialmarkettypecode(String financialmarkettypecode) {
+		this.financialmarkettypecode = financialmarkettypecode;
+	}
+
+	public String getGllegalentityid() {
+		return gllegalentityid;
+	}
+
+	public void setGllegalentityid(String gllegalentityid) {
+		this.gllegalentityid = gllegalentityid;
+	}
+
+	public String getGlmarketdescription() {
+		return glmarketdescription;
+	}
+
+	public void setGlmarketdescription(String glmarketdescription) {
+		this.glmarketdescription = glmarketdescription;
+	}
+
+	public String getMultiplemarketindicator() {
+		return multiplemarketindicator;
+	}
+
+	public void setMultiplemarketindicator(String multiplemarketindicator) {
+		this.multiplemarketindicator = multiplemarketindicator;
+	}
+
+	@Override
+	public String toString() {
+		return "FinancialMarket [glmarketid=" + glmarketid + ", alternatebookingtype=" + alternatebookingtype
+				+ ", gllegalentityid=" + gllegalentityid + ", sidbid=" + sidbid + "]";
+	}
+
 }

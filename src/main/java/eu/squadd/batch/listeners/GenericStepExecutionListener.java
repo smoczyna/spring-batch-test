@@ -5,7 +5,6 @@
  */
 package eu.squadd.batch.listeners;
 
-import eu.squadd.batch.domain.BilledCsvFileDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.ExitStatus;
@@ -17,9 +16,9 @@ import org.springframework.batch.core.StepExecutionListener;
  *
  * @author smorcja
  */
-public class BookingFileStepExecutionListener implements StepExecutionListener, SkipListener {
+public class GenericStepExecutionListener implements StepExecutionListener, SkipListener {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BookingFileStepExecutionListener.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GenericStepExecutionListener.class);
     
     @Override
     public void beforeStep(StepExecution se) {        

@@ -15,8 +15,12 @@ import java.util.Date;
 public class ProcessingUtils {
 
     public static final String STANDARD_FORMAT = "yyyy-MM-dd HH:mm:ss.SSSZ";
-    public static final String SHORT_FORMAT = "yyyy-MM-dd";
-    public static final String SHORTDATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    public static final String SHORT_DATE_FORMAT = "yyyy-MM-dd";
+    public static final String FILE_DATE_FORMAT = "MM/dd/yyyy";
+    public static final String REALY_SHORT_FORMAT = "yyyyMM";
+    public static final String SHORT_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    public static final String SHORT_DATETIME_FORMAT_NOSPACE = "yyyy-MM-dd-HHmmss";
+    public static final String MAINFRAME_FORMAT = "yyyy-MM-dd-HH:mm:ss.SSSZ";
     
     private static final String LBRACKET = "[";
     
@@ -59,21 +63,25 @@ public class ProcessingUtils {
     
     public static String getYearAndMonthFromStrDate(String strDate) {
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat(SHORT_FORMAT);
+            SimpleDateFormat sdf = new SimpleDateFormat(FILE_DATE_FORMAT);
             Date date = sdf.parse(strDate);
             SimpleDateFormat sdf2 = new SimpleDateFormat("yyyyMM");
             return sdf2.format(date);
-        } catch (ParseException ex) {            
-            System.out.println("Parsing error occurred: "+ex.getMessage());
+        } catch (ParseException ex) {
             return null;
         }
     }
     
     public static String dateTimeToStringWithourSpaces(Date date) {
-        String strDate = dateToString(date, SHORTDATETIME_FORMAT);
+        String strDate = dateToString(date, SHORT_DATETIME_FORMAT);
         return strDate.replace(" ", ".");
     }
     
+    /**
+     * analyzing the line of CSV input file to determine delimiter of the fields
+     * @param line
+     * @return 
+     */
     public static String decodeDelimiter(String line) {
         String[] delimiters = {",", ";", "|", "¦"};
         for (String delimiter : delimiters) {
@@ -81,5 +89,5 @@ public class ProcessingUtils {
                 return delimiter;
         }
         return "None of those was found "+Arrays.toString(delimiters);
-    }
+    }   
 }

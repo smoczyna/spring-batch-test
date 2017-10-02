@@ -22,16 +22,14 @@ public class CsvFileGenericWriter<T> extends FlatFileItemWriter<T> {
     private static final String PROPERTY_CSV_EXPORT_FILE_PATH = "database.to.csv.job.export.file.path";
     
     public CsvFileGenericWriter(String fileName, String[] fieldNames) {
+        super.setAppendAllowed(true);
         this.setResource(new FileSystemResource(fileName));
         LineAggregator<T> lineAggregator = createWholesaleReportLineAggregator(fieldNames);
         this.setLineAggregator(lineAggregator);
     }
     
     public CsvFileGenericWriter(Environment environment, String fileName, String[] fieldNames) {
-        String exportFilePath = environment.getRequiredProperty(PROPERTY_CSV_EXPORT_FILE_PATH).concat(fileName);
-        this.setResource(new FileSystemResource(exportFilePath));
-        LineAggregator<T> lineAggregator = createWholesaleReportLineAggregator(fieldNames);
-        this.setLineAggregator(lineAggregator);
+        this(environment.getRequiredProperty(PROPERTY_CSV_EXPORT_FILE_PATH).concat(fileName), fieldNames);
     }
     
     private LineAggregator<T> createWholesaleReportLineAggregator(String[] fieldNames) {

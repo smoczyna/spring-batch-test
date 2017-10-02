@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package eu.squadd.batch.domain.casandra;
 
 import com.datastax.driver.mapping.annotations.Column;
@@ -15,169 +10,170 @@ import com.datastax.driver.mapping.annotations.Table;
  */
 @Table(name = "product")
 public class Product {
-    
-    @PartitionKey
-    @Column(name = "productid")
-    private Integer productid;
-    private String dpcgroupid;
-    private String dpcitemid;
-    private String enddate;
-    private String etfindicator;
-    private String financialgroupcode;
-    private String geocodetype;
-    private String introductiondate;
-    private String occindicator;
-    private String pricetype;
-    private String productallocationcode;
-    private String productbilllevelcode;
-    private String productcategorycode;
-    private String productname;
-    private String productstatus;
-    private String producttype;
-    private String unitofmeasure;
-    private String wholesalebillingcode;
 
-    public Integer getProductid() {
-        return productid;
-    }
+	@PartitionKey(value = 0)
+	@Column(name = "productid")
+	private Integer productid;
 
-    public void setProductid(Integer productid) {
-        this.productid = productid;
-    }
+	private String dpcgroupid;
+	private String dpcitemid;
+	private String enddate;
+	private String etfindicator;
+	private String financialgroupcode;
+	private String geocodetype;
+	private String introductiondate;
+	private String occindicator;
+	private String pricetype;
+	private String productallocationcode;
+	private String productbilllevelcode;
+	private String productcategorycode;
+	private String productname;
+	private String productstatus;
+	private String producttype;
+	private String unitofmeasure;
+	private String wholesalebillingcode;
 
-    public String getDpcgroupid() {
-        return dpcgroupid;
-    }
+	public Integer getProductid() {
+		return productid;
+	}
 
-    public void setDpcgroupid(String dpcgroupid) {
-        this.dpcgroupid = dpcgroupid;
-    }
+	public void setProductid(Integer productid) {
+		this.productid = productid;
+	}
 
-    public String getDpcitemid() {
-        return dpcitemid;
-    }
+	public String getDpcgroupid() {
+		return dpcgroupid;
+	}
 
-    public void setDpcitemid(String dpcitemid) {
-        this.dpcitemid = dpcitemid;
-    }
+	public void setDpcgroupid(String dpcgroupid) {
+		this.dpcgroupid = dpcgroupid;
+	}
 
-    public String getEnddate() {
-        return enddate;
-    }
+	public String getDpcitemid() {
+		return dpcitemid;
+	}
 
-    public void setEnddate(String enddate) {
-        this.enddate = enddate;
-    }
+	public void setDpcitemid(String dpcitemid) {
+		this.dpcitemid = dpcitemid;
+	}
 
-    public String getEtfindicator() {
-        return etfindicator;
-    }
+	public String getEnddate() {
+		return enddate;
+	}
 
-    public void setEtfindicator(String etfindicator) {
-        this.etfindicator = etfindicator;
-    }
+	public void setEnddate(String enddate) {
+		this.enddate = enddate;
+	}
 
-    public String getFinancialgroupcode() {
-        return financialgroupcode;
-    }
+	public String getEtfindicator() {
+		return etfindicator;
+	}
 
-    public void setFinancialgroupcode(String financialgroupcode) {
-        this.financialgroupcode = financialgroupcode;
-    }
+	public void setEtfindicator(String etfindicator) {
+		this.etfindicator = etfindicator;
+	}
 
-    public String getGeocodetype() {
-        return geocodetype;
-    }
+	public String getFinancialgroupcode() {
+		return financialgroupcode;
+	}
 
-    public void setGeocodetype(String geocodetype) {
-        this.geocodetype = geocodetype;
-    }
+	public void setFinancialgroupcode(String financialgroupcode) {
+		this.financialgroupcode = financialgroupcode;
+	}
 
-    public String getIntroductiondate() {
-        return introductiondate;
-    }
+	public String getGeocodetype() {
+		return geocodetype;
+	}
 
-    public void setIntroductiondate(String introductiondate) {
-        this.introductiondate = introductiondate;
-    }
+	public void setGeocodetype(String geocodetype) {
+		this.geocodetype = geocodetype;
+	}
 
-    public String getOccindicator() {
-        return occindicator;
-    }
+	public String getIntroductiondate() {
+		return introductiondate;
+	}
 
-    public void setOccindicator(String occindicator) {
-        this.occindicator = occindicator;
-    }
+	public void setIntroductiondate(String introductiondate) {
+		this.introductiondate = introductiondate;
+	}
 
-    public String getPricetype() {
-        return pricetype;
-    }
+	public String getOccindicator() {
+		return occindicator;
+	}
 
-    public void setPricetype(String pricetype) {
-        this.pricetype = pricetype;
-    }
+	public void setOccindicator(String occindicator) {
+		this.occindicator = occindicator;
+	}
 
-    public String getProductallocationcode() {
-        return productallocationcode;
-    }
+	public String getPricetype() {
+		return pricetype;
+	}
 
-    public void setProductallocationcode(String productallocationcode) {
-        this.productallocationcode = productallocationcode;
-    }
+	public void setPricetype(String pricetype) {
+		this.pricetype = pricetype;
+	}
 
-    public String getProductbilllevelcode() {
-        return productbilllevelcode;
-    }
+	public String getProductallocationcode() {
+		return productallocationcode;
+	}
 
-    public void setProductbilllevelcode(String productbilllevelcode) {
-        this.productbilllevelcode = productbilllevelcode;
-    }
+	public void setProductallocationcode(String productallocationcode) {
+		this.productallocationcode = productallocationcode;
+	}
 
-    public String getProductcategorycode() {
-        return productcategorycode;
-    }
+	public String getProductbilllevelcode() {
+		return productbilllevelcode;
+	}
 
-    public void setProductcategorycode(String productcategorycode) {
-        this.productcategorycode = productcategorycode;
-    }
+	public void setProductbilllevelcode(String productbilllevelcode) {
+		this.productbilllevelcode = productbilllevelcode;
+	}
 
-    public String getProductname() {
-        return productname;
-    }
+	public String getProductcategorycode() {
+		return productcategorycode;
+	}
 
-    public void setProductname(String productname) {
-        this.productname = productname;
-    }
+	public void setProductcategorycode(String productcategorycode) {
+		this.productcategorycode = productcategorycode;
+	}
 
-    public String getProductstatus() {
-        return productstatus;
-    }
+	public String getProductname() {
+		return productname;
+	}
 
-    public void setProductstatus(String productstatus) {
-        this.productstatus = productstatus;
-    }
+	public void setProductname(String productname) {
+		this.productname = productname;
+	}
 
-    public String getProducttype() {
-        return producttype;
-    }
+	public String getProductstatus() {
+		return productstatus;
+	}
 
-    public void setProducttype(String producttype) {
-        this.producttype = producttype;
-    }
+	public void setProductstatus(String productstatus) {
+		this.productstatus = productstatus;
+	}
 
-    public String getUnitofmeasure() {
-        return unitofmeasure;
-    }
+	public String getProducttype() {
+		return producttype;
+	}
 
-    public void setUnitofmeasure(String unitofmeasure) {
-        this.unitofmeasure = unitofmeasure;
-    }
+	public void setProducttype(String producttype) {
+		this.producttype = producttype;
+	}
 
-    public String getWholesalebillingcode() {
-        return wholesalebillingcode;
-    }
+	public String getUnitofmeasure() {
+		return unitofmeasure;
+	}
 
-    public void setWholesalebillingcode(String wholesalebillingcode) {
-        this.wholesalebillingcode = wholesalebillingcode;
-    }
+	public void setUnitofmeasure(String unitofmeasure) {
+		this.unitofmeasure = unitofmeasure;
+	}
+
+	public String getWholesalebillingcode() {
+		return wholesalebillingcode;
+	}
+
+	public void setWholesalebillingcode(String wholesalebillingcode) {
+		this.wholesalebillingcode = wholesalebillingcode;
+	}
 }
