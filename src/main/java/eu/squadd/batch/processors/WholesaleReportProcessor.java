@@ -193,8 +193,6 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
             homeEqualsServingSbid = true;
         }
 
-        LOGGER.info("FinMarket:" + inRec.getFinancialMarket());                     // debugging process
-        
         FinancialMarket financialMarket = this.getFinancialMarketFromDb(inRec.getFinancialMarket());
                 
         String homeLegalEntityId = null;
@@ -306,7 +304,6 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
                 this.tmpChargeAmt = billedRec.getTollCharge();
                 outRec.setDollarAmtOther(this.tmpChargeAmt);
 
-                LOGGER.info("prodID:" + this.tmpProdId);                                // debugging process
                 DataEvent dataEvent = this.getDataEventFromDb(this.tmpProdId);
                 
                 /* compute data usage */
@@ -333,16 +330,7 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
         
         /* do events & book record */       
         altBookingInd = this.isAlternateBookingApplicable(billedRec);
-        
-        LOGGER.info("prodID: " + this.tmpProdId);                                   // debugging process
-        LOGGER.info("finMarket: " + this.financialMarket);
-        LOGGER.info("interEx: " + billedRec.getInterExchangeCarrierCode());
-        LOGGER.info("sidbid: " + this.homeEqualsServingSbid);
-        LOGGER.info("altBooking: " + altBookingInd);
-        
-        // this call fails due to lack of financial market value
         FinancialEventCategory financialEventCategory = this.getEventCategoryFromDb(this.tmpProdId, this.homeEqualsServingSbid, altBookingInd);
-        
         bypassBooking = this.bypassBooking(financialEventCategory, altBookingInd);
 
         /* default booking check - basically it means population of sub leadger record */   
@@ -363,10 +351,10 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
         return outRec;
     }
     
-    private AggregateWholesaleReportDTO processUnbilledRecord(UnbilledCsvFileDTO unbilledRec) {
+    private AggregateWholesaleReportDTO processUnbilledRecord(UnbilledCsvFileDTO unbilledRec) {        
         if (unbilledRec.getAirProdId() > 0 && (unbilledRec.getWholesalePeakAirCharge() > 0 || unbilledRec.getWholesaleOffpeakAirCharge() > 0)) {
             AggregateWholesaleReportDTO outRec = new AggregateWholesaleReportDTO();
-
+            boolean altBookingInd;
             outRec.setBilledInd("N");
             this.fileSource = "U";
             this.searchHomeSbid = unbilledRec.getHomeSbid();
@@ -408,8 +396,8 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
                 outRec.setUsage4G(Math.round(unbilledRec.getTotalWholesaleUsage().doubleValue() / 1024));
             }
             
-            // this is a fake call due to lack of 2 or 3 paramters !!!
-            FinancialEventCategory financialEventCategory = this.getEventCategoryFromDb(this.tmpProdId, this.homeEqualsServingSbid, false); 
+            altBookingInd = this.isAlternateBookingApplicable(unbilledRec);
+            FinancialEventCategory financialEventCategory = this.getEventCategoryFromDb(this.tmpProdId, this.homeEqualsServingSbid, altBookingInd); 
             this.createSubLedgerRecord(tmpChargeAmt, financialEventCategory, financialMarket);            
             return outRec;
         }
@@ -432,7 +420,7 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
         boolean bypassBooking = false;
         
          // this is a fake call due to lack of 3 paramters !!!
-        FinancialEventCategory financialEventCategory = this.getEventCategoryFromDb(this.tmpProdId, this.homeEqualsServingSbid, false); // homeEqualsServingSbid should be a space here
+        FinancialEventCategory financialEventCategory = this.getEventCategoryFromDb(this.tmpProdId, this.homeEqualsServingSbid, false); // homeEqualsServingSbid has to be a space here
                         
         if (financialEventCategory.getHomesidequalsservingsidindicator().trim().isEmpty())
             bypassBooking = false;
