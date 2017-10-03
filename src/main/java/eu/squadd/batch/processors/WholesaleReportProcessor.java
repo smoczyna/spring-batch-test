@@ -32,7 +32,8 @@ import java.util.List;
 /**
  *
  * @author smorcja
- * @param <I>
+ * @param <T> - payload of the processor, 
+ *              it must be a class implementing BaseBookingInputInterface or AdminFeeCsvFileDTO
  */
 public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWholesaleReportDTO> {
 
@@ -97,14 +98,18 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
                 if (financialEventCategory.getBillingaccrualindicator().equals("Y")) {
                     if (tmpChargeAmt > 0) {
                         subLedgerOutput.setSubledgerTotalDebitAmount(tmpChargeAmt);
+                        subLedgerOutput.setSubledgerTotalCreditAmount(0d);
                     } else {
                         subLedgerOutput.setSubledgerTotalCreditAmount(tmpChargeAmt);
+                        subLedgerOutput.setSubledgerTotalDebitAmount(0d);
                     }
                 } else if (financialEventCategory.getBillingaccrualindicator().equals("N")) {
                     if (tmpChargeAmt > 0) {
                         subLedgerOutput.setSubledgerTotalCreditAmount(tmpChargeAmt);
+                        subLedgerOutput.setSubledgerTotalDebitAmount(0d);
                     } else {
                         subLedgerOutput.setSubledgerTotalDebitAmount(tmpChargeAmt);
+                        subLedgerOutput.setSubledgerTotalDebitAmount(0d);
                     }
                 }
             }
@@ -113,22 +118,25 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
             if (financialEventCategory.getDebitcreditindicator().equals("CR")) {
                 if (tmpChargeAmt > 0) {
                     subLedgerOutput.setSubledgerTotalCreditAmount(tmpChargeAmt);
+                    subLedgerOutput.setSubledgerTotalDebitAmount(0d);
                 } else {
                     subLedgerOutput.setSubledgerTotalDebitAmount(tmpChargeAmt);
+                    subLedgerOutput.setSubledgerTotalCreditAmount(0d);
                 }
             }
             else if (financialEventCategory.getDebitcreditindicator().equals("DR")) {
                 if (tmpChargeAmt > 0) {
                     subLedgerOutput.setSubledgerTotalDebitAmount(tmpChargeAmt);
+                    subLedgerOutput.setSubledgerTotalCreditAmount(0d);
                 } else {
                     subLedgerOutput.setSubledgerTotalCreditAmount(tmpChargeAmt);
+                    subLedgerOutput.setSubledgerTotalDebitAmount(0d);
                 }
             }
         }
         
         subLedgerOutput.setFinancialEventNumber(financialEventCategory.getFinancialeventnumber());
         subLedgerOutput.setFinancialCategory(financialEventCategory.getFinancialcategory());
-        //subLedgerOutput.setFinancialmarketId(financialEventCategory.getFinancialmarketid());
         subLedgerOutput.setFinancialmarketId(financialMarket);
         subLedgerOutput.setBillCycleMonthYear(ProcessingUtils.getYearAndMonthFromStrDate(this.tempSubLedgerOuput.getDates().getRptPerEndDate()));
         subLedgerOutput.setBillAccrualIndicator(financialEventCategory.getBillingaccrualindicator());
@@ -279,8 +287,8 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
                 this.tmpProdId = billedRec.getAirProdId();            
         }
         
-        if (billedRec.getDeviceType().trim().isEmpty())
-            financialMarket = billedRec.getFinancialMarket();
+        //if (billedRec.getDeviceType().trim().isEmpty())
+        financialMarket = billedRec.getFinancialMarket();
 
         if ((billedRec.getTollProductId() > 0 && billedRec.getTollCharge() > 0)
             || billedRec.getInterExchangeCarrierCode().equals(5050)
@@ -291,7 +299,7 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
             if (billedRec.getAirProdId().equals(190)) {
                 this.tmpProdId = 95;
             } else {
-                this.tmpProdId = billedRec.getAirProdId();
+                this.tmpProdId = billedRec.getTollProductId();
             }
 
             if (billedRec.getIncompleteInd().equals("D")) {
@@ -333,8 +341,7 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
         LOGGER.info("altBooking: " + altBookingInd);
         
         // this call fails due to lack of financial market value
-        FinancialEventCategory financialEventCategory = this.getEventCategoryFromDb(this.tmpProdId, this.financialMarket, 
-                billedRec.getInterExchangeCarrierCode(), this.homeEqualsServingSbid, altBookingInd);
+        FinancialEventCategory financialEventCategory = this.getEventCategoryFromDb(this.tmpProdId, this.homeEqualsServingSbid, altBookingInd);
         
         bypassBooking = this.bypassBooking(financialEventCategory, altBookingInd);
 
@@ -402,7 +409,7 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
             }
             
             // this is a fake call due to lack of 2 or 3 paramters !!!
-            FinancialEventCategory financialEventCategory = this.getEventCategoryFromDb(this.tmpProdId, this.financialMarket, 0, this.homeEqualsServingSbid, false); 
+            FinancialEventCategory financialEventCategory = this.getEventCategoryFromDb(this.tmpProdId, this.homeEqualsServingSbid, false); 
             this.createSubLedgerRecord(tmpChargeAmt, financialEventCategory, financialMarket);            
             return outRec;
         }
@@ -425,7 +432,7 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
         boolean bypassBooking = false;
         
          // this is a fake call due to lack of 3 paramters !!!
-        FinancialEventCategory financialEventCategory = this.getEventCategoryFromDb(this.tmpProdId, this.financialMarket, 0, this.homeEqualsServingSbid, false); 
+        FinancialEventCategory financialEventCategory = this.getEventCategoryFromDb(this.tmpProdId, this.homeEqualsServingSbid, false); // homeEqualsServingSbid should be a space here
                         
         if (financialEventCategory.getHomesidequalsservingsidindicator().trim().isEmpty())
             bypassBooking = false;
@@ -450,12 +457,11 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
         return result;
     }
     
-    protected FinancialEventCategory getEventCategoryFromDb(Integer tmpProdId, String financialMarketId, Integer interExchangeCarrierCode,
-            boolean homeEqualsServingSbid, boolean altBookingInd) {
+    protected FinancialEventCategory getEventCategoryFromDb(Integer tmpProdId, boolean homeEqualsServingSbid, boolean altBookingInd) {
         FinancialEventCategory result = null;
         try {
-            List<FinancialEventCategory> dbResult = queryManager.getFinancialEventCategoryRecord(CassandraQueryManager.getCassandraSession(),
-                    tmpProdId, financialMarketId, interExchangeCarrierCode, homeEqualsServingSbid ? "Y" : "N", altBookingInd ? "Y" : "N");
+            List<FinancialEventCategory> dbResult = queryManager.getFinancialEventCategoryNoClusteringRecord(CassandraQueryManager.getCassandraSession(),
+                    tmpProdId, homeEqualsServingSbid ? "Y" : "N", altBookingInd ? "Y" : "N");
             if (dbResult.size()==1)
                 result = dbResult.get(0);
         } catch (MultipleRowsReturnedException | NoResultsReturnedException | CassandraQueryException ex) {

@@ -41,7 +41,7 @@ public class FinancialEventCategory {
 	private Integer financialeventnumber;
 	@NotNull
 	private Integer financialcategory;
-	private Integer financialmappingeffectivedate;
+    private String financialmappingeffectivedate;
 	private String glaccountnumber;
 	private String billtypecode;
 	private String financialeventcategorycode;
@@ -110,11 +110,11 @@ public class FinancialEventCategory {
 		this.financialcategory = financialcategory;
 	}
 
-	public Integer getFinancialmappingeffectivedate() {
+    public String getFinancialmappingeffectivedate() {
 		return financialmappingeffectivedate;
 	}
 
-	public void setFinancialmappingeffectivedate(Integer financialmappingeffectivedate) {
+    public void setFinancialmappingeffectivedate(String financialmappingeffectivedate) {
 		this.financialmappingeffectivedate = financialmappingeffectivedate;
 	}
 

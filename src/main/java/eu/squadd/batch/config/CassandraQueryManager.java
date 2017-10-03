@@ -114,7 +114,7 @@ public class CassandraQueryManager {
         String cql_select = "SELECT" + " *" + " FROM financialmarket"
                 + " WHERE financialmarketid=? AND fcccgsamapenddate=? "
                 + " AND financialmarketmapenddate=? AND glmarketlegalentityenddate=? AND glmarketmaptype=? "
-                + " AND glmarketenddate=?  AND alternatebookingtype IN ('Y','N')" + " ALLOW FILTERING";
+                + " AND glmarketenddate=? ALLOW FILTERING";
 
         System.out.println(cql_select);
         PreparedStatement preparedStatement = session.prepare(cql_select);
@@ -239,7 +239,7 @@ public class CassandraQueryManager {
             String File2FinancialMarketId, Integer InterExchangeCarrierCode, String homesidequalsservingsidindicator,
             String alternatebookingindicator)
             throws MultipleRowsReturnedException, NoResultsReturnedException, CassandraQueryException {
-        
+
         List<FinancialEventCategory> listoffec = new ArrayList<>();
         String cql_selectTest = "SELECT " + "*" + " FROM financialeventcategory"
                 + " WHERE productid=? AND homesidequalsservingsidindicator=? AND alternatebookingindicator=? "
@@ -260,7 +260,7 @@ public class CassandraQueryManager {
             LOGGER.error(e.getLocalizedMessage());
             throw new CassandraQueryException("Query execution exception", e);
         } catch (QueryValidationException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getLocalizedMessage());
             throw new CassandraQueryException("Query validation exception", e);
         } catch (UnsupportedFeatureException e) {
             LOGGER.error(e.getLocalizedMessage());
@@ -290,6 +290,77 @@ public class CassandraQueryManager {
     }
 
     /**
+     * Returns list of FinancialEventCategory records
+     * <p>
+     * Cassandra Table Name=FinancialEventCategory
+     *
+     * @param session
+     * @param TmpProdId
+     * @param File2FinancialMarketId
+     * @param InterExchangeCarrierCode
+     * @param homesidequalsservingsidindicator
+     * @param alternatebookingindicator
+     * @return List<FinancialEventCategory>
+     * @throws CassandraQueryException
+     * @throws NoResultsReturnedException
+     * @throws MultipleRowsReturnedException
+     */
+    public List<FinancialEventCategory> getFinancialEventCategoryNoClusteringRecord(Session session, Integer TmpProdId,
+            String homesidequalsservingsidindicator, String alternatebookingindicator)
+            throws MultipleRowsReturnedException, NoResultsReturnedException, CassandraQueryException {
+        financialEventCategoryTable = "financialeventcategory";
+        List<FinancialEventCategory> listoffec = new ArrayList<>();
+
+        String cql_selectTest = "SELECT " + "*" + " FROM " + financialEventCategoryTable
+                + " WHERE productid=? AND homesidequalsservingsidindicator=? AND alternatebookingindicator=? "
+                + "  ALLOW FILTERING";
+
+        System.out.println(cql_selectTest);
+        PreparedStatement preparedStatement = session.prepare(cql_selectTest);
+        BoundStatement statement = new BoundStatement(preparedStatement);
+        statement.bind(TmpProdId, homesidequalsservingsidindicator, alternatebookingindicator);
+        try {
+            Result<FinancialEventCategory> result = new FinancialEventCategoryCassandraMapper()
+                    .executeAndMapResults(session, statement, new MappingManager(session), false);
+            listoffec = result.all();
+        } catch (NoHostAvailableException e) {
+            e.printStackTrace();
+            throw new CassandraQueryException("Host not available", e);
+        } catch (QueryExecutionException e) {
+            e.printStackTrace();
+            throw new CassandraQueryException("Query execution exception", e);
+        } catch (QueryValidationException e) {
+            e.printStackTrace();
+            throw new CassandraQueryException("Query validation exception", e);
+        } catch (UnsupportedFeatureException e) {
+            e.printStackTrace();
+            throw new CassandraQueryException("Unsupported feature", e);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            throw new CassandraQueryException("Null pointer exception", e);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            throw new CassandraQueryException("Interrupted exception", e);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            throw new CassandraQueryException("Execution exception", e);
+        }
+
+        if (listoffec.size() == 0) {
+            logger.info("Error message:" + ErrorEnum.NO_ROWS);
+            throw new NoResultsReturnedException(ErrorEnum.NO_ROWS);
+        }
+        if (listoffec.size() > 1) {
+            logger.info("Error message:" + ErrorEnum.MULTIPLE_ROWS);
+            logger.info("Rows returned:" + listoffec.toString());
+            throw new MultipleRowsReturnedException(ErrorEnum.MULTIPLE_ROWS,
+                    " rows returned: " + Integer.toString(listoffec.size()));
+        }
+
+        return listoffec;
+    }
+
+    /**
      * Returns first record of the List<DataEvent>
      * <p>
      * Cassandra Table Name=DataEvent
@@ -303,7 +374,7 @@ public class CassandraQueryManager {
      */
     public List<DataEvent> getDataEventRecords(Session session, Integer productid)
             throws MultipleRowsReturnedException, CassandraQueryException, NoResultsReturnedException {
-        
+
         List<DataEvent> listofde = new ArrayList<>();
         String cql_select = "SELECT *  FROM dataevent WHERE productid=? ALLOW FILTERING";
         PreparedStatement preparedStatement = session.prepare(cql_select);
@@ -357,7 +428,7 @@ public class CassandraQueryManager {
      */
     public List<WholesalePrice> getWholesalePriceRecords(Session session, Integer productid, String homesidbid)
             throws MultipleRowsReturnedException, CassandraQueryException, NoResultsReturnedException {
-        
+
         List<WholesalePrice> listofwp = new ArrayList<>();
         String cql_select = "SELECT * FROM WholesalePrice WHERE productid=? AND homesidbid=? AND servesidbid=?";
         PreparedStatement preparedStatement = session.prepare(cql_select);
@@ -403,4 +474,4 @@ public class CassandraQueryManager {
         return listofwp;
     }
 
-    }
+}
