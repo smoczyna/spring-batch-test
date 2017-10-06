@@ -142,42 +142,28 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
         subLedgerOutput.setFinancialmarketId(financialMarket);
         subLedgerOutput.setBillCycleMonthYear(ProcessingUtils.getYearAndMonthFromStrDate(this.tempSubLedgerOuput.getDates().getRptPerEndDate()));
         subLedgerOutput.setBillAccrualIndicator(financialEventCategory.getBillingaccrualindicator());
-        
-//        if (subLedgerOutput.getSubledgerTotalDebitAmount()==null) {
-//            LOGGER.info("No subledger total debit amount, cannot determine booking side (DR/CR) !!!");            
-//        }
-//        
-//        if (subLedgerOutput.getSubledgerTotalDebitAmount() > 0) {
-//            subLedgerOutput.setSubledgerTotalCreditAmount(subLedgerOutput.getSubledgerTotalDebitAmount());
-//            subLedgerOutput.setSubledgerTotalDebitAmount(0d);
-//        } else {
-//            subLedgerOutput.setSubledgerTotalDebitAmount(subLedgerOutput.getSubledgerTotalDebitAmount());
-//            subLedgerOutput.setSubledgerTotalCreditAmount(0d);
-//        }
-        
-        // balance check
-        if (isBookingBalanced(subLedgerOutput)) {
-            LOGGER.info("Sub ledger record is balanced");
-        } else {
-            LOGGER.info("Sub ledger record is unbalanced - rebalancing is not yet ready");
-            rebalanceBooking(subLedgerOutput);
-        }        
+ 
+        this.createOffsetBooking(subLedgerOutput);    
     }
 
-    private boolean isBookingBalanced(SummarySubLedgerDTO subLedgerOutput) {
-        boolean result = false;
-        if (subLedgerOutput.getSubledgerTotalCreditAmount().equals(subLedgerOutput.getSubledgerTotalDebitAmount()))
-            result = true;
+    private void createOffsetBooking(SummarySubLedgerDTO subLedgerOutput) {
+        Integer offsetFinCat = this.tempSubLedgerOuput.findOffsetFinCat(subLedgerOutput.getFinancialEventNumber());
+        if (offsetFinCat==null)
+            LOGGER.error("Offset fin cat value not found !!!");
         else {
-            if ((subLedgerOutput.getSubledgerTotalCreditAmount().equals(0d) && subLedgerOutput.getSubledgerTotalDebitAmount() < 0.01d)
-                || (subLedgerOutput.getSubledgerTotalDebitAmount().equals(0d) && subLedgerOutput.getSubledgerTotalCreditAmount() < 0.01d))
-                result = true;
-        }    
-        return result;
-    }
-    
-    private void rebalanceBooking(SummarySubLedgerDTO subLedgerOutpu) {
-        // ths logic is a little bit unclear and has been left over for further discution
+            subLedgerOutput.setFinancialCategory(offsetFinCat);
+            Double debitAmt = subLedgerOutput.getSubledgerTotalDebitAmount();
+            Double creditAmt = subLedgerOutput.getSubledgerTotalCreditAmount();
+            SummarySubLedgerDTO clone = null;
+            try {
+                clone = subLedgerOutput.clone();
+            } catch (CloneNotSupportedException ex) {
+                LOGGER.error("Failed to create offset booking !!!");
+            }    
+            clone.setSubledgerTotalDebitAmount(creditAmt);
+            clone.setSubledgerTotalCreditAmount(debitAmt);
+            this.tempSubLedgerOuput.addOffsetSubledger(clone);
+        }            
     }
 
     private boolean isAlternateBookingApplicable(BaseBookingInputInterface inRec) {
@@ -275,6 +261,14 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
         outRec.setBilledInd("Y");
         this.fileSource = "B";
  
+        //if (billedRec.getDeviceType().trim().isEmpty())
+        if (billedRec.getFinancialMarket().trim().isEmpty())
+            this.financialMarket = "HUB";
+        else
+            this.financialMarket = billedRec.getFinancialMarket();
+        
+        altBookingInd = this.isAlternateBookingApplicable(billedRec);
+        
         if (billedRec.getAirProdId() > 0 && (billedRec.getWholesalePeakAirCharge() > 0 || billedRec.getWholesaleOffpeakAirCharge() > 0)) {
             outRec.setPeakDollarAmt(billedRec.getWholesalePeakAirCharge());
             outRec.setOffpeakDollarAmt(billedRec.getWholesaleOffpeakAirCharge());
@@ -287,12 +281,6 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
                 this.tmpProdId = billedRec.getAirProdId();            
         }
         
-        //if (billedRec.getDeviceType().trim().isEmpty())
-        if (billedRec.getFinancialMarket().trim().isEmpty())
-            this.financialMarket = "HUB";
-        else
-            this.financialMarket = billedRec.getFinancialMarket();
-
         if ((billedRec.getTollProductId() > 0 && billedRec.getTollCharge() > 0)
             || billedRec.getInterExchangeCarrierCode().equals(5050)
             || billedRec.getIncompleteInd().equals("D")
@@ -310,6 +298,8 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
                 outRec.setDollarAmtOther(this.tmpChargeAmt);
 
                 DataEvent dataEvent = this.getDataEventFromDb(this.tmpProdId);
+                if (dataEvent==null)
+                    LOGGER.error("Data Event record came back null");
                 
                 /* compute data usage */
                 if (dataEvent.getDataeventsubtype().equals("DEFLT")) {
@@ -333,9 +323,11 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
 //            tmpInterExchangeCarrierCode = billedRec.getInterExchangeCarrierCode();
         
         
-        /* do events & book record */       
-        altBookingInd = this.isAlternateBookingApplicable(billedRec);
+        /* do events & book record */   
         FinancialEventCategory financialEventCategory = this.getEventCategoryFromDb(this.tmpProdId, this.homeEqualsServingSbid ? "Y" : "N", altBookingInd);
+        if (financialEventCategory==null)
+            LOGGER.error("Financial Event Category for params: prodid=" + this.tmpProdId + ", homeEqServing=" + (this.homeEqualsServingSbid ? "Y" : "N") + ", altBooking=" + (altBookingInd ? "Y" : "N"));
+            
         bypassBooking = this.bypassBooking(financialEventCategory, altBookingInd);
 
         /* default booking check - basically it means population of sub leadger record */   
@@ -362,6 +354,10 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
             boolean altBookingInd;
             outRec.setBilledInd("N");
             this.fileSource = "U";
+            financialMarket = unbilledRec.getFinancialMarket();
+            
+            altBookingInd = this.isAlternateBookingApplicable(unbilledRec);
+            
             this.searchHomeSbid = unbilledRec.getHomeSbid();
             if (unbilledRec.getServingSbid().trim().isEmpty())
                 this.searchServingSbid = unbilledRec.getHomeSbid();
@@ -371,8 +367,6 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
             if (this.searchHomeSbid.equals(this.searchServingSbid))
                 this.homeEqualsServingSbid = true;
 
-            financialMarket = unbilledRec.getFinancialMarket();
-            
             if (unbilledRec.getAirProdId().equals(190))
                 this.tmpProdId = 1;
             else
@@ -401,7 +395,6 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
                 outRec.setUsage4G(Math.round(unbilledRec.getTotalWholesaleUsage().doubleValue() / 1024));
             }
             
-            altBookingInd = this.isAlternateBookingApplicable(unbilledRec);
             FinancialEventCategory financialEventCategory = this.getEventCategoryFromDb(this.tmpProdId, this.homeEqualsServingSbid ? "Y" : "N", altBookingInd); 
             this.createSubLedgerRecord(tmpChargeAmt, financialEventCategory, financialMarket);            
             return outRec;

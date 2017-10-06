@@ -8,7 +8,9 @@ package eu.squadd.batch.processors;
 import eu.squadd.batch.domain.BookDateCsvFileDTO;
 import eu.squadd.batch.domain.FinancialEventOffset;
 import eu.squadd.batch.domain.SummarySubLedgerDTO;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import org.springframework.stereotype.Component;
 
@@ -22,14 +24,14 @@ public class SubLedgerProcessor {
 
     private Set<SummarySubLedgerDTO> aggregatedOutput;
     private BookDateCsvFileDTO dates;
-    private Set<FinancialEventOffset> financialEventOffset;
+    private Map<Integer, Integer> financialEventOffset;
 
     public SubLedgerProcessor() {
         this.aggregatedOutput = new HashSet();
-        this.financialEventOffset = new HashSet();
+        this.financialEventOffset = new HashMap();
     }
 
-    public Set< SummarySubLedgerDTO> getAggregatedOutput() {
+    public Set<SummarySubLedgerDTO> getAggregatedOutput() {
         return aggregatedOutput;
     }
 
@@ -49,6 +51,13 @@ public class SubLedgerProcessor {
             return null;                    
     }
 
+    public SummarySubLedgerDTO addOffsetSubledger(SummarySubLedgerDTO subledger) {
+        if (this.aggregatedOutput.add(subledger))
+            return subledger;
+        else
+            return null;  
+    }
+    
     public BookDateCsvFileDTO getDates() {
         return this.dates;
     }
@@ -57,15 +66,20 @@ public class SubLedgerProcessor {
         this.dates = dates;
     }
 
-    public Set<FinancialEventOffset> getFinancialEventOffset() {
-        return this.financialEventOffset;
-    }
+//    public Map<Integer, Integer> getFinancialEventOffset() {
+//        return financialEventOffset;
+//    }
+//
+//    public void setFinancialEventOffset(Map<Integer, Integer> financialEventOffset) {
+//        this.financialEventOffset = financialEventOffset;
+//    }
 
-    public void setFinancialEventOffset(Set<FinancialEventOffset> financialEventOffset) {
-        this.financialEventOffset = financialEventOffset;
+    public boolean addOffset(FinancialEventOffset offset) {
+        this.financialEventOffset.put(offset.getFinancialEvent(), offset.getOffsetFinancialCategory());
+        return true;
     }
     
-    public boolean addOffset(FinancialEventOffset offset) {        
-        return this.financialEventOffset.add(offset);                
+    public Integer findOffsetFinCat(Integer finCat) {
+        return this.financialEventOffset.get(finCat);
     }
 }

@@ -56,7 +56,7 @@ public class WholesaleReportProcessorTest {
         
         when(tempSubLedgerOuput.addSubledger()).thenReturn(new SummarySubLedgerDTO());
         when(tempSubLedgerOuput.getDates()).thenReturn(this.createBookDateRecord());
-        when(tempSubLedgerOuput.getFinancialEventOffset()).thenReturn(this.createFinancialEventOffset());
+        //when(tempSubLedgerOuput.getFinancialEventOffset()).thenReturn(this.createFinancialEventOffset());
         
         when(wholesaleBookingProcessor.getFinancialMarketFromDb(anyString())).thenReturn(this.createFinancialMarket());
         when(wholesaleBookingProcessor.getEventCategoryFromDb(anyInt(), anyString(), anyBoolean())).thenReturn(this.createEventCategory(true));

@@ -8,6 +8,7 @@ package eu.squadd.batch.listeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.ExitStatus;
+import org.springframework.batch.core.ItemProcessListener;
 import org.springframework.batch.core.SkipListener;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.StepExecutionListener;
@@ -16,12 +17,14 @@ import org.springframework.batch.core.StepExecutionListener;
  *
  * @author smorcja
  */
-public class GenericStepExecutionListener implements StepExecutionListener, SkipListener {
+public class GenericStepExecutionListener implements StepExecutionListener, SkipListener, ItemProcessListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GenericStepExecutionListener.class);
+    private Long recordCount;
     
     @Override
-    public void beforeStep(StepExecution se) {        
+    public void beforeStep(StepExecution se) { 
+        this.recordCount = 0L;
     }
 
     @Override
@@ -43,5 +46,18 @@ public class GenericStepExecutionListener implements StepExecutionListener, Skip
     @Override
     public void onSkipInProcess(Object inputRecord, Throwable exception) {
         LOGGER.error(inputRecord.toString());
+    }
+
+    @Override
+    public void beforeProcess(Object t) {
+        LOGGER.info("Processing records: "+ (++recordCount));
+    }
+
+    @Override
+    public void afterProcess(Object t, Object s) {
+    }
+
+    @Override
+    public void onProcessError(Object t, Exception excptn) {
     }
 }

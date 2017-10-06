@@ -5,12 +5,15 @@
  */
 package eu.squadd.batch.domain;
 
+import org.springframework.stereotype.Component;
+
 /**
  * Summary Sub Ledger internal payload class. 
  * This class represents the output file of the application.
  * @author smorcja
  */
-public class SummarySubLedgerDTO {
+@Component
+public class SummarySubLedgerDTO implements Cloneable {
     
     private String jemsApplId = "BL";
     private String reportStartDate;
@@ -33,8 +36,8 @@ public class SummarySubLedgerDTO {
     private String billAccrualIndicator = "N";
     private String paymentSourceCode;
     private Integer discountOfferId = 0;
-    private String updateUserId = "WholesaleBookingProcessor";
-    private String updateTimestamp; // = new ZonedDateTime();
+    private String updateUserId = "WholesaleBookingApp";
+    private String updateTimestamp;
 
     public String getJemsApplId() {
         return jemsApplId;
@@ -218,5 +221,10 @@ public class SummarySubLedgerDTO {
 
     public void setUpdateTimestamp(String updateTimestamp) {
         this.updateTimestamp = updateTimestamp;
+    }
+    
+    @Override
+    public SummarySubLedgerDTO clone() throws CloneNotSupportedException {
+        return (SummarySubLedgerDTO) super.clone();
     }
 }
