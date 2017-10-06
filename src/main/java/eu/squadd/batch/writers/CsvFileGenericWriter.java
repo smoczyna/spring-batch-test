@@ -24,8 +24,7 @@ public class CsvFileGenericWriter<T> extends FlatFileItemWriter<T> {
     public CsvFileGenericWriter(String fileName, String[] fieldNames, String delimiter) {
         super.setAppendAllowed(true);
         this.setResource(new FileSystemResource(fileName));
-        LineAggregator<T> lineAggregator = createLineAggregator(fieldNames, delimiter);
-        this.setLineAggregator(lineAggregator);
+        this.setLineAggregator(createLineAggregator(fieldNames, delimiter));
     }
     
     public CsvFileGenericWriter(Environment environment, String fileName, String[] fieldNames, String delimiter) {
@@ -35,8 +34,7 @@ public class CsvFileGenericWriter<T> extends FlatFileItemWriter<T> {
     private LineAggregator<T> createLineAggregator(String[] fieldNames, String delimiter) {
         DelimitedLineAggregator<T> lineAggregator = new DelimitedLineAggregator<>();
         lineAggregator.setDelimiter(delimiter);
-        FieldExtractor<T> fieldExtractor = createFieldExtractor(fieldNames);
-        lineAggregator.setFieldExtractor(fieldExtractor);
+        lineAggregator.setFieldExtractor(createFieldExtractor(fieldNames));
         return lineAggregator;
     }
     

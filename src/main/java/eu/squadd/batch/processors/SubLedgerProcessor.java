@@ -40,8 +40,8 @@ public class SubLedgerProcessor {
     public SummarySubLedgerDTO addSubledger() {
         SummarySubLedgerDTO slRecord = new SummarySubLedgerDTO();
         if (this.dates != null) {
-            slRecord.setReportStartDate(dates.getRptPerStartDate());
-            slRecord.setJemsApplTransactioDate(dates.getTransPerEndDate());
+            slRecord.setReportStartDate(this.dates.getRptPerStartDate());
+            slRecord.setJemsApplTransactioDate(this.dates.getTransPerEndDate());
         }        
         if (this.aggregatedOutput.add(slRecord))
             return slRecord;
@@ -50,7 +50,7 @@ public class SubLedgerProcessor {
     }
 
     public BookDateCsvFileDTO getDates() {
-        return dates;
+        return this.dates;
     }
 
     public void setDates(BookDateCsvFileDTO dates) {
@@ -58,7 +58,7 @@ public class SubLedgerProcessor {
     }
 
     public Set<FinancialEventOffset> getFinancialEventOffset() {
-        return financialEventOffset;
+        return this.financialEventOffset;
     }
 
     public void setFinancialEventOffset(Set<FinancialEventOffset> financialEventOffset) {

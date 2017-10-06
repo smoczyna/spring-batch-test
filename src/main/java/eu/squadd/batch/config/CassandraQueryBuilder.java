@@ -1,5 +1,6 @@
 package eu.squadd.batch.config;
 
+import eu.squadd.batch.utils.AbstractMapper;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 

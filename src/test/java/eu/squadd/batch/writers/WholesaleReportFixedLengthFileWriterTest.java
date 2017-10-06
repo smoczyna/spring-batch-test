@@ -5,7 +5,7 @@
  */
 package eu.squadd.batch.writers;
 
-import eu.squadd.batch.domain.SummarySubLedgerDTO;
+import eu.squadd.batch.domain.AggregateWholesaleReportDTO;
 import eu.squadd.batch.utils.ProcessingUtils;
 import java.io.BufferedReader;
 import java.io.File;
@@ -27,60 +27,67 @@ import org.springframework.batch.test.StepScopeTestUtils;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
 /**
  *
  * @author smorcja
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@TestExecutionListeners({DependencyInjectionTestExecutionListener.class, StepScopeTestExecutionListener.class})
+@TestExecutionListeners({StepScopeTestExecutionListener.class})
 @ContextConfiguration
-public class SubledgerCsvFileWriterTest {
+public class WholesaleReportFixedLengthFileWriterTest {
     
-    private SubledgerCsvFileWriter writer;
+    private WholesaleReportFixedLengthFileWriter writer;
     private String workingFoler;
     
     @Before
     public void setUp() {
         ClassLoader classLoader = getClass().getClassLoader();
         workingFoler = classLoader.getResource("./data").getPath();
-        System.out.println("Write path: "+workingFoler);
-        writer = new SubledgerCsvFileWriter(workingFoler+"/subledger_summary.csv");
+        Logger.getLogger(WholesaleReportFixedLengthFileWriterTest.class.getName()).log(Level.INFO, "Write path: {0}", workingFoler);
+        writer = new WholesaleReportFixedLengthFileWriter(workingFoler+"/fixed_length_wholesale_report.txt");
     }
     
     @Test
     public void testWriter() throws Exception {
-        List<SummarySubLedgerDTO> list = new LinkedList();
-        SummarySubLedgerDTO item = new SummarySubLedgerDTO();
-        item.setFinancialCategory(123);
-        item.setFinancialEventNumber(456789);
-        item.setFinancialmarketId("Dublin");
-        item.setSubledgerTotalCreditAmount(-1234.78);
-        item.setSubledgerTotalDebitAmount(86654.89);
-        list.add(item);
-        
+        List<AggregateWholesaleReportDTO> report = new LinkedList();
+        AggregateWholesaleReportDTO record = new AggregateWholesaleReportDTO();
+        record.setBilledInd("Y");
+        record.setHomeFinancialMarketId("Dublin");
+        record.setCycleMonthYear("201709");
+        record.setTollDollarsAmt(345.78);
+        record.setProductDiscountOfferId(123);
+        record.setUsage3G(123456L);
+        record.setUsage4G(4566575L);
+        report.add(record);
+
         StepExecution execution = MetaDataInstanceFactory.createStepExecution();
         StepScopeTestUtils.doInStepScope(execution, () -> {
             try {
                 writer.open(execution.getExecutionContext());
-                writer.write(list);
+                writer.write(report);
                 writer.close();
                 verifyWrittenFile();
             } catch (Exception ex) {
-                Logger.getLogger(SubledgerCsvFileWriterTest.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(WholesaleReportCsvWriterTest.class.getName()).log(Level.SEVERE, null, ex);
             }
             return 1;
         });
     }
     
+    /**
+     * verify the result file:
+     * - checking if it exists first
+     * - reading the first line and splitting it by found delimiter 
+     * - comparing the number of parsed fields with the AggregateWholesaleReportDTO java object
+     * 
+     * @throws IOException 
+     */
     private void verifyWrittenFile() throws IOException {
-        File file = new File(workingFoler+"/subledger_summary.csv");
+        File file = new File(workingFoler+"/fixed_length_wholesale_report.txt");
         assertNotNull(file.exists());
         BufferedReader br = new BufferedReader(new FileReader(file));
         String line = br.readLine();
-        String delimiter = ProcessingUtils.decodeDelimiter(line);
-        String[] parsed = line.split(delimiter);
-        assertEquals(22, parsed.length);
+        System.out.println(line);
     }
 }

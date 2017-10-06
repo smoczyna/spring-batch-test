@@ -6,7 +6,7 @@
 package eu.squadd.batch.writers;
 
 import eu.squadd.batch.domain.AggregateWholesaleReportDTO;
-import eu.squadd.batch.util.ProcessingUtils;
+import eu.squadd.batch.utils.ProcessingUtils;
 import eu.squadd.batch.writers.WholesaleReportCsvWriter;
 import java.io.BufferedReader;
 import java.io.File;

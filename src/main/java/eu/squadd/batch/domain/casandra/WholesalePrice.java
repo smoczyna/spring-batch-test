@@ -7,96 +7,96 @@ import com.datastax.driver.mapping.annotations.ClusteringColumn;
 import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
+import java.math.BigDecimal;
 
 @Table(name = "wholesaleprice")
 public class WholesalePrice {
 
-	@PartitionKey(value = 0)
-	@Column(name = "productid")
-	private Integer productid;
+    @PartitionKey(value = 0)
+    @Column(name = "productid")
+    private Integer productid;
 
-	@PartitionKey(value = 1)
-	@Column(name = "homesidbid")
-	private String homesidbid;
+    @PartitionKey(value = 1)
+    @Column(name = "homesidbid")
+    private String homesidbid;
 
-	@ClusteringColumn
-	@Column(name = "servesidbid")
-	private String servesidbid;
+    @ClusteringColumn
+    @Column(name = "servesidbid")
+    private String servesidbid;
 
-	private String rateperiodclassificationid;
-	private String effectivedate;
-	private String enddate;
-	private Double productwholesaleprice;
-	private Double productdiscountpercent;
+    private String rateperiodclassificationid;
+    private String effectivedate;
+    private String enddate;
+    private BigDecimal productwholesaleprice;
+    private BigDecimal productdiscountpercent;
 
-	@Override
-	public String toString() {
-		return "WholesalePrice [productwholesaleprice=" + productwholesaleprice + ", productdiscountpercent="
-				+ productdiscountpercent + "]";
-	}
+    @Override
+    public String toString() {
+        return "WholesalePrice [productwholesaleprice=" + productwholesaleprice + ", productdiscountpercent="
+                + productdiscountpercent + "]";
+    }
 
-	public Integer getProductid() {
-		return productid;
-	}
+    public Integer getProductid() {
+        return productid;
+    }
 
-	public void setProductid(Integer productid) {
-		this.productid = productid;
-	}
+    public void setProductid(Integer productid) {
+        this.productid = productid;
+    }
 
-	public String getHomesidbid() {
-		return homesidbid;
-	}
+    public String getHomesidbid() {
+        return homesidbid;
+    }
 
-	public void setHomesidbid(String homesidbid) {
-		this.homesidbid = homesidbid;
-	}
+    public void setHomesidbid(String homesidbid) {
+        this.homesidbid = homesidbid;
+    }
 
-	public String getServesidbid() {
-		return servesidbid;
-	}
+    public String getServesidbid() {
+        return servesidbid;
+    }
 
-	public void setServesidbid(String servesidbid) {
-		this.servesidbid = servesidbid;
-	}
+    public void setServesidbid(String servesidbid) {
+        this.servesidbid = servesidbid;
+    }
 
-	public String getRateperiodclassificationid() {
-		return rateperiodclassificationid;
-	}
+    public String getRateperiodclassificationid() {
+        return rateperiodclassificationid;
+    }
 
-	public void setRateperiodclassificationid(String rateperiodclassificationid) {
-		this.rateperiodclassificationid = rateperiodclassificationid;
-	}
+    public void setRateperiodclassificationid(String rateperiodclassificationid) {
+        this.rateperiodclassificationid = rateperiodclassificationid;
+    }
 
-	public String getEffectivedate() {
-		return effectivedate;
-	}
+    public String getEffectivedate() {
+        return effectivedate;
+    }
 
-	public void setEffectivedate(String effectivedate) {
-		this.effectivedate = effectivedate;
-	}
+    public void setEffectivedate(String effectivedate) {
+        this.effectivedate = effectivedate;
+    }
 
-	public String getEnddate() {
-		return enddate;
-	}
+    public String getEnddate() {
+        return enddate;
+    }
 
-	public void setEnddate(String enddate) {
-		this.enddate = enddate;
-	}
+    public void setEnddate(String enddate) {
+        this.enddate = enddate;
+    }
 
-	public Double getProductwholesaleprice() {
-		return productwholesaleprice;
-	}
+    public BigDecimal getProductwholesaleprice() {
+        return productwholesaleprice;
+    }
 
-	public void setProductwholesaleprice(Double productwholesaleprice) {
-		this.productwholesaleprice = productwholesaleprice;
-	}
+    public void setProductwholesaleprice(BigDecimal productwholesaleprice) {
+        this.productwholesaleprice = productwholesaleprice;
+    }
 
-	public Double getProductdiscountpercent() {
-		return productdiscountpercent;
-	}
+    public BigDecimal getProductdiscountpercent() {
+        return productdiscountpercent;
+    }
 
-	public void setProductdiscountpercent(Double productdiscountpercent) {
-		this.productdiscountpercent = productdiscountpercent;
-	}
-
+    public void setProductdiscountpercent(BigDecimal productdiscountpercent) {
+        this.productdiscountpercent = productdiscountpercent;
+    }
 }

@@ -1,4 +1,4 @@
-package eu.squadd.batch.config;
+package eu.squadd.batch.utils;
 
 import java.util.concurrent.ExecutionException;
 

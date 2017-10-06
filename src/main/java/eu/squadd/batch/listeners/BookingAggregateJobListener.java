@@ -6,7 +6,7 @@
 package eu.squadd.batch.listeners;
 
 import eu.squadd.batch.constants.Constants;
-import eu.squadd.batch.util.ProcessingUtils;
+import eu.squadd.batch.utils.ProcessingUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

@@ -5,6 +5,7 @@
  */
 package eu.squadd.batch.config;
 
+import eu.squadd.batch.utils.AbstractMapper;
 import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.MappingManager;
 import eu.squadd.batch.domain.casandra.FinancialMarket;

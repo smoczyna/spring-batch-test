@@ -1,4 +1,4 @@
-package eu.squadd.batch.domain.casandra.exceptions;
+package eu.squadd.batch.domain.exceptions;
 
 public class CassandraQueryException extends Exception {
 

@@ -1,4 +1,4 @@
-package eu.squadd.batch.util;
+package eu.squadd.batch.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

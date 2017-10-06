@@ -40,27 +40,24 @@ public class CsvFileGenericReader<T> extends FlatFileItemReader<T> {
     }
 
     protected final LineMapper<T> createLineMapper(String[] fieldNames, String delimiter) {
-        DefaultLineMapper<T> studentLineMapper = new DefaultLineMapper<>();
+        DefaultLineMapper<T> lineMapper = new DefaultLineMapper<>();
         if (fieldNames != null || fieldNames.length > 0) {
-            LineTokenizer studentLineTokenizer = createLineTokenizer(fieldNames, delimiter);
-            studentLineMapper.setLineTokenizer(studentLineTokenizer);
+            lineMapper.setLineTokenizer(createLineTokenizer(fieldNames, delimiter));
         }
-        FieldSetMapper<T> studentInformationMapper = createInformationMapper();
-        studentLineMapper.setFieldSetMapper(studentInformationMapper);
-
-        return studentLineMapper;
+        lineMapper.setFieldSetMapper(this.createInformationMapper());
+        return lineMapper;
     }
 
     protected LineTokenizer createLineTokenizer(String[] fieldNames, String delimiter) {
-        DelimitedLineTokenizer studentLineTokenizer = new DelimitedLineTokenizer();
-        studentLineTokenizer.setDelimiter(delimiter);
-        studentLineTokenizer.setNames(fieldNames);
-        return studentLineTokenizer;
+        DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
+        lineTokenizer.setDelimiter(delimiter);
+        lineTokenizer.setNames(fieldNames);
+        return lineTokenizer;
     }
 
     protected FieldSetMapper<T> createInformationMapper() {
-        BeanWrapperFieldSetMapper<T> studentInformationMapper = new BeanWrapperFieldSetMapper();
-        studentInformationMapper.setTargetType(payloadClass);
-        return studentInformationMapper;
+        BeanWrapperFieldSetMapper<T> informationMapper = new BeanWrapperFieldSetMapper();
+        informationMapper.setTargetType(payloadClass);
+        return informationMapper;
     }
 }

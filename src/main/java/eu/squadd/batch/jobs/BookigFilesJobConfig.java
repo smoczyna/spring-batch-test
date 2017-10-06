@@ -24,7 +24,7 @@ import eu.squadd.batch.readers.BilledBookingFileReader;
 import eu.squadd.batch.readers.BookDateCsvFileReader;
 import eu.squadd.batch.readers.FinancialEventOffsetRader;
 import eu.squadd.batch.readers.UnbilledBookingFileReader;
-import eu.squadd.batch.validation.CsvFileVerificationSkipper;
+import eu.squadd.batch.validations.CsvFileVerificationSkipper;
 import eu.squadd.batch.writers.AggregatedSubLedgerWriter;
 import eu.squadd.batch.writers.SubledgerCsvFileWriter;
 import eu.squadd.batch.writers.WholesaleReportCsvWriter;

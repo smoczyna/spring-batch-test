@@ -23,10 +23,11 @@ import eu.squadd.batch.domain.casandra.DataEvent;
 import eu.squadd.batch.domain.casandra.FinancialEventCategory;
 import eu.squadd.batch.domain.casandra.FinancialMarket;
 import eu.squadd.batch.domain.casandra.WholesalePrice;
-import eu.squadd.batch.domain.casandra.exceptions.CassandraQueryException;
-import eu.squadd.batch.domain.casandra.exceptions.MultipleRowsReturnedException;
-import eu.squadd.batch.domain.casandra.exceptions.NoResultsReturnedException;
-import eu.squadd.batch.util.ProcessingUtils;
+import eu.squadd.batch.domain.exceptions.CassandraQueryException;
+import eu.squadd.batch.domain.exceptions.MultipleRowsReturnedException;
+import eu.squadd.batch.domain.exceptions.NoResultsReturnedException;
+import eu.squadd.batch.utils.ProcessingUtils;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -87,8 +88,9 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
         
         SummarySubLedgerDTO subLedgerOutput = this.tempSubLedgerOuput.addSubledger();
         
+        // this is pointless, no used ever after
         // second cassandra call goes here, it will check if product is wholesale product        
-        String wholesaleBillingCode = null; // this object comes from db as response 
+        //String wholesaleBillingCode = null; // this object comes from db as response 
         //if (wholesaleBillingCode != null) it is
         //else it is not
         // what is that for ??? It's never used anywhere after 
@@ -141,17 +143,17 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
         subLedgerOutput.setBillCycleMonthYear(ProcessingUtils.getYearAndMonthFromStrDate(this.tempSubLedgerOuput.getDates().getRptPerEndDate()));
         subLedgerOutput.setBillAccrualIndicator(financialEventCategory.getBillingaccrualindicator());
         
-        if (subLedgerOutput.getSubledgerTotalDebitAmount()==null) {
-            LOGGER.info("No subledger total debit amount, cannot determine booking side (DR/CR) !!!");            
-        }
-        
-        if (subLedgerOutput.getSubledgerTotalDebitAmount() > 0) {
-            subLedgerOutput.setSubledgerTotalCreditAmount(subLedgerOutput.getSubledgerTotalDebitAmount());
-            subLedgerOutput.setSubledgerTotalDebitAmount(0d);
-        } else {
-            subLedgerOutput.setSubledgerTotalDebitAmount(subLedgerOutput.getSubledgerTotalDebitAmount());
-            subLedgerOutput.setSubledgerTotalCreditAmount(0d);
-        }
+//        if (subLedgerOutput.getSubledgerTotalDebitAmount()==null) {
+//            LOGGER.info("No subledger total debit amount, cannot determine booking side (DR/CR) !!!");            
+//        }
+//        
+//        if (subLedgerOutput.getSubledgerTotalDebitAmount() > 0) {
+//            subLedgerOutput.setSubledgerTotalCreditAmount(subLedgerOutput.getSubledgerTotalDebitAmount());
+//            subLedgerOutput.setSubledgerTotalDebitAmount(0d);
+//        } else {
+//            subLedgerOutput.setSubledgerTotalDebitAmount(subLedgerOutput.getSubledgerTotalDebitAmount());
+//            subLedgerOutput.setSubledgerTotalCreditAmount(0d);
+//        }
         
         // balance check
         if (isBookingBalanced(subLedgerOutput)) {
@@ -193,34 +195,34 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
             homeEqualsServingSbid = true;
         }
 
-        FinancialMarket financialMarket = this.getFinancialMarketFromDb(inRec.getFinancialMarket());
+        FinancialMarket finMarket = this.getFinancialMarketFromDb(this.financialMarket);
                 
         String homeLegalEntityId = null;
-        String servingLegalEntityId = null;
+        String servingLegalEntityId;
 
-        if (financialMarket.getSidbid().equals(searchHomeSbid) && financialMarket.getAlternatebookingtype().equals("P")) {
-            homeLegalEntityId = financialMarket.getGllegalentityid();
+        if (finMarket.getSidbid().equals(searchHomeSbid) && finMarket.getAlternatebookingtype().equals("P")) {
+            homeLegalEntityId = finMarket.getGllegalentityid();
             if (homeEqualsServingSbid) {
                 altBookingInd = true;
             }
         }
 
-        if (!homeEqualsServingSbid && (financialMarket.getSidbid().equals(searchServingSbid) && financialMarket.getAlternatebookingtype().equals("P"))) {
-            servingLegalEntityId = financialMarket.getGllegalentityid();
+        if (!homeEqualsServingSbid && (finMarket.getSidbid().equals(searchServingSbid) && finMarket.getAlternatebookingtype().equals("P"))) {
+            servingLegalEntityId = finMarket.getGllegalentityid();
             if (homeLegalEntityId.equals(servingLegalEntityId)) {
                 altBookingInd = true;
             }
         }
 
-        if (financialMarket.getSidbid().equals(searchHomeSbid) && financialMarket.getAlternatebookingtype().equals("M")) {
-            homeGlMarketId = financialMarket.getGlmarketid();
+        if (finMarket.getSidbid().equals(searchHomeSbid) && finMarket.getAlternatebookingtype().equals("M")) {
+            homeGlMarketId = finMarket.getGlmarketid();
             if (homeEqualsServingSbid) {
                 altBookingInd = true;
             }
         }
 
-        if (!homeEqualsServingSbid && (financialMarket.getSidbid().equals(searchServingSbid) && financialMarket.getAlternatebookingtype().equals("M"))) {
-            servingGlMarketId = financialMarket.getGlmarketid();
+        if (!homeEqualsServingSbid && (finMarket.getSidbid().equals(searchServingSbid) && finMarket.getAlternatebookingtype().equals("M"))) {
+            servingGlMarketId = finMarket.getGlmarketid();
             if (homeGlMarketId.equals(servingGlMarketId)) {
                 altBookingInd = true;
             }
@@ -272,7 +274,7 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
         
         outRec.setBilledInd("Y");
         this.fileSource = "B";
-        
+ 
         if (billedRec.getAirProdId() > 0 && (billedRec.getWholesalePeakAirCharge() > 0 || billedRec.getWholesaleOffpeakAirCharge() > 0)) {
             outRec.setPeakDollarAmt(billedRec.getWholesalePeakAirCharge());
             outRec.setOffpeakDollarAmt(billedRec.getWholesaleOffpeakAirCharge());
@@ -286,7 +288,10 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
         }
         
         //if (billedRec.getDeviceType().trim().isEmpty())
-        financialMarket = billedRec.getFinancialMarket();
+        if (billedRec.getFinancialMarket().trim().isEmpty())
+            this.financialMarket = "HUB";
+        else
+            this.financialMarket = billedRec.getFinancialMarket();
 
         if ((billedRec.getTollProductId() > 0 && billedRec.getTollCharge() > 0)
             || billedRec.getInterExchangeCarrierCode().equals(5050)
@@ -330,7 +335,7 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
         
         /* do events & book record */       
         altBookingInd = this.isAlternateBookingApplicable(billedRec);
-        FinancialEventCategory financialEventCategory = this.getEventCategoryFromDb(this.tmpProdId, this.homeEqualsServingSbid, altBookingInd);
+        FinancialEventCategory financialEventCategory = this.getEventCategoryFromDb(this.tmpProdId, this.homeEqualsServingSbid ? "Y" : "N", altBookingInd);
         bypassBooking = this.bypassBooking(financialEventCategory, altBookingInd);
 
         /* default booking check - basically it means population of sub leadger record */   
@@ -397,33 +402,37 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
             }
             
             altBookingInd = this.isAlternateBookingApplicable(unbilledRec);
-            FinancialEventCategory financialEventCategory = this.getEventCategoryFromDb(this.tmpProdId, this.homeEqualsServingSbid, altBookingInd); 
+            FinancialEventCategory financialEventCategory = this.getEventCategoryFromDb(this.tmpProdId, this.homeEqualsServingSbid ? "Y" : "N", altBookingInd); 
             this.createSubLedgerRecord(tmpChargeAmt, financialEventCategory, financialMarket);            
             return outRec;
         }
-        else 
-            return null;        
+        else
+            return null;
     }
     
     private AggregateWholesaleReportDTO processAdminFeesRecord(AdminFeeCsvFileDTO adminFeesRec) {
         AggregateWholesaleReportDTO outRec = new AggregateWholesaleReportDTO();
         outRec.setBilledInd("Y");
         this.fileSource = "M";
+        this.searchHomeSbid = adminFeesRec.getSbid(); // there is no check if both home and serving bids are equal ???
         this.tmpProdId = adminFeesRec.getProductId();
         this.financialMarket = adminFeesRec.getFinancialMarket();
         
         // call cassandra wholesale price table
         WholesalePrice wholesalePrice = this.getWholesalePriceFromDb(this.tmpProdId, this.searchHomeSbid);
-        this.tmpChargeAmt = wholesalePrice.getProductwholesaleprice() * adminFeesRec.getAdminCount();
+        
+        this.tmpChargeAmt = wholesalePrice.getProductwholesaleprice().multiply(BigDecimal.valueOf(adminFeesRec.getAdminCount()).movePointLeft(2)).floatValue();
         outRec.setDollarAmtOther(this.tmpChargeAmt);
         
-        boolean bypassBooking = false;
-        
-         // this is a fake call due to lack of 3 paramters !!!
-        FinancialEventCategory financialEventCategory = this.getEventCategoryFromDb(this.tmpProdId, this.homeEqualsServingSbid, false); // homeEqualsServingSbid has to be a space here
-                        
-        if (financialEventCategory.getHomesidequalsservingsidindicator().trim().isEmpty())
-            bypassBooking = false;
+        boolean altBookingInd = false; // alternate booking cannot be checked here due incompatible payload (adminfees file doesn't fit the interface as it has no all required fields)
+        FinancialEventCategory financialEventCategory = this.getEventCategoryFromDb(this.tmpProdId, " ", altBookingInd);
+                
+        // this is pointless - it's false by default
+        //if (financialEventCategory.getHomesidequalsservingsidindicator().trim().isEmpty())
+        //    bypassBooking = false;
+        //else
+              
+        boolean bypassBooking = this.bypassBooking(financialEventCategory, altBookingInd);
         
         if (bypassBooking)
             LOGGER.warn("Booking bypass detected, record skipped for sub ledger file ...");
@@ -436,7 +445,7 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
     protected FinancialMarket getFinancialMarketFromDb(String financialMarketId) {
         FinancialMarket result = null;
         try {
-            List<FinancialMarket> dbResult = queryManager.getFinancialMarketRecord(CassandraQueryManager.getCassandraSession(), financialMarketId);
+            List<FinancialMarket> dbResult = queryManager.getFinancialMarketRecord(financialMarketId);
             if (dbResult.size()==1)
                 result = dbResult.get(0);
         } catch (MultipleRowsReturnedException | NoResultsReturnedException | CassandraQueryException ex) {
@@ -445,11 +454,10 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
         return result;
     }
     
-    protected FinancialEventCategory getEventCategoryFromDb(Integer tmpProdId, boolean homeEqualsServingSbid, boolean altBookingInd) {
+    protected FinancialEventCategory getEventCategoryFromDb(Integer tmpProdId, String homeEqualsServingSbid, boolean altBookingInd) {
         FinancialEventCategory result = null;
         try {
-            List<FinancialEventCategory> dbResult = queryManager.getFinancialEventCategoryNoClusteringRecord(CassandraQueryManager.getCassandraSession(),
-                    tmpProdId, homeEqualsServingSbid ? "Y" : "N", altBookingInd ? "Y" : "N");
+            List<FinancialEventCategory> dbResult = queryManager.getFinancialEventCategoryNoClusteringRecord(tmpProdId, homeEqualsServingSbid, altBookingInd ? "Y" : "N");
             if (dbResult.size()==1)
                 result = dbResult.get(0);
         } catch (MultipleRowsReturnedException | NoResultsReturnedException | CassandraQueryException ex) {
@@ -461,7 +469,7 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
     protected DataEvent getDataEventFromDb(Integer productId) {
         DataEvent result = null;
         try {
-            List<DataEvent> dbResult = queryManager.getDataEventRecords(CassandraQueryManager.getCassandraSession(), productId);
+            List<DataEvent> dbResult = queryManager.getDataEventRecords(productId);
             if (dbResult.size()==1)
                 result = dbResult.get(0);
         } catch (MultipleRowsReturnedException | NoResultsReturnedException | CassandraQueryException ex) {
@@ -473,7 +481,7 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
     protected WholesalePrice getWholesalePriceFromDb(Integer tmpProdId, String searchHomeSbid) {
         WholesalePrice result = null;
         try {
-            List<WholesalePrice> dbResult = queryManager.getWholesalePriceRecords(CassandraQueryManager.getCassandraSession(), tmpProdId, searchHomeSbid);
+            List<WholesalePrice> dbResult = queryManager.getWholesalePriceRecords(tmpProdId, searchHomeSbid);
             if (dbResult.size()==1)
                 result = dbResult.get(0);
         } catch (MultipleRowsReturnedException | NoResultsReturnedException | CassandraQueryException ex) {

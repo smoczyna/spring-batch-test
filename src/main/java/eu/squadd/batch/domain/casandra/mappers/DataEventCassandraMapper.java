@@ -2,7 +2,7 @@ package eu.squadd.batch.domain.casandra.mappers;
 
 import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.MappingManager;
-import eu.squadd.batch.config.AbstractMapper;
+import eu.squadd.batch.utils.AbstractMapper;
 import eu.squadd.batch.domain.casandra.DataEvent;
 
 public class DataEventCassandraMapper extends AbstractMapper<DataEvent> {
