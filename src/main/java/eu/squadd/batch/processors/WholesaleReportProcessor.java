@@ -191,6 +191,8 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
             if (homeEqualsServingSbid) {
                 altBookingInd = true;
             }
+            if (this.financialMarket.equals("666")) // temp patching
+                altBookingInd = false;
         }
 
         if (!homeEqualsServingSbid && (finMarket.getSidbid().equals(searchServingSbid) && finMarket.getAlternatebookingtype().equals("P"))) {
@@ -256,12 +258,10 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
         int tmpInterExchangeCarrierCode = 0;
         boolean bypassBooking;
         boolean altBookingInd;
-        //boolean defaultBooking;
         
         outRec.setBilledInd("Y");
         this.fileSource = "B";
- 
-        //if (billedRec.getDeviceType().trim().isEmpty())
+
         if (billedRec.getFinancialMarket().trim().isEmpty())
             this.financialMarket = "HUB";
         else
@@ -284,7 +284,7 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
                 this.tmpProdId = billedRec.getAirProdId();            
         }
         
-        if (billedRec.getTollProductId() > 0 && billedRec.getTollCharge() > 0) {            
+        if (billedRec.getTollProductId() > 0 && billedRec.getTollCharge() > 0) {
             if (billedRec.getInterExchangeCarrierCode().equals(5050)
                 || billedRec.getIncompleteInd().equals("D")
                 || !billedRec.getHomeSbid().equals(billedRec.getServingSbid())
@@ -317,15 +317,16 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
                     outRec.setTollMinutes(this.tmpProdId);
                     outRec.setTollMinutes(Math.round(billedRec.getTollBillSeconds() / 60));
                 }
+                if (!billedRec.getInterExchangeCarrierCode().equals(5050)) 
+                    tmpInterExchangeCarrierCode = 0;
+                else
+                    tmpInterExchangeCarrierCode = billedRec.getInterExchangeCarrierCode();        
             }
             else
                 LOGGER.info("Gap in the code encountered !!!");
         }
         outRec.setPeakDollarAmt(0d);
 
-        if (!billedRec.getInterExchangeCarrierCode().equals(5050)) 
-            tmpInterExchangeCarrierCode = 0;
-        
         /* do events & book record */
         altBookingInd = this.isAlternateBookingApplicable(billedRec);
         FinancialEventCategory financialEventCategory = this.getEventCategoryFromDb(this.tmpProdId, this.homeEqualsServingSbid ? "Y" : "N", altBookingInd, tmpInterExchangeCarrierCode);
