@@ -150,8 +150,7 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
         Integer offsetFinCat = this.tempSubLedgerOuput.findOffsetFinCat(subLedgerOutput.getFinancialEventNumber());
         if (offsetFinCat==null)
             LOGGER.error("Offset fin cat value not found !!!");
-        else {
-            subLedgerOutput.setFinancialCategory(offsetFinCat);
+        else {            
             Double debitAmt = subLedgerOutput.getSubledgerTotalDebitAmount();
             Double creditAmt = subLedgerOutput.getSubledgerTotalCreditAmount();
             SummarySubLedgerDTO clone = null;
@@ -159,7 +158,8 @@ public class WholesaleReportProcessor<T> implements ItemProcessor<T, AggregateWh
                 clone = subLedgerOutput.clone();
             } catch (CloneNotSupportedException ex) {
                 LOGGER.error("Failed to create offset booking !!!");
-            }    
+            } 
+            clone.setFinancialCategory(offsetFinCat);
             clone.setSubledgerTotalDebitAmount(creditAmt);
             clone.setSubledgerTotalCreditAmount(debitAmt);
             this.tempSubLedgerOuput.addOffsetSubledger(clone);
