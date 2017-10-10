@@ -26,7 +26,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  *
  * @author smorcja
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+//@RunWith(SpringJUnit4ClassRunner.class)
 public class DatabasesConfigTest3 {
     
     /**
@@ -53,7 +53,7 @@ public class DatabasesConfigTest3 {
 //        assertNotNull(result);
 //    }
     
-    @Test
+    //@Test
     public void testCasandraConnectivity() throws Exception {
         System.out.println("Check Casandra native connectivity using Datastax driver");
         //Session session = DatabasesConfig.getCasandraSession();
@@ -71,7 +71,7 @@ public class DatabasesConfigTest3 {
         assertNotNull(session); 
     }
 
-    @Test
+    //@Test
     public void testSystemSchemaAccess() throws Exception {
         Session session = DatabasesConfig.getCasandraSession("system_schema");
         assertNotNull(session);
@@ -84,7 +84,7 @@ public class DatabasesConfigTest3 {
         }
     }
     
-    @Test
+    //@Test
     public void testCassandraUserTablesAccess() throws Exception {
         Session session = DatabasesConfig.getCasandraSession("j6_dev");
         assertNotNull(session);
@@ -107,7 +107,7 @@ public class DatabasesConfigTest3 {
 //        assertEquals(userCount, userCount3);        
     }
     
-    @Test
+    //@Test
     public void testFinancialMarketTable() throws Exception {
         Session session = DatabasesConfig.getCasandraSession("j6_dev");
         assertNotNull(session);

@@ -10,7 +10,7 @@ import eu.squadd.batch.domain.AdminFeeCsvFileDTO;
 import eu.squadd.batch.domain.AggregateWholesaleReportDTO;
 import eu.squadd.batch.domain.BilledCsvFileDTO;
 import eu.squadd.batch.domain.BookDateCsvFileDTO;
-import eu.squadd.batch.domain.FinancialEventOffset;
+import eu.squadd.batch.domain.FinancialEventOffsetDTO;
 import eu.squadd.batch.domain.SummarySubLedgerDTO;
 import eu.squadd.batch.domain.UnbilledCsvFileDTO;
 import eu.squadd.batch.domain.casandra.DataEvent;
@@ -120,9 +120,9 @@ public class WholesaleReportProcessorTest {
         return record;
     }
     
-    private Set<FinancialEventOffset> createFinancialEventOffset() {
-        Set<FinancialEventOffset> items = new HashSet();
-        FinancialEventOffset offset = new FinancialEventOffset();
+    private Set<FinancialEventOffsetDTO> createFinancialEventOffset() {
+        Set<FinancialEventOffsetDTO> items = new HashSet();
+        FinancialEventOffsetDTO offset = new FinancialEventOffsetDTO();
         offset.setFinancialEvent(1);
         offset.setOffsetFinancialCategory(2);
         items.add(offset);

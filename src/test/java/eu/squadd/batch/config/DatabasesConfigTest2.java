@@ -19,7 +19,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  *
  * @author smorcja
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+//@RunWith(SpringJUnit4ClassRunner.class)
 //@PropertySource("classpath:application.properties")
 public class DatabasesConfigTest2 {
 
