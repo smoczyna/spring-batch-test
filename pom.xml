@@ -97,7 +97,7 @@
             <version>1.10</version>
             <type>jar</type>
         </dependency>
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>org.springframework.batch</groupId>
             <artifactId>spring-batch-infrastructure</artifactId>
             <version>3.0.8.RELEASE</version>
@@ -105,66 +105,209 @@
         </dependency>-->
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>sql-maven-plugin</artifactId>
-                <version>1.5</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.derby</groupId>
-                        <artifactId>derbyclient</artifactId>
-                        <version>10.13.1.1</version>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <driver>org.apache.derby.jdbc.ClientDriver</driver>
-                    <url>jdbc:derby://localhost:1527/spring-batch-internal</url>
-                    <username>batch</username>
-                    <password>batch</password>
-                    <!-- You can comment out username/password configurations and have 
-                        maven to look them up in your settings.xml using ${settingsKey} 
-                    <settingsKey>sensibleKey</settingsKey> -->
-                    <!-- All executions are ignored if -Dmaven.test.skip=true 
-                    <skip>${maven.test.skip}</skip> -->
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>create-schema</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>execute</goal>
-                        </goals>
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                        <filtering>true</filtering>
+                    </resource>
+                </resources>
+                <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <!--                <configuration>
+                            <profiles>
+                                <profile>dev</profile>
+                                <profile>test</profile>
+                                <profile>prod</profile>
+                            </profiles>
+                        </configuration>-->
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>sql-maven-plugin</artifactId>
+                        <version>1.5</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.apache.derby</groupId>
+                                <artifactId>derbyclient</artifactId>
+                                <version>10.13.1.1</version>
+                            </dependency>
+                        </dependencies>
                         <configuration>
-                            <autocommit>true</autocommit>
-                            <srcFiles>
-<!--                                <srcFile>src/main/resources/db/meta/schema-derby.sql</srcFile>-->
-                            </srcFiles>
-                        </configuration>
-                    </execution>                    
-                    <!-- <execution>
-                        <id>drop-schema-before-test-if-any</id>
-                        <phase>process-test-resources</phase>
-                        <goals>
-                            <goal>execute</goal>
-                        </goals>
-                        <configuration>
-                             Need another database to drop the targeted one 
+                            <driver>org.apache.derby.jdbc.ClientDriver</driver>
                             <url>jdbc:derby://localhost:1527/spring-batch-internal</url>
-                            <autocommit>true</autocommit>
-                            <sqlCommand>DROP SCHEMA BATCH CASCADE</sqlCommand>
-                             Ignore error when database is not available 
-                            <onError>continue</onError>
+                            <username>batch</username>
+                            <password>batch</password>
+                            <!-- You can comment out username/password configurations and have 
+                                maven to look them up in your settings.xml using ${settingsKey} 
+                            <settingsKey>sensibleKey</settingsKey> -->
+                            <!-- All executions are ignored if -Dmaven.test.skip=true 
+                            <skip>${maven.test.skip}</skip> -->
                         </configuration>
-                    </execution>-->
-                </executions>               
-            </plugin>
-        </plugins>
-    </build>
+                        <executions>
+                            <execution>
+                                <id>create-schema</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>execute</goal>
+                                </goals>
+                                <configuration>
+                                    <autocommit>true</autocommit>
+                                    <srcFiles>
+                                        <!--                                <srcFile>src/main/resources/db/meta/schema-derby.sql</srcFile>-->
+                                    </srcFiles>
+                                </configuration>
+                            </execution>                    
+                            <!-- <execution>
+                                <id>drop-schema-before-test-if-any</id>
+                                <phase>process-test-resources</phase>
+                                <goals>
+                                    <goal>execute</goal>
+                                </goals>
+                                <configuration>
+                                     Need another database to drop the targeted one 
+                                    <url>jdbc:derby://localhost:1527/spring-batch-internal</url>
+                                    <autocommit>true</autocommit>
+                                    <sqlCommand>DROP SCHEMA BATCH CASCADE</sqlCommand>
+                                     Ignore error when database is not available 
+                                    <onError>continue</onError>
+                                </configuration>
+                            </execution>-->
+                        </executions>               
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+    
     <name>spring-batch-test</name>
 </project>
+
+<!--
+<id>dev</id>
+            <build>
+                <finalName>trialdirect-DEV</finalName>
+                <plugins>
+
+                    <plugin>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <version>2.1.1</version>
+                        <configuration>
+                            <outputDirectory>target/tomcat/webapps</outputDirectory>
+                            <warName>trialdirect</warName>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <version>2.7</version>
+                        <executions>
+                            <execution>
+                                <id>copy-tomcat-config</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>target/tomcat/conf</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>src/main/resources/tomcat/conf</directory>
+                                            <includes>
+                                                <include>*.xml</include>
+                                                <include>logging.properties</include>
+                                            </includes>
+                                            <filtering>true</filtering>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.tomcat.maven</groupId>
+                        <artifactId>tomcat6-maven-plugin</artifactId>
+                        <version>2.2</version>
+                        <configuration>
+                            <port>8080</port>
+                            <path></path>
+                            <webapps>
+                                <webapp>
+                                    <groupId>trialdirect</groupId>
+                                    <artifactId>trialdirect</artifactId>
+                                    <version>1.0</version>
+                                    <type>war</type>
+                                    <contextPath>/#</contextPath>
+                                    <asWebapp>true</asWebapp>
+                                </webapp>
+                            </webapps>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>start-tomcat</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <fork>true</fork>
+                                    <skip></skip>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>stop-tomcat</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>shutdown</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>2.19.1</version>
+                        <configuration>
+                            <excludes>
+                                <exclude>**/*IT*</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>2.19.1</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.apache.maven.surefire</groupId>
+                                <artifactId>surefire-junit47</artifactId>
+                                <version>2.19.1</version>
+                            </dependency>
+                        </dependencies>
+                        <configuration>
+                            <includes>
+                                <include>**/*IT*</include>
+                            </includes>
+                            <excludes>
+                                <exclude>**/*Test*</exclude>
+                            </excludes>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>start-integration-test</id>
+                                <phase>integration-test</phase>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+-->
