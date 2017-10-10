@@ -34,7 +34,7 @@ public class FinancialEventOffsetReaderTest extends GenericCsvFileReaderTest<Fin
     @Override
     public File getFile() {
         ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("./data/adminfees.csv").getFile());
+        File file = new File(classLoader.getResource("./data/offset.csv").getFile());
         return file;
     }
     

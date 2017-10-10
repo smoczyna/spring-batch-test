@@ -6,7 +6,7 @@
 package eu.squadd.batch.processors;
 
 import eu.squadd.batch.domain.BookDateCsvFileDTO;
-import eu.squadd.batch.domain.FinancialEventOffset;
+import eu.squadd.batch.domain.FinancialEventOffsetDTO;
 import eu.squadd.batch.domain.SummarySubLedgerDTO;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -74,7 +74,7 @@ public class SubLedgerProcessor {
 //        this.financialEventOffset = financialEventOffset;
 //    }
 
-    public boolean addOffset(FinancialEventOffset offset) {
+    public boolean addOffset(FinancialEventOffsetDTO offset) {
         this.financialEventOffset.put(offset.getFinancialEvent(), offset.getOffsetFinancialCategory());
         return true;
     }

@@ -10,7 +10,7 @@ import eu.squadd.batch.domain.AdminFeeCsvFileDTO;
 import eu.squadd.batch.domain.AggregateWholesaleReportDTO;
 import eu.squadd.batch.domain.BilledCsvFileDTO;
 import eu.squadd.batch.domain.BookDateCsvFileDTO;
-import eu.squadd.batch.domain.FinancialEventOffset;
+import eu.squadd.batch.domain.FinancialEventOffsetDTO;
 import eu.squadd.batch.domain.SummarySubLedgerDTO;
 import eu.squadd.batch.domain.UnbilledCsvFileDTO;
 import eu.squadd.batch.listeners.BookingAggregateJobListener;
@@ -22,7 +22,7 @@ import eu.squadd.batch.processors.WholesaleReportProcessor;
 import eu.squadd.batch.readers.AdminFeesBookingFileReader;
 import eu.squadd.batch.readers.BilledBookingFileReader;
 import eu.squadd.batch.readers.BookDateCsvFileReader;
-import eu.squadd.batch.readers.FinancialEventOffsetRader;
+import eu.squadd.batch.readers.FinancialEventOffsetReader;
 import eu.squadd.batch.readers.UnbilledBookingFileReader;
 import eu.squadd.batch.validations.CsvFileVerificationSkipper;
 import eu.squadd.batch.writers.AggregatedSubLedgerWriter;
@@ -84,8 +84,8 @@ public class BookigFilesJobConfig {
     }
 
     @Bean
-    ItemReader<FinancialEventOffset> financialEventOffsetReader(Environment environment) {
-        return new FinancialEventOffsetRader(environment, Constants.FINANCIAL_EVENT_OFFSET_FILENAME);
+    ItemReader<FinancialEventOffsetDTO> financialEventOffsetReader(Environment environment) {
+        return new FinancialEventOffsetReader(environment, Constants.FINANCIAL_EVENT_OFFSET_FILENAME);
     }
     
     @Bean
@@ -117,7 +117,7 @@ public class BookigFilesJobConfig {
     }
     
     @Bean
-    ItemProcessor<FinancialEventOffset, Boolean> financialEventOffsetProcessor() {
+    ItemProcessor<FinancialEventOffsetDTO, Boolean> financialEventOffsetProcessor() {
         return new FinancialEventOffsetProcessor();
     }
 
@@ -177,11 +177,11 @@ public class BookigFilesJobConfig {
     }
 
     @Bean
-    Step readOffsetDataStep(ItemReader<FinancialEventOffset> financialEventOffsetReader,
-                            ItemProcessor<FinancialEventOffset, Boolean> financialEventOffsetProcessor,
+    Step readOffsetDataStep(ItemReader<FinancialEventOffsetDTO> financialEventOffsetReader,
+                            ItemProcessor<FinancialEventOffsetDTO, Boolean> financialEventOffsetProcessor,
                             StepBuilderFactory stepBuilderFactory) {
         return stepBuilderFactory.get("readOffsetDataStep")
-                .<FinancialEventOffset, Boolean>chunk(1)
+                .<FinancialEventOffsetDTO, Boolean>chunk(1)
                 .reader(financialEventOffsetReader)
                 .processor(financialEventOffsetProcessor)
                 .build();

@@ -5,7 +5,7 @@
  */
 package eu.squadd.batch.readers;
 
-import eu.squadd.batch.domain.FinancialEventOffset;
+import eu.squadd.batch.domain.FinancialEventOffsetDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 
@@ -13,15 +13,15 @@ import org.springframework.core.env.Environment;
  *
  * @author smorcja
  */
-public class FinancialEventOffsetRader extends CsvFileGenericReader<FinancialEventOffset> {
+public class FinancialEventOffsetReader extends CsvFileGenericReader<FinancialEventOffsetDTO> {
     private static final String[] COLUMN_NAMES = new String[] {"financialEvent", "offsetFinancialCategory"};
     
     @Autowired
-    public FinancialEventOffsetRader(Environment environment, String filename) {
-        super(FinancialEventOffset.class, environment, filename, COLUMN_NAMES, ",");
+    public FinancialEventOffsetReader(Environment environment, String filename) {
+        super(FinancialEventOffsetDTO.class, environment, filename, COLUMN_NAMES, ",");
     }
     
-    public FinancialEventOffsetRader(String filePath, String delimiter) {
-        super(FinancialEventOffset.class, filePath, COLUMN_NAMES, delimiter, 0);
+    public FinancialEventOffsetReader(String filePath, String delimiter) {
+        super(FinancialEventOffsetDTO.class, filePath, COLUMN_NAMES, delimiter, 0);
     }
 }
