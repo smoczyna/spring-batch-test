@@ -13,20 +13,21 @@ import eu.squadd.batch.domain.BookDateCsvFileDTO;
 import eu.squadd.batch.domain.FinancialEventOffsetDTO;
 import eu.squadd.batch.domain.SummarySubLedgerDTO;
 import eu.squadd.batch.domain.UnbilledCsvFileDTO;
+import eu.squadd.batch.domain.WholesaleProcessingOutput;
 import eu.squadd.batch.listeners.BookingAggregateJobListener;
 import eu.squadd.batch.listeners.GenericStepExecutionListener;
 import eu.squadd.batch.processors.BookDateProcessor;
 import eu.squadd.batch.processors.FinancialEventOffsetProcessor;
 import eu.squadd.batch.processors.SubLedgerProcessor;
-import eu.squadd.batch.processors.WholesaleReportProcessor;
+import eu.squadd.batch.processors.WholesaleBookingProcessor;
 import eu.squadd.batch.readers.AdminFeesBookingFileReader;
 import eu.squadd.batch.readers.BilledBookingFileReader;
 import eu.squadd.batch.readers.BookDateCsvFileReader;
 import eu.squadd.batch.readers.FinancialEventOffsetReader;
 import eu.squadd.batch.readers.UnbilledBookingFileReader;
 import eu.squadd.batch.validations.CsvFileVerificationSkipper;
-import eu.squadd.batch.writers.AggregatedSubLedgerWriter;
 import eu.squadd.batch.writers.SubledgerCsvFileWriter;
+import eu.squadd.batch.writers.WholesaleOutputWriter;
 import eu.squadd.batch.writers.WholesaleReportCsvWriter;
 import java.util.Set;
 import org.springframework.batch.core.Job;
@@ -112,7 +113,7 @@ public class BookigFilesJobConfig {
     /* processors */
     
     @Bean
-    ItemProcessor<BookDateCsvFileDTO, Set<SummarySubLedgerDTO>> bookDateProcessor() {
+    ItemProcessor<BookDateCsvFileDTO, Boolean> bookDateProcessor() {
         return new BookDateProcessor();
     }
     
@@ -123,17 +124,17 @@ public class BookigFilesJobConfig {
 
     @Bean
     ItemProcessor<BilledCsvFileDTO, AggregateWholesaleReportDTO> billedBookingProcessor() {
-        return new WholesaleReportProcessor();
+        return new WholesaleBookingProcessor();
     }
 
     @Bean
     ItemProcessor<UnbilledCsvFileDTO, AggregateWholesaleReportDTO> unbilledBookingProcessor() {
-        return new WholesaleReportProcessor();
+        return new WholesaleBookingProcessor();
     }
     
     @Bean
     ItemProcessor<AdminFeeCsvFileDTO, AggregateWholesaleReportDTO> adminFeesBookingProcessor() {
-        return new WholesaleReportProcessor();
+        return new WholesaleBookingProcessor();
     }
 
     
@@ -150,9 +151,14 @@ public class BookigFilesJobConfig {
     }
 
     @Bean
-    Tasklet writeAggregatedSubLedger() {
-        return new AggregatedSubLedgerWriter();
+    ItemWriter<WholesaleProcessingOutput> wholesaleOutputWriter(Environment environment) {
+        return new WholesaleOutputWriter();
     }
+    
+//    @Bean
+//    Tasklet writeAggregatedSubLedger() {
+//        return new AggregatedSubLedgerWriter();
+//    }
 
     
     /* job steps */
@@ -167,10 +173,10 @@ public class BookigFilesJobConfig {
 
     @Bean
     Step updateBookingDatesStep(ItemReader<BookDateCsvFileDTO> bookDateItemReader,
-                                ItemProcessor<BookDateCsvFileDTO, Set<SummarySubLedgerDTO>> bookDateProcessor,
+                                ItemProcessor<BookDateCsvFileDTO, Boolean> bookDateProcessor,
                                 StepBuilderFactory stepBuilderFactory) {
         return stepBuilderFactory.get("updateBookingDatesStep")
-                .<BookDateCsvFileDTO, Set<SummarySubLedgerDTO>>chunk(1)
+                .<BookDateCsvFileDTO, Boolean>chunk(1)
                 .reader(bookDateItemReader)
                 .processor(bookDateProcessor)
                 .build();
@@ -191,16 +197,16 @@ public class BookigFilesJobConfig {
     Step billedBookingFileStep(StepExecutionListener billedFileStepListener,
                                ItemReader<BilledCsvFileDTO> billedFileItemReader,
                                SkipPolicy fileVerificationSkipper,
-                               ItemProcessor<BilledCsvFileDTO, AggregateWholesaleReportDTO> billedBookingProcessor,
-                               ItemWriter<AggregateWholesaleReportDTO> wholesaleReportWriter,
+                               ItemProcessor<BilledCsvFileDTO, WholesaleProcessingOutput> billedBookingProcessor,
+                               ItemWriter<WholesaleProcessingOutput> wholesaleOutputWriter,
                                StepBuilderFactory stepBuilderFactory) {
         return stepBuilderFactory.get("billedBookingFileStep")
-                .<BilledCsvFileDTO, AggregateWholesaleReportDTO>chunk(1)
+                .<BilledCsvFileDTO, WholesaleProcessingOutput>chunk(1)
                 .reader(billedFileItemReader)
                 .faultTolerant()
                 .skipPolicy(fileVerificationSkipper)
                 .processor(billedBookingProcessor)
-                .writer(wholesaleReportWriter)
+                .writer(wholesaleOutputWriter)
                 .listener(billedFileStepListener)
                 .build();
     }
@@ -209,16 +215,16 @@ public class BookigFilesJobConfig {
     Step unbilledBookingFileStep(StepExecutionListener unbilledFileStepListener,
                                  ItemReader<UnbilledCsvFileDTO> unbilledFileItemReader,
                                  SkipPolicy fileVerificationSkipper,
-                                 ItemProcessor<UnbilledCsvFileDTO, AggregateWholesaleReportDTO> unbilledBookingProcessor,
-                                 ItemWriter<AggregateWholesaleReportDTO> wholesaleReportWriter,
+                                 ItemProcessor<UnbilledCsvFileDTO, WholesaleProcessingOutput> unbilledBookingProcessor,
+                                 ItemWriter<WholesaleProcessingOutput> wholesaleOutputWriter,
                                  StepBuilderFactory stepBuilderFactory) {
         return stepBuilderFactory.get("unbilledBookingFileStep")
-                .<UnbilledCsvFileDTO, AggregateWholesaleReportDTO>chunk(1)
+                .<UnbilledCsvFileDTO, WholesaleProcessingOutput>chunk(1)
                 .reader(unbilledFileItemReader)
                 .faultTolerant()
                 .skipPolicy(fileVerificationSkipper)
                 .processor(unbilledBookingProcessor)
-                .writer(wholesaleReportWriter)
+                .writer(wholesaleOutputWriter)
                 .listener(unbilledFileStepListener)
                 .build();
     }
@@ -227,27 +233,27 @@ public class BookigFilesJobConfig {
     Step adminFeesBookingFileStep(StepExecutionListener adminFeesFileStepListener,
                                   ItemReader<AdminFeeCsvFileDTO> adminFeesFileItemReader,
                                   SkipPolicy fileVerificationSkipper,
-                                  ItemProcessor<AdminFeeCsvFileDTO, AggregateWholesaleReportDTO> adminFeesBookingProcessor,
-                                  ItemWriter<AggregateWholesaleReportDTO> wholesaleReportWriter,
+                                  ItemProcessor<AdminFeeCsvFileDTO, WholesaleProcessingOutput> adminFeesBookingProcessor,
+                                  ItemWriter<WholesaleProcessingOutput> wholesaleOutputWriter,
                                   StepBuilderFactory stepBuilderFactory) {
         return stepBuilderFactory.get("adminFeesBookingFileStep")
-                .<AdminFeeCsvFileDTO, AggregateWholesaleReportDTO>chunk(1)
+                .<AdminFeeCsvFileDTO, WholesaleProcessingOutput>chunk(1)
                 .reader(adminFeesFileItemReader)
                 .faultTolerant()
                 .skipPolicy(fileVerificationSkipper)
                 .processor(adminFeesBookingProcessor)
-                .writer(wholesaleReportWriter)
+                .writer(wholesaleOutputWriter)
                 .listener(adminFeesFileStepListener)
                 .build();
     }
     
-    @Bean
-    Step saveSubLedgerToFile(Tasklet writeAggregatedSubLedger,
-                             StepBuilderFactory stepBuilderFactory) {
-        return stepBuilderFactory.get("saveSubLedgerToFile")
-                .tasklet(writeAggregatedSubLedger)
-                .build();
-    }
+//    @Bean
+//    Step saveSubLedgerToFile(Tasklet writeAggregatedSubLedger,
+//                             StepBuilderFactory stepBuilderFactory) {
+//        return stepBuilderFactory.get("saveSubLedgerToFile")
+//                .tasklet(writeAggregatedSubLedger)
+//                .build();
+//    }
 
     /* the job */
     
@@ -259,8 +265,8 @@ public class BookigFilesJobConfig {
                             @Qualifier("readOffsetDataStep") Step readOffsetDataStep,
                             @Qualifier("billedBookingFileStep") Step billedBookingFileStep,
                             @Qualifier("unbilledBookingFileStep") Step unbilledBookingFileStep,
-                            @Qualifier("adminFeesBookingFileStep") Step adminFeesBookingFileStep,
-                            @Qualifier("saveSubLedgerToFile") Step saveSubLedgerToFile) {
+                            @Qualifier("adminFeesBookingFileStep") Step adminFeesBookingFileStep) {
+                            //@Qualifier("saveSubLedgerToFile") Step saveSubLedgerToFile) {
         return jobBuilderFactory.get("bookingAggregateJob")
                 .incrementer(new RunIdIncrementer())
                 .listener(bookingFileJobListener)
@@ -270,7 +276,7 @@ public class BookigFilesJobConfig {
                 .on("COMPLETED").to(billedBookingFileStep)
                 .on("COMPLETED").to(unbilledBookingFileStep)
                 .on("COMPLETED").to(adminFeesBookingFileStep)
-                .on("COMPLETED").to(saveSubLedgerToFile)
+                //.on("COMPLETED").to(saveSubLedgerToFile)
                 .end()
                 .build();
     }

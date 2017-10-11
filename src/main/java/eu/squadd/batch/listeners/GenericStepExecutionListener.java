@@ -5,6 +5,7 @@
  */
 package eu.squadd.batch.listeners;
 
+import eu.squadd.batch.processors.SubLedgerProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.ExitStatus;
@@ -12,6 +13,7 @@ import org.springframework.batch.core.ItemProcessListener;
 import org.springframework.batch.core.SkipListener;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.StepExecutionListener;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -19,6 +21,9 @@ import org.springframework.batch.core.StepExecutionListener;
  */
 public class GenericStepExecutionListener implements StepExecutionListener, SkipListener, ItemProcessListener {
 
+    @Autowired
+    SubLedgerProcessor tempSubLedgerOuput;
+    
     private static final Logger LOGGER = LoggerFactory.getLogger(GenericStepExecutionListener.class);
     private Long recordCount;
     
@@ -30,6 +35,12 @@ public class GenericStepExecutionListener implements StepExecutionListener, Skip
     @Override
     public ExitStatus afterStep(StepExecution se) {
         LOGGER.info("Step completed, read count: "+se.getReadCount() + ", write count: "+se.getWriteCount());
+        LOGGER.info("Number of sub ledger records created: "+this.tempSubLedgerOuput.getCounter("sub"));
+        LOGGER.info("Number of zero charges: "+this.tempSubLedgerOuput.getCounter("zero"));
+        LOGGER.info("Number of gaps: "+this.tempSubLedgerOuput.getCounter("gap"));
+        LOGGER.info("Number of data errors: "+this.tempSubLedgerOuput.getCounter("error"));
+        LOGGER.info("Number of bypasses: "+this.tempSubLedgerOuput.getCounter("bypass"));
+        this.tempSubLedgerOuput.clearCounters();
         return se.getExitStatus();
     }
 

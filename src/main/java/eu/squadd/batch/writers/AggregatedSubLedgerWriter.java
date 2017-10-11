@@ -31,11 +31,11 @@ public class AggregatedSubLedgerWriter implements Tasklet {
     
     @Override
     public RepeatStatus execute(StepContribution sc, ChunkContext cc) throws Exception {
-       List<SummarySubLedgerDTO> values = new ArrayList();
-       values.addAll(tempSubLedgerOuput.getAggregatedOutput());
-       writer.open(cc.getStepContext().getStepExecution().getExecutionContext());
-       writer.write(values);
-       writer.close();
+//       List<SummarySubLedgerDTO> values = new ArrayList();
+//       values.addAll(tempSubLedgerOuput.getAggregatedOutput());
+//       writer.open(cc.getStepContext().getStepExecution().getExecutionContext());
+//       writer.write(values);
+//       writer.close();
        return RepeatStatus.FINISHED;
     }
     
