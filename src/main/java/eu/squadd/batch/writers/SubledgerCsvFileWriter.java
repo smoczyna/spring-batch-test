@@ -16,8 +16,7 @@ import org.springframework.stereotype.Component;
  * @author smorcja
  */
 @Component
-public class SubledgerCsvFileWriter extends CsvFileGenericWriter<SummarySubLedgerDTO> {
-    
+public class SubledgerCsvFileWriter extends CsvFileGenericWriter<SummarySubLedgerDTO> {    
     private static final String[] COLUMN_NAMES = new String[] {
         "jemsApplId",
         "reportStartDate",

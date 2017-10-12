@@ -18,7 +18,7 @@ import eu.squadd.batch.listeners.BookingAggregateJobListener;
 import eu.squadd.batch.listeners.GenericStepExecutionListener;
 import eu.squadd.batch.processors.BookDateProcessor;
 import eu.squadd.batch.processors.FinancialEventOffsetProcessor;
-import eu.squadd.batch.processors.SubLedgerProcessor;
+import eu.squadd.batch.utils.WholesaleBookingProcessorHelper;
 import eu.squadd.batch.processors.WholesaleBookingProcessor;
 import eu.squadd.batch.readers.AdminFeesBookingFileReader;
 import eu.squadd.batch.readers.BilledBookingFileReader;
@@ -72,8 +72,8 @@ public class BookigFilesJobConfig {
     }
 
     @Bean
-    SubLedgerProcessor tempSubLedgerOuput() {
-        return new SubLedgerProcessor();
+    WholesaleBookingProcessorHelper tempSubLedgerOuput() {
+        return new WholesaleBookingProcessorHelper();
     }
 
     
@@ -123,17 +123,17 @@ public class BookigFilesJobConfig {
     }
 
     @Bean
-    ItemProcessor<BilledCsvFileDTO, AggregateWholesaleReportDTO> billedBookingProcessor() {
+    ItemProcessor<BilledCsvFileDTO, WholesaleProcessingOutput> billedBookingProcessor() {
         return new WholesaleBookingProcessor();
     }
 
     @Bean
-    ItemProcessor<UnbilledCsvFileDTO, AggregateWholesaleReportDTO> unbilledBookingProcessor() {
+    ItemProcessor<UnbilledCsvFileDTO, WholesaleProcessingOutput> unbilledBookingProcessor() {
         return new WholesaleBookingProcessor();
     }
     
     @Bean
-    ItemProcessor<AdminFeeCsvFileDTO, AggregateWholesaleReportDTO> adminFeesBookingProcessor() {
+    ItemProcessor<AdminFeeCsvFileDTO, WholesaleProcessingOutput> adminFeesBookingProcessor() {
         return new WholesaleBookingProcessor();
     }
 
@@ -154,13 +154,7 @@ public class BookigFilesJobConfig {
     ItemWriter<WholesaleProcessingOutput> wholesaleOutputWriter(Environment environment) {
         return new WholesaleOutputWriter();
     }
-    
-//    @Bean
-//    Tasklet writeAggregatedSubLedger() {
-//        return new AggregatedSubLedgerWriter();
-//    }
 
-    
     /* job steps */
     
     @Bean
@@ -246,14 +240,6 @@ public class BookigFilesJobConfig {
                 .listener(adminFeesFileStepListener)
                 .build();
     }
-    
-//    @Bean
-//    Step saveSubLedgerToFile(Tasklet writeAggregatedSubLedger,
-//                             StepBuilderFactory stepBuilderFactory) {
-//        return stepBuilderFactory.get("saveSubLedgerToFile")
-//                .tasklet(writeAggregatedSubLedger)
-//                .build();
-//    }
 
     /* the job */
     
@@ -266,7 +252,6 @@ public class BookigFilesJobConfig {
                             @Qualifier("billedBookingFileStep") Step billedBookingFileStep,
                             @Qualifier("unbilledBookingFileStep") Step unbilledBookingFileStep,
                             @Qualifier("adminFeesBookingFileStep") Step adminFeesBookingFileStep) {
-                            //@Qualifier("saveSubLedgerToFile") Step saveSubLedgerToFile) {
         return jobBuilderFactory.get("bookingAggregateJob")
                 .incrementer(new RunIdIncrementer())
                 .listener(bookingFileJobListener)
@@ -276,7 +261,6 @@ public class BookigFilesJobConfig {
                 .on("COMPLETED").to(billedBookingFileStep)
                 .on("COMPLETED").to(unbilledBookingFileStep)
                 .on("COMPLETED").to(adminFeesBookingFileStep)
-                //.on("COMPLETED").to(saveSubLedgerToFile)
                 .end()
                 .build();
     }

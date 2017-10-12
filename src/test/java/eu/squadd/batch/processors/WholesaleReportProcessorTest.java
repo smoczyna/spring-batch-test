@@ -5,6 +5,7 @@
  */
 package eu.squadd.batch.processors;
 
+import eu.squadd.batch.utils.WholesaleBookingProcessorHelper;
 import eu.squadd.batch.config.CassandraQueryManager;
 import eu.squadd.batch.domain.AdminFeeCsvFileDTO;
 import eu.squadd.batch.domain.AggregateWholesaleReportDTO;
@@ -41,7 +42,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class WholesaleReportProcessorTest {
 
     @Mock
-    private SubLedgerProcessor tempSubLedgerOuput;
+    private WholesaleBookingProcessorHelper tempSubLedgerOuput;
 
     @Mock
     private CassandraQueryManager queryManager;

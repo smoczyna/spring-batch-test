@@ -11,11 +11,9 @@ import com.datastax.driver.core.PlainTextAuthProvider;
 import com.datastax.driver.core.Session;
 import java.sql.SQLException;
 import javax.sql.DataSource;
-//import org.apache.cassandra.cql.jdbc.CassandraDataSource;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.derby.jdbc.ClientDataSource;
 import org.springframework.stereotype.Component;
-//import com.datastax.driver.core.
 
 /**
  *
@@ -57,26 +55,6 @@ public class DatabasesConfig {
         ds.setPassword("app");
         return ds;
     }
-
-    /**
-     * casandra native data source, dev space
-     * this data source fails to run queries with the error:
-     * Could not get JDBC Connection; 
-     *      nested exception is java.sql.SQLNonTransientConnectionException: 
-     *      org.apache.thrift.transport.TTransportException: Read a negative frame size (-2062548992)!
-     * @param user
-     * @param password
-     * @return
-     * @throws SQLException 
-     */
-//    public static DataSource getCasandraBasicDs(String user, String password) throws SQLException {
-//        String host = "170.127.114.154";
-//        int port = 9042;
-//        String keyspace = "j6_dev";
-//        String version = null;        
-//        CassandraDataSource ds = new CassandraDataSource(host, port, keyspace, user, password, version);
-//        return ds;       
-//    }
 
     /**
      * Datastax driver way

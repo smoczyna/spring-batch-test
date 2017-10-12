@@ -5,6 +5,7 @@
  */
 package eu.squadd.batch.processors;
 
+import eu.squadd.batch.utils.WholesaleBookingProcessorHelper;
 import eu.squadd.batch.domain.FinancialEventOffsetDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +21,7 @@ public class FinancialEventOffsetProcessor implements ItemProcessor<FinancialEve
     private static final Logger LOGGER = LoggerFactory.getLogger(FinancialEventOffsetProcessor.class);
     
     @Autowired
-    SubLedgerProcessor tempSubLedgerOuput;
+    WholesaleBookingProcessorHelper tempSubLedgerOuput;
     
     @Override
     public Boolean process(FinancialEventOffsetDTO offset) throws Exception {

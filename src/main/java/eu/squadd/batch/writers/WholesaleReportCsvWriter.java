@@ -9,13 +9,14 @@ import eu.squadd.batch.constants.Constants;
 import eu.squadd.batch.domain.AggregateWholesaleReportDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author smorcja
  */
-public class WholesaleReportCsvWriter extends CsvFileGenericWriter<AggregateWholesaleReportDTO> {
-    
+@Component
+public class WholesaleReportCsvWriter extends CsvFileGenericWriter<AggregateWholesaleReportDTO> {    
     private static final String[] COLUMN_NAMES = new String[] {
         "cycleMonthYear",
         "startDate",

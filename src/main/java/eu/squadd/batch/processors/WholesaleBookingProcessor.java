@@ -5,6 +5,7 @@
  */
 package eu.squadd.batch.processors;
 
+import eu.squadd.batch.utils.WholesaleBookingProcessorHelper;
 import eu.squadd.batch.config.CassandraQueryManager;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -42,7 +43,7 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
     private static final Logger LOGGER = LoggerFactory.getLogger(WholesaleBookingProcessor.class);
      
     @Autowired
-    SubLedgerProcessor tempSubLedgerOuput;
+    WholesaleBookingProcessorHelper tempSubLedgerOuput;
     
     @Autowired
     CassandraQueryManager queryManager;
@@ -253,8 +254,6 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
         WholesaleProcessingOutput outRec = new WholesaleProcessingOutput();        
         AggregateWholesaleReportDTO report = new AggregateWholesaleReportDTO();
         int tmpInterExchangeCarrierCode = 0;
-        boolean bypassBooking;
-        boolean altBookingInd;
         boolean zeroAirCharge = false;
         boolean zeroTollCharge = false;
         
@@ -334,6 +333,7 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
                 
                 report.setPeakDollarAmt(0d);
                 outRec.addWholesaleReportRecord(report);
+                this.tempSubLedgerOuput.incrementCounter("report");
                 this.makeBookings(billedRec, outRec, tmpInterExchangeCarrierCode);
             }
             else {

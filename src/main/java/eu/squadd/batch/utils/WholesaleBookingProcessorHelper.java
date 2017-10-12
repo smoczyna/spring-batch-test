@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package eu.squadd.batch.processors;
+package eu.squadd.batch.utils;
 
 import eu.squadd.batch.domain.BookDateCsvFileDTO;
 import eu.squadd.batch.domain.FinancialEventOffsetDTO;
@@ -19,25 +19,25 @@ import org.springframework.stereotype.Component;
  * @author smorcja
  */
 @Component
-public class SubLedgerProcessor {
+public class WholesaleBookingProcessorHelper {
 
-    //private Set<SummarySubLedgerDTO> aggregatedOutput;
     private BookDateCsvFileDTO dates;
     private final Map<Integer, Integer> financialEventOffset;
-    private int zeroChargesCounter;
-    private int gapsCounter;
-    private int dataErrorsCounter;
-    private int bypassCounter;
-    private int subledgerWriteCounter;
+    private long zeroChargesCounter;
+    private long gapsCounter;
+    private long dataErrorsCounter;
+    private long bypassCounter;
+    private long subledgerWriteCounter;
+    private long wholesaleReportCounter;
 
-    public SubLedgerProcessor() {
-        //this.aggregatedOutput = new HashSet();
+    public WholesaleBookingProcessorHelper() {
         this.financialEventOffset = new HashMap();
         this.zeroChargesCounter = 0;
         this.gapsCounter = 0;
         this.dataErrorsCounter = 0;
         this.bypassCounter = 0;
         this.subledgerWriteCounter = 0;
+        this.wholesaleReportCounter = 0;
     }
 
     public BookDateCsvFileDTO getDates() {
@@ -74,12 +74,15 @@ public class SubLedgerProcessor {
             case "sub":
                 this.subledgerWriteCounter++;
                 break;
+            case "report":
+                this.wholesaleReportCounter++;
+                break;
             default:
                 break;
         }
     }
 
-    public int getCounter(String name) {
+    public long getCounter(String name) {
         switch (name) {
             case "zero":
                 return this.zeroChargesCounter;
@@ -91,6 +94,8 @@ public class SubLedgerProcessor {
                 return this.bypassCounter;
             case "sub":
                 return this.subledgerWriteCounter;
+            case "report":
+                return this.wholesaleReportCounter;
             default:
                 return -1;
         }
@@ -102,5 +107,6 @@ public class SubLedgerProcessor {
         this.dataErrorsCounter = 0;
         this.bypassCounter = 0;
         this.subledgerWriteCounter = 0;
+        this.wholesaleReportCounter = 0;
     }
 }

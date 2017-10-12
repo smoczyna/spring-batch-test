@@ -5,7 +5,7 @@
  */
 package eu.squadd.batch.listeners;
 
-import eu.squadd.batch.processors.SubLedgerProcessor;
+import eu.squadd.batch.utils.WholesaleBookingProcessorHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.ExitStatus;
@@ -22,7 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class GenericStepExecutionListener implements StepExecutionListener, SkipListener, ItemProcessListener {
 
     @Autowired
-    SubLedgerProcessor tempSubLedgerOuput;
+    WholesaleBookingProcessorHelper tempSubLedgerOuput;
     
     private static final Logger LOGGER = LoggerFactory.getLogger(GenericStepExecutionListener.class);
     private Long recordCount;

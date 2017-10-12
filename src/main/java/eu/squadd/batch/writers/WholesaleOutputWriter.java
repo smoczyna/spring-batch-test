@@ -6,7 +6,6 @@
 package eu.squadd.batch.writers;
 
 import eu.squadd.batch.domain.WholesaleProcessingOutput;
-import java.util.Collection;
 import java.util.List;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemStreamException;
