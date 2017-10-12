@@ -18,7 +18,6 @@ import eu.squadd.batch.listeners.BookingAggregateJobListener;
 import eu.squadd.batch.listeners.GenericStepExecutionListener;
 import eu.squadd.batch.processors.BookDateProcessor;
 import eu.squadd.batch.processors.FinancialEventOffsetProcessor;
-import eu.squadd.batch.utils.WholesaleBookingProcessorHelper;
 import eu.squadd.batch.processors.WholesaleBookingProcessor;
 import eu.squadd.batch.readers.AdminFeesBookingFileReader;
 import eu.squadd.batch.readers.BilledBookingFileReader;
@@ -29,7 +28,6 @@ import eu.squadd.batch.validations.CsvFileVerificationSkipper;
 import eu.squadd.batch.writers.SubledgerCsvFileWriter;
 import eu.squadd.batch.writers.WholesaleOutputWriter;
 import eu.squadd.batch.writers.WholesaleReportCsvWriter;
-import java.util.Set;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.Step;
@@ -54,7 +52,7 @@ import org.springframework.core.env.Environment;
 @Configuration
 public class BookigFilesJobConfig {
     
-    /* listeners and checkers */
+    /* listeners and helpers */
     
     @Bean
     JobExecutionListener bookingFileJobListener() {
@@ -71,12 +69,6 @@ public class BookigFilesJobConfig {
         return new GenericStepExecutionListener();
     }
 
-    @Bean
-    WholesaleBookingProcessorHelper tempSubLedgerOuput() {
-        return new WholesaleBookingProcessorHelper();
-    }
-
-    
     /* readers */
     
     @Bean
@@ -109,7 +101,6 @@ public class BookigFilesJobConfig {
         return new CsvFileVerificationSkipper();
     }
 
-    
     /* processors */
     
     @Bean
@@ -136,7 +127,6 @@ public class BookigFilesJobConfig {
     ItemProcessor<AdminFeeCsvFileDTO, WholesaleProcessingOutput> adminFeesBookingProcessor() {
         return new WholesaleBookingProcessor();
     }
-
     
     /* writers */
     

@@ -43,7 +43,7 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
     private static final Logger LOGGER = LoggerFactory.getLogger(WholesaleBookingProcessor.class);
      
     @Autowired
-    WholesaleBookingProcessorHelper tempSubLedgerOuput;
+    WholesaleBookingProcessorHelper processingHelper;
     
     @Autowired
     CassandraQueryManager queryManager;
@@ -88,7 +88,7 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
         if (tmpChargeAmt==null || financialEventCategory==null || financialMarket==null)
             return null;
         
-        SummarySubLedgerDTO subLedgerOutput = new SummarySubLedgerDTO(); //this.tempSubLedgerOuput.addSubledger();
+        SummarySubLedgerDTO subLedgerOutput = this.processingHelper.addSubledger();
         
         if (financialEventCategory.getFinancialeventnormalsign().equals("DR")) {
             if (financialEventCategory.getDebitcreditindicator().equals("DR")) {
@@ -130,25 +130,26 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
                     subLedgerOutput.setSubledgerTotalDebitAmount(0d);
                 }
             }
-        }
-        
+        }        
         subLedgerOutput.setFinancialEventNumber(financialEventCategory.getFinancialeventnumber());
         subLedgerOutput.setFinancialCategory(financialEventCategory.getFinancialcategory());
         subLedgerOutput.setFinancialmarketId(financialMarket);
-        subLedgerOutput.setBillCycleMonthYear(ProcessingUtils.getYearAndMonthFromStrDate(this.tempSubLedgerOuput.getDates().getRptPerEndDate()));
+        subLedgerOutput.setBillCycleMonthYear(ProcessingUtils.getYearAndMonthFromStrDate(this.processingHelper.getDates().getRptPerEndDate()));
         subLedgerOutput.setBillAccrualIndicator(financialEventCategory.getBillingaccrualindicator());
-        this.tempSubLedgerOuput.incrementCounter("sub");
         return subLedgerOutput;
     }
 
     private SummarySubLedgerDTO createOffsetBooking(SummarySubLedgerDTO subLedgerOutput) {
         SummarySubLedgerDTO clone = null;
-        Integer offsetFinCat = this.tempSubLedgerOuput.findOffsetFinCat(subLedgerOutput.getFinancialEventNumber());
+        Integer offsetFinCat = this.processingHelper.findOffsetFinCat(subLedgerOutput.getFinancialEventNumber());
         if (offsetFinCat==null)
             LOGGER.error("Offset fin cat value not found !!!");
         else {            
             Double debitAmt = subLedgerOutput.getSubledgerTotalDebitAmount();
             Double creditAmt = subLedgerOutput.getSubledgerTotalCreditAmount();
+            
+            if (debitAmt==0d && creditAmt==0d)
+                LOGGER.info("Zero amounts in sub ledger record found !!!");
             
             try {
                 clone = subLedgerOutput.clone();
@@ -158,9 +159,8 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
             clone.setFinancialCategory(offsetFinCat);
             clone.setSubledgerTotalDebitAmount(creditAmt);
             clone.setSubledgerTotalCreditAmount(debitAmt);
-            //this.tempSubLedgerOuput.addOffsetSubledger(clone);
         }
-        this.tempSubLedgerOuput.incrementCounter("sub");
+        this.processingHelper.incrementCounter("subledger");
         return clone;
     }
 
@@ -211,7 +211,7 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
                 altBookingInd = true;
             }
         }
-        altBookingInd = false; // temp fix
+        altBookingInd = false; // temporary fix, will be reviewed later
         return altBookingInd;
     }
     
@@ -252,7 +252,7 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
     
     private WholesaleProcessingOutput processBilledRecord(BilledCsvFileDTO billedRec) {
         WholesaleProcessingOutput outRec = new WholesaleProcessingOutput();        
-        AggregateWholesaleReportDTO report = new AggregateWholesaleReportDTO();
+        AggregateWholesaleReportDTO report = this.processingHelper.addWholesaleReport();
         int tmpInterExchangeCarrierCode = 0;
         boolean zeroAirCharge = false;
         boolean zeroTollCharge = false;
@@ -267,7 +267,7 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
         
         if (billedRec.getWholesalePeakAirCharge()==0 && billedRec.getWholesaleOffpeakAirCharge()==0 && billedRec.getTollCharge()==0) {
             LOGGER.info("Record skipped due to zero charges !!!");
-            this.tempSubLedgerOuput.incrementCounter("zero");
+            this.processingHelper.incrementCounter("zero");
             return null;
         }
         
@@ -276,7 +276,8 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
             report.setOffpeakDollarAmt(billedRec.getWholesaleOffpeakAirCharge());
             report.setDollarAmtOther(0d);
             report.setVoiceMinutes(billedRec.getAirBillSeconds() * 60);
-            tmpChargeAmt = billedRec.getWholesalePeakAirCharge() + billedRec.getWholesaleOffpeakAirCharge();
+            tmpChargeAmt = ProcessingUtils.roundDecimalNumber(billedRec.getWholesalePeakAirCharge() + billedRec.getWholesaleOffpeakAirCharge());
+            
             if (billedRec.getAirProdId().equals(190))
                 this.tmpProdId = 1;
             else
@@ -302,11 +303,11 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
                 }
 
                 if (billedRec.getInterExchangeCarrierCode().equals(5050)) {
-                    this.tmpChargeAmt = billedRec.getTollCharge();
+                    this.tmpChargeAmt = ProcessingUtils.roundDecimalNumber(billedRec.getTollCharge());
                     report.setDollarAmtOther(this.tmpChargeAmt);
                 }
                 else if (billedRec.getIncompleteInd().equals("D")) {
-                    this.tmpChargeAmt = billedRec.getTollCharge();
+                    this.tmpChargeAmt = ProcessingUtils.roundDecimalNumber(billedRec.getTollCharge());
                     report.setDollarAmtOther(this.tmpChargeAmt);
 
                     DataEvent dataEvent = this.getDataEventFromDb(this.tmpProdId);
@@ -321,7 +322,7 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
                         report.setUsage4G(Math.round(billedRec.getWholesaleUsageBytes().doubleValue() / 1024));
                     }
                 } else {
-                    tmpChargeAmt = billedRec.getWholesaleTollChargeLDPeak() + billedRec.getWholesaleTollChargeLDOther();
+                    tmpChargeAmt = ProcessingUtils.roundDecimalNumber(billedRec.getWholesaleTollChargeLDPeak() + billedRec.getWholesaleTollChargeLDOther());
                     report.setTollDollarsAmt(this.tmpChargeAmt);
                     report.setTollMinutes(this.tmpProdId);
                     report.setTollMinutes(Math.round(billedRec.getTollBillSeconds() / 60));
@@ -333,12 +334,11 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
                 
                 report.setPeakDollarAmt(0d);
                 outRec.addWholesaleReportRecord(report);
-                this.tempSubLedgerOuput.incrementCounter("report");
                 this.makeBookings(billedRec, outRec, tmpInterExchangeCarrierCode);
             }
             else {
                 LOGGER.info("Gap in the code encountered !!!");
-                this.tempSubLedgerOuput.incrementCounter("gap");
+                this.processingHelper.incrementCounter("gap");
             }                
         } else { 
             zeroTollCharge = true;
@@ -346,7 +346,7 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
         
         if (zeroAirCharge && zeroTollCharge) {
             LOGGER.info("Invalid input record encountered !!!");
-            this.tempSubLedgerOuput.incrementCounter("error");
+            this.processingHelper.incrementCounter("error");
             return null;
         }
         return outRec;
@@ -359,7 +359,7 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
 
         if (bypassBooking) {
             LOGGER.warn("Booking bypass detected, record skipped for sub ledger file ...");
-            this.tempSubLedgerOuput.incrementCounter("bypass");
+            this.processingHelper.incrementCounter("bypass");
         } else {
             SummarySubLedgerDTO subledger = this.createSubLedgerBooking(tmpChargeAmt, financialEventCategory, financialMarket);
             outRec.addSubledgerRecord(subledger);
@@ -370,7 +370,7 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
     private WholesaleProcessingOutput processUnbilledRecord(UnbilledCsvFileDTO unbilledRec) {        
         if (unbilledRec.getAirProdId() > 0 && (unbilledRec.getWholesalePeakAirCharge() > 0 || unbilledRec.getWholesaleOffpeakAirCharge() > 0)) {
             WholesaleProcessingOutput outRec = new WholesaleProcessingOutput();        
-            AggregateWholesaleReportDTO report = new AggregateWholesaleReportDTO();
+            AggregateWholesaleReportDTO report = this.processingHelper.addWholesaleReport();
             boolean altBookingInd;
             report.setBilledInd("N");
             this.fileSource = "U";
@@ -390,7 +390,7 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
             else
                 this.tmpProdId = unbilledRec.getAirProdId();
             
-            this.tmpChargeAmt = unbilledRec.getWholesalePeakAirCharge() + unbilledRec.getWholesaleOffpeakAirCharge();
+            this.tmpChargeAmt = ProcessingUtils.roundDecimalNumber(unbilledRec.getWholesalePeakAirCharge() + unbilledRec.getWholesaleOffpeakAirCharge());
             if (unbilledRec.getMessageSource().trim().isEmpty()) {
                 report.setPeakDollarAmt(unbilledRec.getWholesalePeakAirCharge());
                 report.setDollarAmtOther(0d);
@@ -428,7 +428,7 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
     
     private WholesaleProcessingOutput processAdminFeesRecord(AdminFeeCsvFileDTO adminFeesRec) {
         WholesaleProcessingOutput outRec = new WholesaleProcessingOutput();        
-        AggregateWholesaleReportDTO report = new AggregateWholesaleReportDTO();
+        AggregateWholesaleReportDTO report = this.processingHelper.addWholesaleReport();
         report.setBilledInd("Y");
         this.fileSource = "M";
         this.searchHomeSbid = adminFeesRec.getSbid(); // there is no check if both home and serving bids are equal ???

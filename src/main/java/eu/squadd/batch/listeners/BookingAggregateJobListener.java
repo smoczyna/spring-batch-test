@@ -7,6 +7,7 @@ package eu.squadd.batch.listeners;
 
 import eu.squadd.batch.constants.Constants;
 import eu.squadd.batch.utils.ProcessingUtils;
+import eu.squadd.batch.utils.WholesaleBookingProcessorHelper;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -20,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 /**
@@ -31,6 +33,9 @@ public class BookingAggregateJobListener implements JobExecutionListener {
     private static final Logger LOGGER = LoggerFactory.getLogger(BookingAggregateJobListener.class);
     private Date startTIme;
     
+    @Autowired
+    private WholesaleBookingProcessorHelper helper;
+    
     @Value("${csv.to.database.job.source.file.path}")
     private String INPUT_CSV_SOURCE_FILE_PATH;
 
@@ -38,6 +43,7 @@ public class BookingAggregateJobListener implements JobExecutionListener {
     public void beforeJob(JobExecution je) {
         this.startTIme = new Date();
         LOGGER.info("Wholesale booking processing started at: "+ProcessingUtils.dateToString(this.startTIme, ProcessingUtils.SHORT_DATETIME_FORMAT));
+        this.helper.setMaxSkippedRecords(je.getJobParameters().getLong("maxSkippedRecords"));
     }
 
     /**

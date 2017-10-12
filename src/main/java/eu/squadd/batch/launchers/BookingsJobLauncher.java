@@ -50,9 +50,7 @@ public class BookingsJobLauncher {
     private JobParameters newExecution() {
         Map<String, JobParameter> parameters = new HashMap<>();
         parameters.put("currentTime", new JobParameter(new Date()));
-//        parameters.put("billed_csv_file_name", new JobParameter("billed.csv"));
-//        parameters.put("unbilled_csv_file_name", new JobParameter("unbilled.csv"));
-//        parameters.put("bookdate_txt_file_name", new JobParameter("bookdate.txt"));
+        parameters.put("maxSkippedRecords", new JobParameter(10L));
         return new JobParameters(parameters);
     }
 }

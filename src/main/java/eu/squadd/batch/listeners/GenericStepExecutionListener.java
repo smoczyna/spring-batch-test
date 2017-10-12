@@ -22,7 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class GenericStepExecutionListener implements StepExecutionListener, SkipListener, ItemProcessListener {
 
     @Autowired
-    WholesaleBookingProcessorHelper tempSubLedgerOuput;
+    WholesaleBookingProcessorHelper processingHelper;
     
     private static final Logger LOGGER = LoggerFactory.getLogger(GenericStepExecutionListener.class);
     private Long recordCount;
@@ -35,12 +35,13 @@ public class GenericStepExecutionListener implements StepExecutionListener, Skip
     @Override
     public ExitStatus afterStep(StepExecution se) {
         LOGGER.info("Step completed, read count: "+se.getReadCount() + ", write count: "+se.getWriteCount());
-        LOGGER.info("Number of sub ledger records created: "+this.tempSubLedgerOuput.getCounter("sub"));
-        LOGGER.info("Number of zero charges: "+this.tempSubLedgerOuput.getCounter("zero"));
-        LOGGER.info("Number of gaps: "+this.tempSubLedgerOuput.getCounter("gap"));
-        LOGGER.info("Number of data errors: "+this.tempSubLedgerOuput.getCounter("error"));
-        LOGGER.info("Number of bypasses: "+this.tempSubLedgerOuput.getCounter("bypass"));
-        this.tempSubLedgerOuput.clearCounters();
+        LOGGER.info("Number of wholesale report records created: "+this.processingHelper.getCounter("report"));
+        LOGGER.info("Number of sub ledger records created: "+this.processingHelper.getCounter("subledger"));
+        LOGGER.info("Number of zero charges: "+this.processingHelper.getCounter("zero"));
+        LOGGER.info("Number of gaps: "+this.processingHelper.getCounter("gap"));
+        LOGGER.info("Number of data errors: "+this.processingHelper.getCounter("error"));
+        LOGGER.info("Number of bypasses: "+this.processingHelper.getCounter("bypass"));
+        this.processingHelper.clearCounters();
         return se.getExitStatus();
     }
 

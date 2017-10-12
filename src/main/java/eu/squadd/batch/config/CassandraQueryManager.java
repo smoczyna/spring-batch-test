@@ -22,6 +22,7 @@ import com.datastax.driver.core.exceptions.QueryValidationException;
 import com.datastax.driver.core.exceptions.UnsupportedFeatureException;
 import com.datastax.driver.mapping.MappingManager;
 import com.datastax.driver.mapping.Result;
+import eu.squadd.batch.constants.Constants;
 import eu.squadd.batch.domain.casandra.DataEvent;
 import eu.squadd.batch.domain.casandra.FinancialEventCategory;
 import eu.squadd.batch.domain.casandra.FinancialMarket;
@@ -66,7 +67,7 @@ public class CassandraQueryManager {
     private final String finEventCatQuery = "SELECT * FROM financialeventcategory "
             + "WHERE productid=? AND homesidequalsservingsidindicator=? AND alternatebookingindicator=? AND interexchangecarriercode=? ALLOW FILTERING";
 
-    private final String dataEventQuery = "SELECT *  FROM dataevent WHERE productid=? ALLOW FILTERING";
+    private final String dataEventQuery = "SELECT * FROM dataevent WHERE productid=? ALLOW FILTERING";
     
     private final String wholesalePriceQuery = "SELECT * FROM WholesalePrice WHERE productid=? AND homesidbid=? AND servesidbid=?";
     
@@ -78,6 +79,11 @@ public class CassandraQueryManager {
     
     @PostConstruct
     public void init() {
+        LOGGER.info("Cassandra connection details:");
+        LOGGER.info("IP address: " + Constants.CASSANDRA_HOST);
+        LOGGER.info("username: " + Constants.CASSANDRA_USERNAME);
+        LOGGER.info("password: " + Constants.CASSANDRA_PASSWORD_ENC);
+        
         AuthProvider authProvider = new PlainTextAuthProvider("j6_dev_user", "Ireland");
         Cluster cluster = Cluster.builder().addContactPoint("170.127.114.154").withAuthProvider(authProvider).build();
         this.cassandraSession = cluster.connect(CASSANDRA_KEYSPACE);

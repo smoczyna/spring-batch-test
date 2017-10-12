@@ -5,8 +5,11 @@
  */
 package eu.squadd.batch.utils;
 
+import eu.squadd.batch.constants.Constants;
+import eu.squadd.batch.domain.AggregateWholesaleReportDTO;
 import eu.squadd.batch.domain.BookDateCsvFileDTO;
 import eu.squadd.batch.domain.FinancialEventOffsetDTO;
+import eu.squadd.batch.domain.SummarySubLedgerDTO;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.stereotype.Component;
@@ -29,6 +32,7 @@ public class WholesaleBookingProcessorHelper {
     private long bypassCounter;
     private long subledgerWriteCounter;
     private long wholesaleReportCounter;
+    private long maxSkippedRecords;
 
     public WholesaleBookingProcessorHelper() {
         this.financialEventOffset = new HashMap();
@@ -38,6 +42,7 @@ public class WholesaleBookingProcessorHelper {
         this.bypassCounter = 0;
         this.subledgerWriteCounter = 0;
         this.wholesaleReportCounter = 0;
+        this.maxSkippedRecords = 0;
     }
 
     public BookDateCsvFileDTO getDates() {
@@ -46,6 +51,14 @@ public class WholesaleBookingProcessorHelper {
 
     public void setDates(BookDateCsvFileDTO dates) {
         this.dates = dates;
+    }
+
+    public long getMaxSkippedRecords() {
+        return this.maxSkippedRecords==0 ? Constants.MAX_SKIPPED_RECORDS : this.maxSkippedRecords;
+    }
+
+    public void setMaxSkippedRecords(long maxSkippedRecords) {
+        this.maxSkippedRecords = maxSkippedRecords>0 ? maxSkippedRecords : Constants.MAX_SKIPPED_RECORDS;
     }
 
     public boolean addOffset(FinancialEventOffsetDTO offset) {
@@ -57,6 +70,22 @@ public class WholesaleBookingProcessorHelper {
         return this.financialEventOffset.get(finCat);
     }
 
+    public SummarySubLedgerDTO addSubledger() {
+        SummarySubLedgerDTO slRecord = new SummarySubLedgerDTO();
+        if (this.dates != null) {
+            slRecord.setReportStartDate(dates.getRptPerStartDate());
+            slRecord.setJemsApplTransactioDate(dates.getTransPerEndDate());
+        }
+        this.subledgerWriteCounter++;
+        return slRecord;                
+    }
+    
+    public AggregateWholesaleReportDTO addWholesaleReport() {
+        AggregateWholesaleReportDTO report = new AggregateWholesaleReportDTO();
+        this.wholesaleReportCounter++;
+        return report;
+    }
+    
     public void incrementCounter(String name) {
         switch (name) {
             case "zero":
@@ -71,7 +100,7 @@ public class WholesaleBookingProcessorHelper {
             case "bypass":
                 this.bypassCounter++;
                 break;
-            case "sub":
+            case "subledger":
                 this.subledgerWriteCounter++;
                 break;
             case "report":
@@ -92,7 +121,7 @@ public class WholesaleBookingProcessorHelper {
                 return this.dataErrorsCounter;
             case "bypass":
                 return this.bypassCounter;
-            case "sub":
+            case "subledger":
                 return this.subledgerWriteCounter;
             case "report":
                 return this.wholesaleReportCounter;

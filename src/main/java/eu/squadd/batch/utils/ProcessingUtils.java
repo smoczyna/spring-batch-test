@@ -1,5 +1,6 @@
 package eu.squadd.batch.utils;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
@@ -21,7 +22,7 @@ public class ProcessingUtils {
     public static final String SHORT_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     public static final String SHORT_DATETIME_FORMAT_NOSPACE = "yyyy-MM-dd-HHmmss";
     public static final String MAINFRAME_FORMAT = "yyyy-MM-dd-HH:mm:ss.SSSZ";
-    
+    public static final String DECIMAL_ROUND_FORMAT = "#.##";    
     private static final String LBRACKET = "[";
     
     /**
@@ -89,5 +90,10 @@ public class ProcessingUtils {
                 return delimiter;
         }
         return "None of those was found "+Arrays.toString(delimiters);
-    }   
+    }
+    
+    public static Double roundDecimalNumber(Double inputNumber) {
+        DecimalFormat df = new DecimalFormat(DECIMAL_ROUND_FORMAT);
+        return Double.valueOf(df.format(inputNumber));
+    }
 }
