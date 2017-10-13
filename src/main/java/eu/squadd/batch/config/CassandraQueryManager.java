@@ -7,9 +7,7 @@ import java.util.concurrent.ExecutionException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 
 import com.datastax.driver.core.BoundStatement;
 import com.datastax.driver.core.Cluster;
@@ -22,7 +20,6 @@ import com.datastax.driver.core.exceptions.QueryValidationException;
 import com.datastax.driver.core.exceptions.UnsupportedFeatureException;
 import com.datastax.driver.mapping.MappingManager;
 import com.datastax.driver.mapping.Result;
-import eu.squadd.batch.constants.Constants;
 import eu.squadd.batch.domain.casandra.DataEvent;
 import eu.squadd.batch.domain.casandra.FinancialEventCategory;
 import eu.squadd.batch.domain.casandra.FinancialMarket;
@@ -67,30 +64,33 @@ public class CassandraQueryManager {
     private final String finEventCatQuery = "SELECT * FROM financialeventcategory "
             + "WHERE productid=? AND homesidequalsservingsidindicator=? AND alternatebookingindicator=? AND interexchangecarriercode=? ALLOW FILTERING";
 
-    private final String dataEventQuery = "SELECT * FROM dataevent WHERE productid=? ALLOW FILTERING";
+    private final String finEventCatQueryBilled = "SELECT * FROM financialeventcategory "
+            + "WHERE productid=? AND homesidequalsservingsidindicator=? AND financialeventnormalsign=? "
+            + "AND alternatebookingindicator=? AND interexchangecarriercode=? ALLOW FILTERING";
+    
+    private final String dataEventQuery = "SELECT *  FROM dataevent WHERE productid=? ALLOW FILTERING";
     
     private final String wholesalePriceQuery = "SELECT * FROM WholesalePrice WHERE productid=? AND homesidbid=? AND servesidbid=?";
     
     private PreparedStatement finMarketStatement;
     private PreparedStatement productStatement;
     private PreparedStatement finEventCatStatement;
+    private PreparedStatement finEventCatStatementBilled;
     private PreparedStatement dataEventStatement;
     private PreparedStatement wholesalePriceStatement;
     
     @PostConstruct
     public void init() {
-        LOGGER.info("Cassandra connection details:");
-        LOGGER.info("IP address: " + Constants.CASSANDRA_HOST);
-        LOGGER.info("username: " + Constants.CASSANDRA_USERNAME);
-        LOGGER.info("password: " + Constants.CASSANDRA_PASSWORD_ENC);
-        
         AuthProvider authProvider = new PlainTextAuthProvider("j6_dev_user", "Ireland");
         Cluster cluster = Cluster.builder().addContactPoint("170.127.114.154").withAuthProvider(authProvider).build();
+//        AuthProvider authProvider = new PlainTextAuthProvider(username, password);
+//        Cluster cluster = Cluster.builder().addContactPoint(host).withAuthProvider(authProvider).build();
         this.cassandraSession = cluster.connect(CASSANDRA_KEYSPACE);
         
         this.finMarketStatement = this.cassandraSession.prepare(finMarketQuery);
         this.productStatement = this.cassandraSession.prepare(productQuery);
         this.finEventCatStatement = this.cassandraSession.prepare(finEventCatQuery);
+        this.finEventCatStatementBilled = this.cassandraSession.prepare(finEventCatQueryBilled);
         this.dataEventStatement = this.cassandraSession.prepare(dataEventQuery);
         this.wholesalePriceStatement = this.cassandraSession.prepare(wholesalePriceQuery);
     }
@@ -203,12 +203,18 @@ public class CassandraQueryManager {
      */
     @Cacheable("FinancialEventCategory")
     public List<FinancialEventCategory> getFinancialEventCategoryNoClusteringRecord(Integer TmpProdId, 
-            String homesidequalsservingsidindicator, String alternatebookingindicator, int interExchangeCarrierCode)
+            String homesidequalsservingsidindicator, String alternatebookingindicator, int interExchangeCarrierCode, String financialeventnormalsign)
             throws MultipleRowsReturnedException, NoResultsReturnedException, CassandraQueryException {
         
         List<FinancialEventCategory> listoffec = new ArrayList<>();        
-        BoundStatement statement = new BoundStatement(this.finEventCatStatement);
+        BoundStatement statement;
+        if (financialeventnormalsign==null) {
+            statement = new BoundStatement(this.finEventCatStatement);
         statement.bind(TmpProdId, homesidequalsservingsidindicator, alternatebookingindicator, interExchangeCarrierCode);
+        } else {
+            statement = new BoundStatement(this.finEventCatStatementBilled);
+            statement.bind(TmpProdId, homesidequalsservingsidindicator, financialeventnormalsign, alternatebookingindicator, interExchangeCarrierCode);
+        }
         try {
             Result<FinancialEventCategory> result = new FinancialEventCategoryCassandraMapper().executeAndMapResults(this.cassandraSession, statement, new MappingManager(this.cassandraSession), false);
             listoffec = result.all();
@@ -228,8 +234,7 @@ public class CassandraQueryManager {
             LOGGER.info("Error message:" + ErrorEnum.MULTIPLE_ROWS+"Table: FinancialEventCategory, Input params[" 
                     + TmpProdId+","+homesidequalsservingsidindicator+","+alternatebookingindicator+","+interExchangeCarrierCode+"]");
             LOGGER.info("Number of rows returned:" + Integer.toString(listoffec.size()));
-            throw new MultipleRowsReturnedException(ErrorEnum.MULTIPLE_ROWS,
-                    " rows returned: " + Integer.toString(listoffec.size()));
+            throw new MultipleRowsReturnedException(ErrorEnum.MULTIPLE_ROWS, " rows returned: " + Integer.toString(listoffec.size()));
         }
         return listoffec;
     }

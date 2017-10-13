@@ -3,7 +3,6 @@ package eu.squadd.batch.domain.casandra;
 /*
  * PRIMARY KEY ((ProductId,HomeSidEqualsServingSidIndicator,AlternateBookingIndicator),FinancialMarketId,InterExchangeCarrierCode))
  */
-
 import com.datastax.driver.mapping.annotations.ClusteringColumn;
 import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
@@ -26,6 +25,11 @@ public class FinancialEventCategory {
 	private String homesidequalsservingsidindicator;
 
 	@PartitionKey(value = 2)
+    @Column(name = "financialeventnormalsign")
+    @NotNull
+   private String financialeventnormalsign;
+
+    @PartitionKey(value = 3)
 	@Column(name = "alternatebookingindicator")
 	private String alternatebookingindicator;
 
@@ -76,8 +80,6 @@ public class FinancialEventCategory {
 	private String financialeventcategorytype;
 	private String financialeventdescription;
 	private String financialeventdetails;
-	@NotNull
-	private String financialeventnormalsign;
 	private String financialeventprocessingcode;
 	private String financialmarketsourcecode;
 	@NotNull

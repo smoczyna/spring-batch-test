@@ -38,6 +38,7 @@ public class BilledCsvFileDTO implements BaseBookingInputInterface {
     private Integer airBillSeconds;
     private Integer tollBillSeconds;
     private Long wholesaleUsageBytes;
+    private String debitcreditindicator;
 
     @Override
     public String getHomeSbid() {
@@ -271,6 +272,14 @@ public class BilledCsvFileDTO implements BaseBookingInputInterface {
         this.wholesaleUsageBytes = wholesaleUsageBytes;
     }
     
+    public String getDebitcreditindicator() {
+        return debitcreditindicator;
+    }
+
+    public void setDebitcreditindicator(String debitcreditindicator) {
+        this.debitcreditindicator = debitcreditindicator;
+    }
+    
     @Override
     public String toString() {
         return "BilledCsvFileDTO{" + "homeSbid=" + homeSbid 
@@ -300,6 +309,7 @@ public class BilledCsvFileDTO implements BaseBookingInputInterface {
                 + ", deviceType=" + deviceType 
                 + ", airBillSeconds=" + airBillSeconds 
                 + ", tollBillSeconds=" + tollBillSeconds 
-                + ", wholesaleUsageBytes=" + wholesaleUsageBytes + '}';
+                + ", wholesaleUsageBytes=" + wholesaleUsageBytes 
+                + ", debitcreditindicator=" + debitcreditindicator + '}';
     }
 }

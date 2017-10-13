@@ -61,7 +61,7 @@ public class WholesaleReportProcessorTest {
        // when(tempSubLedgerOuput.getFinancialEventOffset()).thenReturn(this.createFinancialEventOffset());
         
         when(wholesaleBookingProcessor.getFinancialMarketFromDb(anyString())).thenReturn(this.createFinancialMarket());
-        when(wholesaleBookingProcessor.getEventCategoryFromDb(anyInt(), anyString(), anyBoolean(), anyInt())).thenReturn(this.createEventCategory(true));
+        when(wholesaleBookingProcessor.getEventCategoryFromDb(anyInt(), anyString(), anyBoolean(), anyInt(), anyString())).thenReturn(this.createEventCategory(true));
         when(wholesaleBookingProcessor.getDataEventFromDb(anyInt())).thenReturn(this.createDataEvent(true));
         when(wholesaleBookingProcessor.getWholesalePriceFromDb(anyInt(), anyString())).thenReturn(this.createWholesalePrice());
     }

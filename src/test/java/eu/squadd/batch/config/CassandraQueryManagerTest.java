@@ -82,7 +82,9 @@ public class CassandraQueryManagerTest {
         Integer InterExchangeCarrierCode = 0;
         String homesidequalsservingsidindicator = "Y";
         String alternatebookingindicator = "N";
-        List<FinancialEventCategory> recordsActual = queryManager.getFinancialEventCategoryNoClusteringRecord(TmpProdId, homesidequalsservingsidindicator, alternatebookingindicator, InterExchangeCarrierCode);
+        String debitCreditIndicator = "DR";
+        List<FinancialEventCategory> recordsActual = queryManager.getFinancialEventCategoryNoClusteringRecord(TmpProdId, 
+                homesidequalsservingsidindicator, alternatebookingindicator, InterExchangeCarrierCode, debitCreditIndicator);
         
         //List<FinancialEventCategory> recordsExpected = getFinancialEventCategoryLists();
         //Assert.assertEquals(recordsExpected, recordsActual);
