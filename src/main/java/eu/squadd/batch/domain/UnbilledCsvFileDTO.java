@@ -20,6 +20,7 @@ public class UnbilledCsvFileDTO implements BaseBookingInputInterface {
     private String financialMarket;
     private Integer airBillSeconds;
     private Long totalWholesaleUsage;
+    private String debitcreditindicator;
 
     @Override
     public String getHomeSbid() {
@@ -110,6 +111,15 @@ public class UnbilledCsvFileDTO implements BaseBookingInputInterface {
     }
 
     @Override
+    public String getDebitcreditindicator() {
+        return debitcreditindicator;
+    }
+
+    public void setDebitcreditindicator(String debitcreditindicator) {
+        this.debitcreditindicator = debitcreditindicator;
+    }
+
+    @Override
     public String toString() {
         return "UnbilledCsvFileDTO{" + "homeSbid=" + homeSbid 
                 + ", servingSbid=" + servingSbid 
@@ -120,6 +130,8 @@ public class UnbilledCsvFileDTO implements BaseBookingInputInterface {
                 + ", source=" + source 
                 + ", financialMarket=" + financialMarket 
                 + ", airBillSeconds=" + airBillSeconds 
-                + ", totalWholesaleUsage=" + totalWholesaleUsage + '}';
+                + ", totalWholesaleUsage=" + totalWholesaleUsage
+                + ", debitcreditindicator=" + debitcreditindicator
+                + '}';
     }
 }

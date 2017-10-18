@@ -17,5 +17,6 @@ public interface BaseBookingInputInterface {
     Double getWholesalePeakAirCharge();
     Double getWholesaleOffpeakAirCharge();
     String getFinancialMarket();
-    Integer getAirBillSeconds();    
+    Integer getAirBillSeconds();  
+    String getDebitcreditindicator();
 }

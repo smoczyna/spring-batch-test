@@ -1,5 +1,6 @@
 package eu.squadd.batch.launchers;
 
+import eu.squadd.batch.constants.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
@@ -42,15 +43,15 @@ public class BookingsJobLauncher {
 
     @Scheduled(cron = "${csv.to.database.job.cron}")
     void launchCsvFileToDatabaseJob() throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
-        LOGGER.info("Starting booking files processing job");
+        LOGGER.info(Constants.JOB_STARTED);
         jobLauncher.run(job, newExecution());
-        LOGGER.info("Stopping booking files processing job");
+        LOGGER.info(Constants.JOB_FINISHED);        
     }
 
     private JobParameters newExecution() {
-        Map<String, JobParameter> parameters = new HashMap<>();
+        Map<String, JobParameter> parameters = new HashMap<>();  
         parameters.put("currentTime", new JobParameter(new Date()));
-        parameters.put("maxSkippedRecords", new JobParameter(10L));
+        parameters.put("maxSkippedRecords", new JobParameter(1000000L));
         return new JobParameters(parameters);
     }
 }

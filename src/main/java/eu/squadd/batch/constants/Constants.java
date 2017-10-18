@@ -11,21 +11,6 @@ package eu.squadd.batch.constants;
  */
 public class Constants {
     
-//    @Value("${cassandra.db.ip}")
-//    public static String CASSANDRA_HOST;
-//    
-//    @Value("${cassandra.db.username}")
-//    public static String CASSANDRA_USERNAME;
-//    
-//    @Value("${cassandra.db.password}")
-//    public static String CASSANDRA_PASSWORD;
-//    
-//    @Value("${cassandra.db.password.enc}")
-//    public static String CASSANDRA_PASSWORD_ENC;
-//    
-//    @Value("${cassandra.db.keyspace}")
-//    public static String CASSANDRA_KEYSPACE;
-    
     public static final String BOOK_DATE_FILENAME = "bookdate.csv";
     public static final String FINANCIAL_EVENT_OFFSET_FILENAME = "offset.csv";
     public static final String BILLED_BOOKING_FILENAME = "billed.csv";    
@@ -42,9 +27,50 @@ public class Constants {
     public static final String CREDIT_CODE = "CR";
     
     public static final String ZERO_CHARGES = "zero";
-    public static final String GAPS ="gaps";
+    public static final String GAPS ="gap";
     public static final String DATA_ERRORS = "error";
     public static final String BYPASS = "bypass";
     public static final String SUBLEDGER = "subledger";
     public static final String WHOLESALES_REPORT = "report";
+    
+    public static final String JOB_STARTED = "Starting booking files processing job\"";
+    public static final String JOB_FINISHED = "Stopping booking files processing job";
+    public static final String JOB_STARTED_MESSAGE = "Wholesale booking processing started at: %S";
+    public static final String JOB_FINISHED_MESSAGE = "Wholesale booking processing ended at: %s";
+    public static final String JOB_PROCESSIG_TIME_MESSAGE = "Overall processing time: %d seconds.";
+    public static final String JOB_EXCEPTIONS_ENCOUNTERED = "All encountered exceptions:";
+    public static final String EXCEPTION_MESSAGE = "exception : %s";
+    public static final String FILE_ARCHIVED_MESSAGE = "%s file archived successfully";
+    
+    public static final String CHECK_IF_FILES_EXIST = "Checking if file exists...";
+    public static final String FILES_NOT_FOUND_MESSAGE = "Source file(s) do not exist";
+    public static final String FILES_NOT_FOUND_JOB_ABORTED = "One or more required files not found, job aborted.";
+    
+    public static final String FEC_NOT_FOUND_MESSAGE = "Original Fianancial Event Catergory not found, looking for default one...";
+    public static final String DEFAULT_FEC_OBTAINED = "Default Fianancial Event Catergory obtained instead, everythig's cool";
+    
+    public static final String BOOKING_BYPASS_DETECTED = "Booking bypass detected, record skipped for sub ledger file ...";
+    public static final String ZERO_CHARGES_DETECTED = "Zero charges detected, skipping...";
+    public static final String ZERO_CHARGES_SKIP = "Record skipped due to zero charges !!!";
+    public static final String GAP_DETECTED = "Gap in the logic encountered, skipping valid charges from processing !!!";
+    public static final String INVALID_INPUT = "Invalid input record encountered !!!";
+    public static final String OFFSET_NOT_FOUND = "Offset fin cat value not found !!!";
+    public static final String ZERO_SUBLEDGER_AMOUNT = "Zero amounts in sub ledger record found !!!";
+    public static final String FAILED_TO_CREATE_OFFSET = "Failed to create offset booking !!!";
+    
+    public static final String PROCESSING_RECORD = "Processing records: %d";
+    public static final String READER_EXCEPTION = "Reader exception encountered: %s";
+    public static final String WRITER_EXCEPTION = "Writer exception encountered: %s";
+    public static final String JOB_EXECUTION_FINISHED = "Step completed, read count: %d, write count: %d";
+    public static final String WHOLESALE_REPORT_NO = "Number of wholesale report records created: %d";
+    public static final String SUBLEDGER_REPORD_NO = "Number of sub ledger records created: %d";
+    public static final String ZERO_CHARGE_NO = "Number of zero charges: %d";
+    public static final String CODE_GAPS_NO = "Number of gaps: %d";
+    public static final String DATA_ERRORS_NO = "Number of data errors: %d";
+    public static final String BYPASS_NO = "Number of bypasses: %d";
+    
+    public static final String MAX_ALLOWED_EXCEPTION = "Maximum allowed exceptions reached, terminating...";
+    public static final String FILE_MISSING_MESSAGE = "File missing, terminating...";
+    public static final String PARSING_ERROR = "Parsing error when processing line: %d";
+    public static final String NULL_ENCOUNTERED = "NULL encountered but the value was expected - skipping record ...";
 }

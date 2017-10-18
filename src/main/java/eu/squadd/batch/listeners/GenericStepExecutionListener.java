@@ -5,6 +5,7 @@
  */
 package eu.squadd.batch.listeners;
 
+import eu.squadd.batch.constants.Constants;
 import eu.squadd.batch.utils.WholesaleBookingProcessorHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,25 +35,25 @@ public class GenericStepExecutionListener implements StepExecutionListener, Skip
 
     @Override
     public ExitStatus afterStep(StepExecution se) {
-        LOGGER.info("Step completed, read count: "+se.getReadCount() + ", write count: "+se.getWriteCount());
-        LOGGER.info("Number of wholesale report records created: "+this.processingHelper.getCounter("report"));
-        LOGGER.info("Number of sub ledger records created: "+this.processingHelper.getCounter("subledger"));
-        LOGGER.info("Number of zero charges: "+this.processingHelper.getCounter("zero"));
-        LOGGER.info("Number of gaps: "+this.processingHelper.getCounter("gap"));
-        LOGGER.info("Number of data errors: "+this.processingHelper.getCounter("error"));
-        LOGGER.info("Number of bypasses: "+this.processingHelper.getCounter("bypass"));
+        LOGGER.info(String.format(Constants.JOB_EXECUTION_FINISHED, se.getReadCount(), se.getWriteCount()));        
+        LOGGER.info(String.format(Constants.WHOLESALE_REPORT_NO, this.processingHelper.getCounter(Constants.WHOLESALES_REPORT)));
+        LOGGER.info(String.format(Constants.SUBLEDGER_REPORD_NO, this.processingHelper.getCounter(Constants.SUBLEDGER)));
+        LOGGER.info(String.format(Constants.ZERO_CHARGE_NO, this.processingHelper.getCounter(Constants.ZERO_CHARGES)));
+        LOGGER.info(String.format(Constants.CODE_GAPS_NO, this.processingHelper.getCounter(Constants.GAPS)));
+        LOGGER.info(String.format(Constants.DATA_ERRORS_NO, this.processingHelper.getCounter(Constants.DATA_ERRORS)));
+        LOGGER.info(String.format(Constants.BYPASS_NO, this.processingHelper.getCounter(Constants.BYPASS)));
         this.processingHelper.clearCounters();
         return se.getExitStatus();
     }
 
     @Override
     public void onSkipInRead(Throwable exception) {
-        LOGGER.error("Reader exception encountered: " + exception.getMessage());
+        LOGGER.error(String.format(Constants.READER_EXCEPTION, exception.getMessage()));
     }
 
     @Override
     public void onSkipInWrite(Object s, Throwable exception) {
-        LOGGER.error("Writer exception encountered: " + exception.getMessage());
+        LOGGER.error(String.format(Constants.WRITER_EXCEPTION, exception.getMessage()));
     }
 
     @Override
@@ -62,7 +63,7 @@ public class GenericStepExecutionListener implements StepExecutionListener, Skip
 
     @Override
     public void beforeProcess(Object t) {
-        LOGGER.info("Processing records: "+ (++recordCount));
+        LOGGER.info(String.format(Constants.PROCESSING_RECORD, ++recordCount));
     }
 
     @Override

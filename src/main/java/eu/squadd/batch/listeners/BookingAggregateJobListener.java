@@ -42,7 +42,7 @@ public class BookingAggregateJobListener implements JobExecutionListener {
     @Override
     public void beforeJob(JobExecution je) {
         this.startTIme = new Date();
-        LOGGER.info("Wholesale booking processing started at: "+ProcessingUtils.dateToString(this.startTIme, ProcessingUtils.SHORT_DATETIME_FORMAT));
+        LOGGER.info(String.format(Constants.JOB_STARTED_MESSAGE, ProcessingUtils.dateToString(this.startTIme, ProcessingUtils.SHORT_DATETIME_FORMAT)));
         this.helper.setMaxSkippedRecords(je.getJobParameters().getLong("maxSkippedRecords"));
     }
 
@@ -60,13 +60,13 @@ public class BookingAggregateJobListener implements JobExecutionListener {
             this.moveFileToArchive(Constants.ADMIN_FEES_FILENAME);
             
             Date endTime = new Date();
-            LOGGER.info("Wholesale booking processing ended at: "+ProcessingUtils.dateToString(endTime, ProcessingUtils.SHORT_DATETIME_FORMAT));
-            LOGGER.info("Overall processing time: " + (endTime.getTime() - this.startTIme.getTime())/1000 + " seconds.");
+            LOGGER.info(String.format(Constants.JOB_FINISHED_MESSAGE, ProcessingUtils.dateToString(endTime, ProcessingUtils.SHORT_DATETIME_FORMAT)));
+            LOGGER.info(String.format(Constants.JOB_PROCESSIG_TIME_MESSAGE, ((endTime.getTime() - this.startTIme.getTime())/1000)));
         } else {
-            LOGGER.info("All encountered exceptions:");
+            LOGGER.info(Constants.JOB_EXCEPTIONS_ENCOUNTERED);
             List<Throwable> exceptionList = je.getAllFailureExceptions();
             exceptionList.forEach((th) -> {
-                LOGGER.error("exception :" + th.getLocalizedMessage());
+                LOGGER.error(String.format(Constants.EXCEPTION_MESSAGE, th.getLocalizedMessage()));
             });
         }
     }
@@ -85,14 +85,13 @@ public class BookingAggregateJobListener implements JobExecutionListener {
             OutputStream outStream = new FileOutputStream(destFile);
             byte[] buffer = new byte[1024];
             int length;
-            //copy file content
             while ((length = inStream.read(buffer)) > 0) {
                 outStream.write(buffer, 0, length);
             }
             inStream.close();
             outStream.close();
             srcFile.delete();
-            LOGGER.info(String.format("%s file archived successfully", filename));
+            LOGGER.info(String.format(Constants.FILE_ARCHIVED_MESSAGE, filename));
         } catch (IOException e) {
             LOGGER.error(e.getMessage());
         }

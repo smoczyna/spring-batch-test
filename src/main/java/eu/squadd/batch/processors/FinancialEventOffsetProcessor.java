@@ -18,8 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class FinancialEventOffsetProcessor implements ItemProcessor<FinancialEventOffsetDTO, Boolean> {
     
-    private static final Logger LOGGER = LoggerFactory.getLogger(FinancialEventOffsetProcessor.class);
-    
     @Autowired
     WholesaleBookingProcessorHelper tempSubLedgerOuput;
     

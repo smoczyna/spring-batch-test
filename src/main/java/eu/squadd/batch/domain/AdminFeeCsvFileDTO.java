@@ -15,6 +15,7 @@ public class AdminFeeCsvFileDTO {
     private Double adminChargeAmt;
     private Integer adminCount;
     private String financialMarket;
+    private String debitcreditindicator;
 
     public String getSbid() {
         return sbid;
@@ -55,4 +56,25 @@ public class AdminFeeCsvFileDTO {
     public void setFinancialMarket(String financialMarket) {
         this.financialMarket = financialMarket;
     }
+
+    public String getDebitcreditindicator() {
+        return debitcreditindicator;
+    }
+
+    public void setDebitcreditindicator(String debitcreditindicator) {
+        this.debitcreditindicator = debitcreditindicator;
+    }
+
+    @Override
+    public String toString() {
+        return "AdminFeeCsvFileDTO{" 
+                + "sbid=" + sbid 
+                + ", productId=" + productId 
+                + ", adminChargeAmt=" + adminChargeAmt 
+                + ", adminCount=" + adminCount 
+                + ", financialMarket=" + financialMarket 
+                + ", debitcreditindicator=" + debitcreditindicator 
+                + '}';
+    }
+    
 }

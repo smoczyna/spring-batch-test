@@ -96,7 +96,7 @@ public class BatchExecutionSchemaToFileConfig {
     }
     
     @Bean
-    ItemReader<BatchJobExecutionContext> batchJobExecutionContectReader(Environment environment) throws Exception {
+    ItemReader<BatchJobExecutionContext> batchJobExecutionContextReader(Environment environment) throws Exception {
         JdbcCursorItemReader<BatchJobExecutionContext> databaseReader = new JdbcCursorItemReader();
         databaseReader.setDataSource(metaDataSource);
         databaseReader.setRowMapper(new BeanPropertyRowMapper<>(BatchJobExecutionContext.class));

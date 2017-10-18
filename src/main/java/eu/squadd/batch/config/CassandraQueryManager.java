@@ -13,6 +13,7 @@ import com.datastax.driver.core.BoundStatement;
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.PlainTextAuthProvider;
 import com.datastax.driver.core.PreparedStatement;
+import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.core.exceptions.NoHostAvailableException;
 import com.datastax.driver.core.exceptions.QueryExecutionException;
@@ -316,4 +317,13 @@ public class CassandraQueryManager {
         }
         return listofwp;
     }
+    
+//    public boolean insertBatchJobExecutionData() {
+//        BoundStatement statement = new BoundStatement("");
+//        statement.bind();
+//        statement.enableTracing();
+//        
+//        ResultSet result = this.cassandraSession.execute(statement);
+//        
+//    }
 }
