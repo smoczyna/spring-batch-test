@@ -9,7 +9,7 @@ package eu.squadd.batch.domain;
  * Admin Fees source payload class. This class represents the input file for admin fees: MTNADFEE.CSV
  * @author smorcja
  */
-public class AdminFeeCsvFileDTO {
+public class AdminFeeCsvFileDTO implements MinBookingInterface {
     private String sbid;
     private Integer productId;
     private Double adminChargeAmt;

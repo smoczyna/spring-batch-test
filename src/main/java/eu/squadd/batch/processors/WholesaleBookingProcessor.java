@@ -58,6 +58,7 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
     String fileSource;
     int tmpProdId;
     double tmpChargeAmt;
+    int tmpInterExchangeCarrierCode;
     final Set<Integer> PROD_IDS_TOLL = new HashSet(Arrays.asList(new Integer[]{95, 12872, 12873, 36201}));
     final Set<Integer> PROD_IDS = new HashSet(Arrays.asList(new Integer[]{95, 12872, 12873, 13537, 13538, 36201}));
 
@@ -78,6 +79,7 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
         this.fileSource = null;
         this.tmpProdId = 0;
         this.tmpChargeAmt = 0;
+        this.tmpInterExchangeCarrierCode = 0;
 
         if (inRec instanceof BilledCsvFileDTO) {
             return processBilledRecord((BilledCsvFileDTO) inRec);
@@ -284,7 +286,7 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
     private WholesaleProcessingOutput processBilledRecord(BilledCsvFileDTO billedRec) {
         WholesaleProcessingOutput outRec = new WholesaleProcessingOutput();
         AggregateWholesaleReportDTO report = this.processingHelper.addWholesaleReport();
-        int tmpInterExchangeCarrierCode = 0;
+        
         boolean zeroAirCharge = false;
         boolean zeroTollCharge = false;
 
@@ -385,7 +387,7 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
         if (unbilledRec.getAirProdId() > 0 && (unbilledRec.getWholesalePeakAirCharge() > 0 || unbilledRec.getWholesaleOffpeakAirCharge() > 0)) {
             WholesaleProcessingOutput outRec = new WholesaleProcessingOutput();
             AggregateWholesaleReportDTO report = this.processingHelper.addWholesaleReport();
-            int tmpInterExchangeCarrierCode = 0;
+            
             report.setBilledInd("N");
             this.fileSource = "U";
             financialMarket = unbilledRec.getFinancialMarket();
@@ -427,7 +429,7 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
                 }
             }
             outRec.addWholesaleReportRecord(report);
-            makeBookings(unbilledRec, outRec, tmpInterExchangeCarrierCode);
+            this.makeBookings(unbilledRec, outRec, tmpInterExchangeCarrierCode);
             return outRec;
         } else {
             this.processingHelper.incrementCounter(Constants.ZERO_CHARGES);
@@ -468,6 +470,7 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
 //            outRec.addSubledgerRecord(subledger);
 //            outRec.addSubledgerRecord(this.createOffsetBooking(subledger));
 //        }
+        this.makeBookings(adminFeesRec, outRec, tmpInterExchangeCarrierCode);
         return outRec;
     }
 
