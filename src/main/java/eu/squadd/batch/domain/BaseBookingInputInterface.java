@@ -9,7 +9,7 @@ package eu.squadd.batch.domain;
  *
  * @author smoczyna
  */
-public interface BaseBookingInputInterface {
+public interface BaseBookingInputInterface extends MinBookingInterface {
     String getHomeSbid();
     String getServingSbid();
     String getMessageSource();
@@ -17,6 +17,5 @@ public interface BaseBookingInputInterface {
     Double getWholesalePeakAirCharge();
     Double getWholesaleOffpeakAirCharge();
     String getFinancialMarket();
-    Integer getAirBillSeconds();  
-    String getDebitcreditindicator();
+    Integer getAirBillSeconds();    
 }

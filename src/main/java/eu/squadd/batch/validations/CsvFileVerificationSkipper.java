@@ -40,9 +40,10 @@ public class CsvFileVerificationSkipper implements SkipPolicy {
                 result = true;
             } else if (exception instanceof NullPointerException) {
                 NullPointerException npe = (NullPointerException) exception;
-                LOGGER.error(Constants.NULL_ENCOUNTERED);
                 result = true;
-            }            
+            }
+            LOGGER.error(Constants.RECORD_SKIP_DETECTED);
+            this.helper.incrementCounter(Constants.DATA_ERRORS);
         }
         return result;
     }

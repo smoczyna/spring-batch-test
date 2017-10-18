@@ -18,6 +18,7 @@ import eu.squadd.batch.domain.AdminFeeCsvFileDTO;
 import eu.squadd.batch.domain.AggregateWholesaleReportDTO;
 import eu.squadd.batch.domain.BaseBookingInputInterface;
 import eu.squadd.batch.domain.BilledCsvFileDTO;
+import eu.squadd.batch.domain.MinBookingInterface;
 import eu.squadd.batch.domain.SummarySubLedgerDTO;
 import eu.squadd.batch.domain.UnbilledCsvFileDTO;
 import eu.squadd.batch.domain.WholesaleProcessingOutput;
@@ -255,10 +256,15 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
         return bypassBooking;
     }
 
-    private void makeBookings(BaseBookingInputInterface inRec, WholesaleProcessingOutput outRec, int iecCode) {
-        boolean altBookingInd = this.isAlternateBookingApplicable(inRec);
-        FinancialEventCategory financialEventCategory = null;
-        financialEventCategory = this.getEventCategoryFromDb(this.tmpProdId, this.homeEqualsServingSbid ? "Y" : "N", altBookingInd, iecCode, inRec.getDebitcreditindicator());
+    private void makeBookings(MinBookingInterface inRec, WholesaleProcessingOutput outRec, int iecCode) {
+        boolean altBookingInd = false;
+        String tmpHomeEqualsServingSbid = " ";
+        if (inRec instanceof BilledCsvFileDTO) {
+            altBookingInd = this.isAlternateBookingApplicable((BilledCsvFileDTO) inRec);
+            tmpHomeEqualsServingSbid = this.homeEqualsServingSbid ? "Y" : "N";
+        }
+        FinancialEventCategory financialEventCategory = null;        
+        financialEventCategory = this.getEventCategoryFromDb(this.tmpProdId, tmpHomeEqualsServingSbid, altBookingInd, iecCode, inRec.getDebitcreditindicator());
         boolean bypassBooking = this.bypassBooking(financialEventCategory, altBookingInd);
         if (bypassBooking) {
             LOGGER.warn(Constants.BOOKING_BYPASS_DETECTED);
@@ -421,13 +427,6 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
                 }
             }
             outRec.addWholesaleReportRecord(report);
-            
-//            altBookingInd = this.isAlternateBookingApplicable(unbilledRec);
-//            FinancialEventCategory financialEventCategory = this.getEventCategoryFromDb(this.tmpProdId, this.homeEqualsServingSbid ? "Y" : "N", altBookingInd, 0, unbilledRec.getDebitcreditindicator());
-//            SummarySubLedgerDTO subledger = this.createSubLedgerBooking(tmpChargeAmt, financialEventCategory, financialMarket, unbilledRec.getDebitcreditindicator());            
-//            outRec.addSubledgerRecord(subledger);
-//            outRec.addSubledgerRecord(this.createOffsetBooking(subledger));
-
             makeBookings(unbilledRec, outRec, tmpInterExchangeCarrierCode);
             return outRec;
         } else {
@@ -441,7 +440,7 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
         AggregateWholesaleReportDTO report = this.processingHelper.addWholesaleReport();
         report.setBilledInd("Y");
         this.fileSource = "M";
-        this.searchHomeSbid = adminFeesRec.getSbid(); // there is no check if both home and serving bids are equal ???
+        this.searchHomeSbid = adminFeesRec.getSbid();
         this.tmpProdId = adminFeesRec.getProductId();
         this.financialMarket = adminFeesRec.getFinancialMarket();
 
@@ -452,23 +451,23 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
         report.setDollarAmtOther(this.tmpChargeAmt);
         outRec.addWholesaleReportRecord(report);
         
-        boolean altBookingInd = false; // alternate booking cannot be checked here due incompatible payload (adminfees file doesn't fit the interface as it has no all required fields)
-        FinancialEventCategory financialEventCategory = this.getEventCategoryFromDb(this.tmpProdId, " ", altBookingInd, 0, null);
-
-        // this is pointless - it's false by default
-        //if (financialEventCategory.getHomesidequalsservingsidindicator().trim().isEmpty())
-        //    bypassBooking = false;
-        //else
-        boolean bypassBooking = this.bypassBooking(financialEventCategory, altBookingInd);
-
-        if (bypassBooking) {
-            LOGGER.warn(Constants.BOOKING_BYPASS_DETECTED);
-            this.processingHelper.incrementCounter(Constants.BYPASS);
-        } else {
-            SummarySubLedgerDTO subledger = this.createSubLedgerBooking(tmpChargeAmt, financialEventCategory, financialMarket, adminFeesRec.getDebitcreditindicator());
-            outRec.addSubledgerRecord(subledger);
-            outRec.addSubledgerRecord(this.createOffsetBooking(subledger));
-        }
+//        boolean altBookingInd = false; // alternate booking cannot be checked here due incompatible payload (adminfees file doesn't fit the interface as it has no all required fields)
+//        FinancialEventCategory financialEventCategory = this.getEventCategoryFromDb(this.tmpProdId, " ", altBookingInd, 0, null);
+//
+//        // this is pointless - it's false by default
+//        //if (financialEventCategory.getHomesidequalsservingsidindicator().trim().isEmpty())
+//        //    bypassBooking = false;
+//        //else
+//        boolean bypassBooking = this.bypassBooking(financialEventCategory, altBookingInd);
+//
+//        if (bypassBooking) {
+//            LOGGER.warn(Constants.BOOKING_BYPASS_DETECTED);
+//            this.processingHelper.incrementCounter(Constants.BYPASS);
+//        } else {
+//            SummarySubLedgerDTO subledger = this.createSubLedgerBooking(tmpChargeAmt, financialEventCategory, financialMarket, adminFeesRec.getDebitcreditindicator());
+//            outRec.addSubledgerRecord(subledger);
+//            outRec.addSubledgerRecord(this.createOffsetBooking(subledger));
+//        }
         return outRec;
     }
 

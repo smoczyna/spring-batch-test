@@ -73,4 +73,5 @@ public class Constants {
     public static final String FILE_MISSING_MESSAGE = "File missing, terminating...";
     public static final String PARSING_ERROR = "Parsing error when processing line: %d";
     public static final String NULL_ENCOUNTERED = "NULL encountered but the value was expected - skipping record ...";
+    public static final String RECORD_SKIP_DETECTED = "Record skipped due to processing errors !!!";
 }
