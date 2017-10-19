@@ -452,24 +452,6 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
         this.tmpChargeAmt = wholesalePrice.getProductwholesaleprice().multiply(BigDecimal.valueOf(adminFeesRec.getAdminCount())).floatValue();
         report.setDollarAmtOther(this.tmpChargeAmt);
         outRec.addWholesaleReportRecord(report);
-        
-//        boolean altBookingInd = false; // alternate booking cannot be checked here due incompatible payload (adminfees file doesn't fit the interface as it has no all required fields)
-//        FinancialEventCategory financialEventCategory = this.getEventCategoryFromDb(this.tmpProdId, " ", altBookingInd, 0, null);
-//
-//        // this is pointless - it's false by default
-//        //if (financialEventCategory.getHomesidequalsservingsidindicator().trim().isEmpty())
-//        //    bypassBooking = false;
-//        //else
-//        boolean bypassBooking = this.bypassBooking(financialEventCategory, altBookingInd);
-//
-//        if (bypassBooking) {
-//            LOGGER.warn(Constants.BOOKING_BYPASS_DETECTED);
-//            this.processingHelper.incrementCounter(Constants.BYPASS);
-//        } else {
-//            SummarySubLedgerDTO subledger = this.createSubLedgerBooking(tmpChargeAmt, financialEventCategory, financialMarket, adminFeesRec.getDebitcreditindicator());
-//            outRec.addSubledgerRecord(subledger);
-//            outRec.addSubledgerRecord(this.createOffsetBooking(subledger));
-//        }
         this.makeBookings(adminFeesRec, outRec, tmpInterExchangeCarrierCode);
         return outRec;
     }
@@ -501,9 +483,15 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
         }
         if (dbResult == null && financialeventnormalsign.equals("DR")) {
             LOGGER.warn(Constants.FEC_NOT_FOUND_MESSAGE);
+            int tmpProductId;
+            if (this.fileSource.equals("M")) // for admin fees call 0 product
+                tmpProductId = 0;
+            else
+                tmpProductId = 36;           // for the rest 2 files call 36 product
+            
             try {
                 dbResult = queryManager.getFinancialEventCategoryNoClusteringRecord(
-                        36, homeEqualsServingSbid, altBookingInd ? "Y" : "N", interExchangeCarrierCode, financialeventnormalsign);
+                        tmpProductId, homeEqualsServingSbid, altBookingInd ? "Y" : "N", interExchangeCarrierCode, financialeventnormalsign);
 
                 LOGGER.info(Constants.DEFAULT_FEC_OBTAINED);
             } catch (MultipleRowsReturnedException | NoResultsReturnedException | CassandraQueryException ex) {
