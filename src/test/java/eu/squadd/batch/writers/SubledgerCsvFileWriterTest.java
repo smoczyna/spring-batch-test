@@ -13,8 +13,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
@@ -38,6 +38,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 @ContextConfiguration
 public class SubledgerCsvFileWriterTest {
     
+    private static final Logger LOGGER = LoggerFactory.getLogger(SubledgerCsvFileWriterTest.class);
     private SubledgerCsvFileWriter writer;
     private String workingFoler;
     
@@ -68,7 +69,7 @@ public class SubledgerCsvFileWriterTest {
                 writer.close();
                 verifyWrittenFile();
             } catch (Exception ex) {
-                Logger.getLogger(SubledgerCsvFileWriterTest.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.error(ex.getMessage());
             }
             return 1;
         });

@@ -7,15 +7,14 @@ package eu.squadd.batch.writers;
 
 import eu.squadd.batch.domain.AggregateWholesaleReportDTO;
 import eu.squadd.batch.utils.ProcessingUtils;
-import eu.squadd.batch.writers.WholesaleReportCsvWriter;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
@@ -38,6 +37,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration
 public class WholesaleReportCsvWriterTest {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(WholesaleReportCsvWriterTest.class);
     private WholesaleReportCsvWriter writer;
     private String workingFoler;
 
@@ -45,7 +45,7 @@ public class WholesaleReportCsvWriterTest {
     public void setUp() {
         ClassLoader classLoader = getClass().getClassLoader();
         workingFoler = classLoader.getResource("./data").getPath();
-        Logger.getLogger(WholesaleReportCsvWriterTest.class.getName()).info("Write path: "+workingFoler);
+        LOGGER.info("Write path: {0}", workingFoler);
         writer = new WholesaleReportCsvWriter(workingFoler+"/wholesale_report.csv");
     }
 
@@ -70,7 +70,7 @@ public class WholesaleReportCsvWriterTest {
                 writer.close();
                 verifyWrittenFile();
             } catch (Exception ex) {
-                Logger.getLogger(WholesaleReportCsvWriterTest.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.error(ex.getMessage());
             }
             return 1;
         });

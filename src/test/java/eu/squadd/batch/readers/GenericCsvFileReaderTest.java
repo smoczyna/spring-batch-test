@@ -6,13 +6,13 @@
 package eu.squadd.batch.readers;
 
 import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.test.MetaDataInstanceFactory;
 import org.springframework.batch.test.StepScopeTestExecutionListener;
@@ -32,6 +32,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 @ContextConfiguration
 public abstract class GenericCsvFileReaderTest<T extends Object> {
     
+    private static final Logger LOGGER = LoggerFactory.getLogger(GenericCsvFileReaderTest.class);
     public abstract CsvFileGenericReader getReader();
     public abstract File getFile();
     protected int numberOfRecords;
@@ -58,12 +59,12 @@ public abstract class GenericCsvFileReaderTest<T extends Object> {
                         readCount++;
                     }
                 } catch (Exception ex) {
-                    Logger.getLogger(GenericCsvFileReaderTest.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.error(ex.getMessage());
                 }
                 return readCount;
             });
         } catch (Exception ex) {
-            Logger.getLogger(GenericCsvFileReaderTest.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error(ex.getMessage());
         }
         assertEquals(numberOfRecords, count);
     }

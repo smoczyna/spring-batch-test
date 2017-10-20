@@ -7,12 +7,12 @@ package eu.squadd.batch.readers;
 
 import eu.squadd.batch.domain.BookDateCsvFileDTO;
 import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.item.ItemStreamException;
 import org.springframework.batch.test.MetaDataInstanceFactory;
@@ -21,7 +21,6 @@ import org.springframework.batch.test.StepScopeTestUtils;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
 /**
  *
@@ -33,6 +32,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 //@TestPropertySource(properties = {"csv.to.database.job.source.file.path", "/home/smoczyna/NetBeansProjects/spring-batch-test/src/main/resources/data"})
 public class BookDateCsvFileReaderTest {
     
+    private static final Logger LOGGER = LoggerFactory.getLogger(BookDateCsvFileReaderTest.class);
     private BookDateCsvFileReader reader;
    
     @Before
@@ -65,7 +65,7 @@ public class BookDateCsvFileReaderTest {
                         readCount++;
                     }
                 } catch (Exception ex) {
-                    Logger.getLogger(BookDateCsvFileReaderTest.class.getName()).log(Level.SEVERE, null, ex);
+                     LOGGER.error(ex.getMessage());
                 } finally {
                     try { reader.close(); } catch (ItemStreamException e) { fail(e.toString());
                     }

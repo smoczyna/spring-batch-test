@@ -6,16 +6,14 @@
 package eu.squadd.batch.writers;
 
 import eu.squadd.batch.domain.AggregateWholesaleReportDTO;
-import eu.squadd.batch.utils.ProcessingUtils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import static org.junit.Assert.assertEquals;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,6 +35,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration
 public class WholesaleReportFixedLengthFileWriterTest {
     
+    private static final Logger LOGGER = LoggerFactory.getLogger(WholesaleReportFixedLengthFileWriterTest.class);
     private WholesaleReportFixedLengthFileWriter writer;
     private String workingFoler;
     
@@ -44,7 +43,7 @@ public class WholesaleReportFixedLengthFileWriterTest {
     public void setUp() {
         ClassLoader classLoader = getClass().getClassLoader();
         workingFoler = classLoader.getResource("./data").getPath();
-        Logger.getLogger(WholesaleReportFixedLengthFileWriterTest.class.getName()).log(Level.INFO, "Write path: {0}", workingFoler);
+        LOGGER.info("Write path: {0}", workingFoler);
         writer = new WholesaleReportFixedLengthFileWriter(workingFoler+"/fixed_length_wholesale_report.txt");
     }
     
@@ -69,7 +68,7 @@ public class WholesaleReportFixedLengthFileWriterTest {
                 writer.close();
                 verifyWrittenFile();
             } catch (Exception ex) {
-                Logger.getLogger(WholesaleReportCsvWriterTest.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.error(ex.getMessage());
             }
             return 1;
         });

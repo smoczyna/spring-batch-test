@@ -12,8 +12,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.file.transform.Alignment;
 import org.springframework.batch.item.file.transform.LineAggregator;
 
@@ -24,6 +24,7 @@ import org.springframework.batch.item.file.transform.LineAggregator;
  */
 public class FixedLengthLineAggregator<T> implements LineAggregator<T> {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(FixedLengthLineAggregator.class);
     private final Class<T> payloadClass;
     private final Map<String, Integer> fieldsDefinition;
         
@@ -78,7 +79,7 @@ public class FixedLengthLineAggregator<T> implements LineAggregator<T> {
                     line.append(sb.toString());
                 }
             } catch (IllegalAccessException | InvocationTargetException | IntrospectionException | ContentTooLongException ex) {
-                Logger.getLogger(FixedLengthLineAggregator.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.error(ex.getMessage());
                 return null;
             }
         }

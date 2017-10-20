@@ -43,6 +43,7 @@ public class Constants {
     public static final String FILE_ARCHIVED_MESSAGE = "%s file archived successfully";
     
     public static final String CHECK_IF_FILES_EXIST = "Checking if file exists...";
+    public static final String SOURCE_LOCATION_MISSING_MESSAGE = "Source location missing !!!";
     public static final String FILES_NOT_FOUND_MESSAGE = "Source file(s) do not exist";
     public static final String FILES_NOT_FOUND_JOB_ABORTED = "One or more required files not found, job aborted.";
     

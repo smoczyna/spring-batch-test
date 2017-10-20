@@ -12,8 +12,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
@@ -36,6 +36,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration
 public class SubledgerFixedLengthFielWriterTest {
     
+    private static final Logger LOGGER = LoggerFactory.getLogger(SubledgerFixedLengthFielWriterTest.class);
     private SubledgerFixedLengthFileWriter writer;
     private String workingFoler;
     
@@ -43,7 +44,7 @@ public class SubledgerFixedLengthFielWriterTest {
     public void setUp() {
         ClassLoader classLoader = getClass().getClassLoader();
         workingFoler = classLoader.getResource("./data").getPath();
-        Logger.getLogger(SubledgerFixedLengthFielWriterTest.class.getName()).log(Level.INFO, "Write path: {0}", workingFoler);
+        LOGGER.info("Write path: {0}", workingFoler);
         writer = new SubledgerFixedLengthFileWriter(workingFoler+"/fixed_length_subledger_report.txt");
     }
     
@@ -67,7 +68,7 @@ public class SubledgerFixedLengthFielWriterTest {
                 writer.close();
                 verifyWrittenFile();
             } catch (Exception ex) {
-                Logger.getLogger(SubledgerFixedLengthFielWriterTest.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.error(ex.getMessage());
             }
             return 1;
         });

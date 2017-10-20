@@ -31,7 +31,7 @@ import org.springframework.beans.factory.annotation.Value;
 public class BookingAggregateJobListener implements JobExecutionListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BookingAggregateJobListener.class);
-    private Date startTIme;
+    private Date startTime;
     
     @Autowired
     private WholesaleBookingProcessorHelper helper;
@@ -41,8 +41,8 @@ public class BookingAggregateJobListener implements JobExecutionListener {
 
     @Override
     public void beforeJob(JobExecution je) {
-        this.startTIme = new Date();
-        LOGGER.info(String.format(Constants.JOB_STARTED_MESSAGE, ProcessingUtils.dateToString(this.startTIme, ProcessingUtils.SHORT_DATETIME_FORMAT)));
+        this.startTime = new Date();
+        LOGGER.info(String.format(Constants.JOB_STARTED_MESSAGE, ProcessingUtils.dateToString(this.startTime, ProcessingUtils.SHORT_DATETIME_FORMAT)));
         this.helper.setMaxSkippedRecords(je.getJobParameters().getLong("maxSkippedRecords"));
     }
 
@@ -61,7 +61,7 @@ public class BookingAggregateJobListener implements JobExecutionListener {
             
             Date endTime = new Date();
             LOGGER.info(String.format(Constants.JOB_FINISHED_MESSAGE, ProcessingUtils.dateToString(endTime, ProcessingUtils.SHORT_DATETIME_FORMAT)));
-            LOGGER.info(String.format(Constants.JOB_PROCESSIG_TIME_MESSAGE, ((endTime.getTime() - this.startTIme.getTime())/1000)));
+            LOGGER.info(String.format(Constants.JOB_PROCESSIG_TIME_MESSAGE, ((endTime.getTime() - this.startTime.getTime())/1000)));
         } else {
             LOGGER.info(Constants.JOB_EXCEPTIONS_ENCOUNTERED);
             List<Throwable> exceptionList = je.getAllFailureExceptions();

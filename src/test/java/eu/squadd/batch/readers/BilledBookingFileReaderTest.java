@@ -7,12 +7,12 @@ package eu.squadd.batch.readers;
 
 import eu.squadd.batch.domain.BilledCsvFileDTO;
 import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.item.file.FlatFileParseException;
 import org.springframework.batch.test.MetaDataInstanceFactory;
@@ -32,6 +32,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 @ContextConfiguration
 public class BilledBookingFileReaderTest {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(BilledBookingFileReaderTest.class);
     private BilledBookingFileReader reader;
     private String os;
     private String delimiter;
@@ -70,12 +71,12 @@ public class BilledBookingFileReaderTest {
                         readCount++;
                     }
                 } catch (Exception ex) {
-                    Logger.getLogger(BilledBookingFileReaderTest.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.error(ex.getMessage());
                 }
                 return readCount;
             });
         } catch (Exception ex) {
-            Logger.getLogger(BilledBookingFileReaderTest.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error(ex.getMessage());
         }
         assertEquals(1, count);
     }
@@ -105,12 +106,12 @@ public class BilledBookingFileReaderTest {
                         readCount++;
                     }
                 } catch (Exception ex) {
-                    Logger.getLogger(BilledBookingFileReaderTest.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.error(ex.getMessage());
                 }
                 return readCount;
             });
         } catch (Exception ex) {
-            Logger.getLogger(BilledBookingFileReaderTest.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error(ex.getMessage());
             assertTrue(ex instanceof FlatFileParseException);
         }
         assertEquals(0, count);

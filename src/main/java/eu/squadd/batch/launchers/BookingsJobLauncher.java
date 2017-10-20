@@ -45,7 +45,7 @@ public class BookingsJobLauncher {
     public void runBookingWholesaleJob() throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
         LOGGER.info(Constants.JOB_STARTED);
         jobLauncher.run(job, newExecution());
-        LOGGER.info(Constants.JOB_FINISHED);        
+        LOGGER.info(Constants.JOB_FINISHED);
     }
 
     private JobParameters newExecution() {
