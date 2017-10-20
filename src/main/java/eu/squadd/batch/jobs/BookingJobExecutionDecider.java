@@ -22,7 +22,7 @@ public class BookingJobExecutionDecider implements JobExecutionDecider {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BookingJobExecutionDecider.class);
     
-    @Value("${csv.to.database.job.source.file.path}")
+    @Value("${source.files.path}")
     private String SOURCE_FILES_PATH;
     
     @Override

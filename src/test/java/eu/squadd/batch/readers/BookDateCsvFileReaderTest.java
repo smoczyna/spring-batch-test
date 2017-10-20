@@ -29,7 +29,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestExecutionListeners({StepScopeTestExecutionListener.class})
 @ContextConfiguration
-//@TestPropertySource(properties = {"csv.to.database.job.source.file.path", "/home/smoczyna/NetBeansProjects/spring-batch-test/src/main/resources/data"})
+//@TestPropertySource(properties = {"source.files.path", "/home/smoczyna/NetBeansProjects/spring-batch-test/src/main/resources/data"})
 public class BookDateCsvFileReaderTest {
     
     private static final Logger LOGGER = LoggerFactory.getLogger(BookDateCsvFileReaderTest.class);

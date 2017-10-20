@@ -25,7 +25,7 @@ import org.springframework.core.io.FileSystemResource;
 public class CsvFileGenericReader<T> extends FlatFileItemReader<T> {
 
     private final Class<T> payloadClass;
-    private static final String PROPERTY_CSV_SOURCE_FILE_PATH = "csv.to.database.job.source.file.path";
+    private static final String PROPERTY_CSV_SOURCE_FILE_PATH = "source.files.path";
 
     public CsvFileGenericReader(Class<T> payloadClass, String filePath, String[] fieldNames, String delimiter, int linesToSkip) {
         super();

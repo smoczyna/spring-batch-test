@@ -36,7 +36,7 @@ public class BookingAggregateJobListener implements JobExecutionListener {
     @Autowired
     private WholesaleBookingProcessorHelper helper;
     
-    @Value("${csv.to.database.job.source.file.path}")
+    @Value("${source.files.path}")
     private String INPUT_CSV_SOURCE_FILE_PATH;
 
     @Override

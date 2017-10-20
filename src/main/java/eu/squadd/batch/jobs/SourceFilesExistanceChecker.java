@@ -24,7 +24,7 @@ public class SourceFilesExistanceChecker implements Tasklet {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SourceFilesExistanceChecker.class);
     
-    @Value("${csv.to.database.job.source.file.path}")
+    @Value("${source.files.path}")
     private String SOURCE_FILES_PATH;
 
     @Override

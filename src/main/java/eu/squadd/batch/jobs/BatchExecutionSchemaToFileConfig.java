@@ -41,7 +41,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 @Configuration
 public class BatchExecutionSchemaToFileConfig {
     
-    private static final String PROPERTY_CSV_EXPORT_FILE_PATH = "database.to.csv.job.export.file.path";
+    private static final String PROPERTY_CSV_EXPORT_FILE_PATH = "source.files.path";
     
     @Autowired
     private DataSource metaDataSource;

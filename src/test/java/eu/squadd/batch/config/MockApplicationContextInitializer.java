@@ -19,7 +19,7 @@ public class MockApplicationContextInitializer implements ApplicationContextInit
     @Override
     public void initialize(ConfigurableApplicationContext applicationContext) {
         MutablePropertySources propertySources = applicationContext.getEnvironment().getPropertySources();
-        MockPropertySource mockEnvVars = new MockPropertySource().withProperty("csv.to.database.job.source.file.path", "/data/");
+        MockPropertySource mockEnvVars = new MockPropertySource().withProperty("source.files.path", "/data/");
         propertySources.addFirst(mockEnvVars);
     }
 }
