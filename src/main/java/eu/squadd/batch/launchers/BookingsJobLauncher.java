@@ -13,12 +13,12 @@ import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteExcep
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-//import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.scheduling.annotation.Scheduled;
 
 /**
  * Migration job launcher, it takes 4 parameters: 3 for file names and 1 for current date and time
@@ -41,7 +41,7 @@ public class BookingsJobLauncher {
         this.jobLauncher = jobLauncher;
     }
 
-    //@Scheduled(cron = "${csv.to.database.job.cron}")
+    @Scheduled(cron = "${csv.to.database.job.cron}")
     public void runBookingWholesaleJob() throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
         LOGGER.info(Constants.JOB_STARTED);
         jobLauncher.run(job, newExecution());
