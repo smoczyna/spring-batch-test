@@ -49,6 +49,7 @@ public class Constants {
     
     public static final String FEC_NOT_FOUND_MESSAGE = "Original Fianancial Event Catergory not found, looking for default one...";
     public static final String DEFAULT_FEC_OBTAINED = "Default Fianancial Event Catergory obtained instead, everythig's cool";
+    public static final String DEFAULT_FEC_NOT_FOUND = "Default Fianancial Event Catergory not found either !!!";
     
     public static final String BOOKING_BYPASS_DETECTED = "Booking bypass detected, record skipped for sub ledger file ...";
     public static final String ZERO_CHARGES_DETECTED = "Zero charges detected, skipping...";

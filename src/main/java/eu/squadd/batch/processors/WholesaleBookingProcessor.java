@@ -495,6 +495,7 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
                 LOGGER.info(Constants.DEFAULT_FEC_OBTAINED);
             } catch (MultipleRowsReturnedException | NoResultsReturnedException | CassandraQueryException ex) {
                 LOGGER.error(ex.getMessage());
+                LOGGER.error(Constants.DEFAULT_FEC_NOT_FOUND);
             }
         }
         if (dbResult.size() == 1) {
