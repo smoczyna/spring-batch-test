@@ -446,7 +446,6 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
         this.tmpProdId = adminFeesRec.getProductId();
         this.financialMarket = adminFeesRec.getFinancialMarket();
 
-        // call cassandra wholesale price table
         WholesalePrice wholesalePrice = this.getWholesalePriceFromDb(this.tmpProdId, this.searchHomeSbid);
 
         this.tmpChargeAmt = wholesalePrice.getProductwholesaleprice().multiply(BigDecimal.valueOf(adminFeesRec.getAdminCount())).floatValue();
@@ -483,15 +482,15 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
         }
         if (dbResult == null && financialeventnormalsign.equals("DR")) {
             LOGGER.warn(Constants.FEC_NOT_FOUND_MESSAGE);
-            int tmpProductId;
-            if (this.fileSource.equals("M")) // for admin fees call 0 product
-                tmpProductId = 0;
-            else
-                tmpProductId = 36;           // for the rest 2 files call 36 product
-            
+            if (this.fileSource.equals("M")) {  // for admin fees call 0 product and 1 as inter exchange cde
+                tmpProdId = 0;
+                interExchangeCarrierCode = 1;
+            } else {
+                tmpProdId = 36;                 // for the rest 2 files call 36 product
+            }
             try {
                 dbResult = queryManager.getFinancialEventCategoryNoClusteringRecord(
-                        tmpProductId, homeEqualsServingSbid, altBookingInd ? "Y" : "N", interExchangeCarrierCode, financialeventnormalsign);
+                        tmpProdId, homeEqualsServingSbid, altBookingInd ? "Y" : "N", interExchangeCarrierCode, financialeventnormalsign);
 
                 LOGGER.info(Constants.DEFAULT_FEC_OBTAINED);
             } catch (MultipleRowsReturnedException | NoResultsReturnedException | CassandraQueryException ex) {

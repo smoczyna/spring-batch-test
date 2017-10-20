@@ -19,7 +19,7 @@ import org.springframework.core.io.FileSystemResource;
  * @param <T>
  */
 public class CsvFileGenericWriter<T> extends FlatFileItemWriter<T> {
-    private static final String PROPERTY_CSV_EXPORT_FILE_PATH = "database.to.csv.job.export.file.path";
+    private static final String PROPERTY_CSV_EXPORT_FILE_PATH = "destination.files.path";
     
     public CsvFileGenericWriter(String fileName, String[] fieldNames, String delimiter) {
         super.setAppendAllowed(true);
