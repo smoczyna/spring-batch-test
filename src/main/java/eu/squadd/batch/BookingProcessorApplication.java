@@ -41,5 +41,8 @@ public class BookingProcessorApplication {
 //            Logger.getLogger(BookingWholesaleApplication.class.getName()).log(Level.SEVERE, null, ex);
 //        }
         SpringApplication.run(BookingProcessorApplication.class, args);
+        
+        //BatchProcessStarter batchProcessStarter = (BatchProcessStarter)appContext.getBean("batchProcessStarter");
+        //batchProcessStarter.start();
     }
 }
