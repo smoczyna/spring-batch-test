@@ -20,7 +20,7 @@ import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteExcep
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-//import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
@@ -42,7 +42,7 @@ public class BatchExecutionSchemaDumpLauncher {
         this.jobLauncher = jobLauncher;
     }
     
-    //@Scheduled(cron = "${database.cleanup.job.cron}")
+    @Scheduled(cron = "${database.cleanup.job.cron}")
     public void runSchemaDumpJob() throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
         LOGGER.info("Starting batch schema dump job");
         jobLauncher.run(job, newExecution());

@@ -12,7 +12,6 @@ import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.mapping.FieldSetMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.batch.item.file.transform.LineTokenizer;
-import org.springframework.core.env.Environment;
 import org.springframework.core.io.FileSystemResource;
 
 /**
@@ -25,7 +24,6 @@ import org.springframework.core.io.FileSystemResource;
 public class CsvFileGenericReader<T> extends FlatFileItemReader<T> {
 
     private final Class<T> payloadClass;
-    private static final String PROPERTY_CSV_SOURCE_FILE_PATH = "source.files.path";
 
     public CsvFileGenericReader(Class<T> payloadClass, String filePath, String[] fieldNames, String delimiter, int linesToSkip) {
         super();
@@ -35,10 +33,6 @@ public class CsvFileGenericReader<T> extends FlatFileItemReader<T> {
         this.setLineMapper(createLineMapper(fieldNames, delimiter));
     }
     
-    public CsvFileGenericReader(Class<T> payloadClass, Environment environment, String filename, String[] fieldNames, String delimiter) {
-        this(payloadClass, environment.getRequiredProperty(PROPERTY_CSV_SOURCE_FILE_PATH).concat(filename), fieldNames, delimiter, 0);
-    }
-
     protected final LineMapper<T> createLineMapper(String[] fieldNames, String delimiter) {
         DefaultLineMapper<T> lineMapper = new DefaultLineMapper<>();
         if (fieldNames != null || fieldNames.length > 0) {

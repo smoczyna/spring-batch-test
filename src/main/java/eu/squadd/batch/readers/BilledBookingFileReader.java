@@ -7,14 +7,12 @@ package eu.squadd.batch.readers;
 
 import eu.squadd.batch.domain.BilledCsvFileDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 
 /**
  *
  * @author smorcja
  */
 public class BilledBookingFileReader extends CsvFileGenericReader<BilledCsvFileDTO> {
-    
     private static final String[] COLUMN_NAMES = new String[] {
             "homeSbid",
             "servingSbid",
@@ -47,8 +45,8 @@ public class BilledBookingFileReader extends CsvFileGenericReader<BilledCsvFileD
             "debitcreditindicator"};
     
     @Autowired
-    public BilledBookingFileReader(Environment environment, String filename) {
-        super(BilledCsvFileDTO.class, environment, filename, COLUMN_NAMES, ",");
+    public BilledBookingFileReader(String filePath) {
+        super(BilledCsvFileDTO.class, filePath, COLUMN_NAMES, ",", 0);        
     }
     
     public BilledBookingFileReader(String filePath, String delimiter) {

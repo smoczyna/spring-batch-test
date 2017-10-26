@@ -60,7 +60,7 @@ public class CassandraQueryManager {
             + " WHERE financialmarketid=? AND financialmarketmapenddate=? AND glmarketlegalentityenddate=? "
             + " AND glmarketmaptype=? AND glmarketenddate=? ALLOW FILTERING";
     
-    private final String productQuery = "SELECT * FROM product WHERE productid=?" + " ALLOW FILTERING";
+    //private final String productQuery = "SELECT * FROM product WHERE productid=?" + " ALLOW FILTERING";
     
     private final String finEventCatQuery = "SELECT * FROM financialeventcategory "
             + "WHERE productid=? AND homesidequalsservingsidindicator=? AND alternatebookingindicator=? AND interexchangecarriercode=? ALLOW FILTERING";
@@ -74,7 +74,7 @@ public class CassandraQueryManager {
     private final String wholesalePriceQuery = "SELECT * FROM WholesalePrice WHERE productid=? AND homesidbid=? AND servesidbid=?";
     
     private PreparedStatement finMarketStatement;
-    private PreparedStatement productStatement;
+    //private PreparedStatement productStatement;
     private PreparedStatement finEventCatStatement;
     private PreparedStatement finEventCatStatementBilled;
     private PreparedStatement dataEventStatement;
@@ -89,7 +89,7 @@ public class CassandraQueryManager {
         this.cassandraSession = cluster.connect(CASSANDRA_KEYSPACE);
         
         this.finMarketStatement = this.cassandraSession.prepare(finMarketQuery);
-        this.productStatement = this.cassandraSession.prepare(productQuery);
+        //this.productStatement = this.cassandraSession.prepare(productQuery);
         this.finEventCatStatement = this.cassandraSession.prepare(finEventCatQuery);
         this.finEventCatStatementBilled = this.cassandraSession.prepare(finEventCatQueryBilled);
         this.dataEventStatement = this.cassandraSession.prepare(dataEventQuery);
@@ -162,29 +162,29 @@ public class CassandraQueryManager {
      * @throws NoResultsReturnedException
      * @throws MultipleRowsReturnedException
      */
-    @Cacheable("WholesaleProduct")
-    public char isWholesaleProduct(Integer TmpProdId) throws CassandraQueryException {
-        char isWholesaleProduct;        
-        List<Product> listoffep = new ArrayList<>();        
-        BoundStatement statement = new BoundStatement(this.productStatement);
-        statement.bind(TmpProdId);
-        try {
-            Result<Product> result = new ProductCassandraMapper().executeAndMapResults(this.cassandraSession, statement, new MappingManager(this.cassandraSession), false);
-            listoffep = result.all();
-        } catch (NoHostAvailableException | QueryExecutionException | QueryValidationException | UnsupportedFeatureException e) {
-            LOGGER.error(e.getLocalizedMessage());
-            throw new CassandraQueryException("Casandra Query Exception", e);       
-        } catch (NullPointerException | InterruptedException | ExecutionException e) {
-            LOGGER.error(e.getLocalizedMessage());
-            throw new CassandraQueryException("Query Execution exception", e);
-        }
-        if (listoffep.size() == 1) {
-            isWholesaleProduct = listoffep.get(0).getWholesalebillingcode().charAt(0);
-        } else {
-            isWholesaleProduct = 'N';
-        }
-        return isWholesaleProduct;
-    }
+//    @Cacheable("WholesaleProduct")
+//    public char isWholesaleProduct(Integer TmpProdId) throws CassandraQueryException {
+//        char isWholesaleProduct;        
+//        List<Product> listoffep = new ArrayList<>();        
+//        BoundStatement statement = new BoundStatement(this.productStatement);
+//        statement.bind(TmpProdId);
+//        try {
+//            Result<Product> result = new ProductCassandraMapper().executeAndMapResults(this.cassandraSession, statement, new MappingManager(this.cassandraSession), false);
+//            listoffep = result.all();
+//        } catch (NoHostAvailableException | QueryExecutionException | QueryValidationException | UnsupportedFeatureException e) {
+//            LOGGER.error(e.getLocalizedMessage());
+//            throw new CassandraQueryException("Casandra Query Exception", e);       
+//        } catch (NullPointerException | InterruptedException | ExecutionException e) {
+//            LOGGER.error(e.getLocalizedMessage());
+//            throw new CassandraQueryException("Query Execution exception", e);
+//        }
+//        if (listoffep.size() == 1) {
+//            isWholesaleProduct = listoffep.get(0).getWholesalebillingcode().charAt(0);
+//        } else {
+//            isWholesaleProduct = 'N';
+//        }
+//        return isWholesaleProduct;
+//    }
 
     /**
      * Returns list of FinancialEventCategory records

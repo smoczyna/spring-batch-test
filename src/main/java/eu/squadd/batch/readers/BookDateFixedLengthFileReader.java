@@ -16,9 +16,11 @@ import org.springframework.core.env.Environment;
  * @author smorcja
  */
 public class BookDateFixedLengthFileReader extends CsvFileGenericReader<BookDateCsvFileDTO> {
+    private static final String PROPERTY_CSV_SOURCE_FILE_PATH = "csv.to.database.job.source.file.path";
+    private static final String[] COLUMN_NAMES = new String[]{"rptPerStartDate", "rptPerEndDate", "transPerStartDate", "transPerEndDate", "monthEndCycle"};
     
     public BookDateFixedLengthFileReader(Environment environment, String filename) {
-        super(BookDateCsvFileDTO.class, environment, filename, new String[]{"rptPerStartDate", "rptPerEndDate", "transPerStartDate", "transPerEndDate", "monthEndCycle"}, null);        
+        super(BookDateCsvFileDTO.class, environment.getRequiredProperty(PROPERTY_CSV_SOURCE_FILE_PATH).concat(filename), COLUMN_NAMES, null, 0);        
     }
     
     @Override

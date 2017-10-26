@@ -41,7 +41,7 @@ public class BookingsJobLauncher {
         this.jobLauncher = jobLauncher;
     }
 
-    @Scheduled(cron = "${csv.to.database.job.cron}")
+    //@Scheduled(cron = "${csv.to.database.job.cron}")
     public void runBookingWholesaleJob() throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
         LOGGER.info(Constants.JOB_STARTED);
         jobLauncher.run(job, newExecution());

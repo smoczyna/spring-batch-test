@@ -12,6 +12,7 @@ import eu.squadd.batch.domain.FinancialEventOffsetDTO;
 import eu.squadd.batch.domain.SummarySubLedgerDTO;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.batch.item.ExecutionContext;
 import org.springframework.stereotype.Component;
 
 /**
@@ -33,6 +34,8 @@ public class WholesaleBookingProcessorHelper {
     private long subledgerWriteCounter;
     private long wholesaleReportCounter;
     private long maxSkippedRecords;
+    private long numberOfChunks;
+    private ExecutionContext stepExecutionContext;
 
     public WholesaleBookingProcessorHelper() {
         this.financialEventOffset = new HashMap();
@@ -45,6 +48,14 @@ public class WholesaleBookingProcessorHelper {
         this.maxSkippedRecords = 0;
     }
 
+    public ExecutionContext getStepExecutionContext() {
+        return stepExecutionContext;
+    }
+
+    public void setStepExecutionContext(ExecutionContext stepExecutionContext) {
+        this.stepExecutionContext = stepExecutionContext;
+    }
+
     public BookDateCsvFileDTO getDates() {
         return this.dates;
     }
@@ -54,11 +65,19 @@ public class WholesaleBookingProcessorHelper {
     }
 
     public long getMaxSkippedRecords() {
-        return this.maxSkippedRecords == 0 ? Constants.DEFAULT_MAX_SKIPPED_RECORDS : this.maxSkippedRecords;
+        return this.maxSkippedRecords==0 ? Constants.DEFAULT_MAX_SKIPPED_RECORDS : this.maxSkippedRecords;
     }
 
     public void setMaxSkippedRecords(long maxSkippedRecords) {
-        this.maxSkippedRecords = maxSkippedRecords > 0 ? maxSkippedRecords : Constants.DEFAULT_MAX_SKIPPED_RECORDS;
+        this.maxSkippedRecords = maxSkippedRecords>0 ? maxSkippedRecords : Constants.DEFAULT_MAX_SKIPPED_RECORDS;
+    }
+
+    public long getNumberOfChunks() {
+        return this.numberOfChunks==0 ? Constants.DEFAULT_NUMBER_OF_CHUNKS : this.numberOfChunks;
+    }
+
+    public void setNumberOfChunks(long numberOfChunks) {
+        this.numberOfChunks = numberOfChunks>0 ? numberOfChunks : Constants.DEFAULT_NUMBER_OF_CHUNKS;
     }
 
     public boolean addOffset(FinancialEventOffsetDTO offset) {

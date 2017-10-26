@@ -27,8 +27,8 @@ public class UnbilledBookingFileReader extends CsvFileGenericReader<UnbilledCsvF
         "totalWholesaleUsage"};
     
     @Autowired
-    public UnbilledBookingFileReader(Environment environment, String filename) {
-        super(UnbilledCsvFileDTO.class, environment, filename, COLUMN_NAMES, ",");
+    public UnbilledBookingFileReader(String filePath) {
+        super(UnbilledCsvFileDTO.class, filePath, COLUMN_NAMES, ",", 0);
     }
     
     public UnbilledBookingFileReader(String filePath, String delimiter) {

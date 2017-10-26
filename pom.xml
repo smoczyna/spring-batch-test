@@ -4,7 +4,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>eu.squadd.spring-batch-test</groupId>
-    <artifactId>eu.squadd.springbatchtest</artifactId>
+    <artifactId>SpringBatchTest</artifactId>
     <version>1.0.0</version>
 
     <parent>
@@ -185,7 +185,7 @@
         </profile>
     </profiles>
     
-    <name>spring-batch-test</name>
+    <name>SpringBatchTest</name>
 </project>
 
 <!--

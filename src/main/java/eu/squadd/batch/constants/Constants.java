@@ -20,8 +20,10 @@ public class Constants {
     public static final String SUBLEDGER_SUMMARY_FILENAME = "subledger_summary.csv";
     public static final String WHOLESALE_REPORT_FILENAME = "wholesale_report.csv";
     
+    public static final String FILE_SPLIT_MESSAGE = "File %s has been splitted into %d chunks";
     public static final String DEFAULT_CSV_FIELDS_DELIMITER = ",";
     public static final Integer DEFAULT_MAX_SKIPPED_RECORDS = 100;
+    public static final Integer DEFAULT_NUMBER_OF_CHUNKS = 1;
     
     public static final String DEBIT_CODE = "DR";
     public static final String CREDIT_CODE = "CR";
@@ -54,7 +56,7 @@ public class Constants {
     public static final String BOOKING_BYPASS_DETECTED = "Booking bypass detected, record skipped for sub ledger file ...";
     public static final String ZERO_CHARGES_DETECTED = "Zero charges detected, skipping...";
     public static final String ZERO_CHARGES_SKIP = "Record skipped due to zero charges !!!";
-    public static final String GAP_DETECTED = "Gap in the logic encountered, skipping valid charges from processing !!!";
+    public static final String GAP_DETECTED = "Valid Toll Charges skipped from processing !!!";
     public static final String INVALID_INPUT = "Invalid input record encountered !!!";
     public static final String OFFSET_NOT_FOUND = "Offset fin cat value not found !!!";
     public static final String ZERO_SUBLEDGER_AMOUNT = "Zero amounts in sub ledger record found !!!";

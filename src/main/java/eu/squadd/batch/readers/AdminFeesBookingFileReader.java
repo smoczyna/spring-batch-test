@@ -7,7 +7,6 @@ package eu.squadd.batch.readers;
 
 import eu.squadd.batch.domain.AdminFeeCsvFileDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 
 /**
  *
@@ -19,11 +18,12 @@ public class AdminFeesBookingFileReader extends CsvFileGenericReader<AdminFeeCsv
         "productId",
         "adminChargeAmt",
         "adminCount",
-        "financialMarket"};
+        "financialMarket",
+        "debitcreditindicator"};
     
     @Autowired
-    public AdminFeesBookingFileReader(Environment environment, String filename) {
-        super(AdminFeeCsvFileDTO.class, environment, filename, COLUMN_NAMES, ",");
+    public AdminFeesBookingFileReader(String filename) {
+        super(AdminFeeCsvFileDTO.class, filename, COLUMN_NAMES, ",", 0);
     }
     
     public AdminFeesBookingFileReader(String filePath, String delimiter) {
