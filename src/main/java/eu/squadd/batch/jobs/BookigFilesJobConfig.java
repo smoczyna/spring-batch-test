@@ -25,7 +25,6 @@ import eu.squadd.batch.readers.BookDateCsvFileReader;
 import eu.squadd.batch.readers.FinancialEventOffsetReader;
 import eu.squadd.batch.readers.UnbilledBookingFileReader;
 import eu.squadd.batch.utils.RangePartitioner;
-import eu.squadd.batch.utils.WholesaleBookingProcessorHelper;
 import eu.squadd.batch.validations.CsvFileVerificationSkipper;
 import eu.squadd.batch.writers.SubledgerCsvFileWriter;
 import eu.squadd.batch.writers.WholesaleOutputWriter;
@@ -41,12 +40,11 @@ import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.step.skip.SkipPolicy;
 import org.springframework.batch.core.step.tasklet.Tasklet;
-import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -122,19 +120,19 @@ public class BookigFilesJobConfig {
 
     @Bean
     @StepScope
-    BilledBookingFileReader billedFileItemReader(@Value("#{stepExecutionContext[fileName]}") String filename) {
+    ItemReader<BilledCsvFileDTO> billedFileItemReader(@Value("#{stepExecutionContext[fileName]}") String filename) {
         return new BilledBookingFileReader(filename);
     }
     
     @Bean
     @StepScope
-    UnbilledBookingFileReader unbilledFileItemReader(@Value("#{stepExecutionContext[fileName]}") String filename) {
+    ItemReader<UnbilledCsvFileDTO> unbilledFileItemReader(@Value("#{stepExecutionContext[fileName]}") String filename) {
         return new UnbilledBookingFileReader(filename);
     }
     
     @Bean
     @StepScope
-    AdminFeesBookingFileReader adminFeesFileItemReader(@Value("#{stepExecutionContext[fileName]}") String filename) {
+    ItemReader<AdminFeeCsvFileDTO> adminFeesFileItemReader(@Value("#{stepExecutionContext[fileName]}") String filename) {
         return new AdminFeesBookingFileReader(filename);
     }
     
