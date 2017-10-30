@@ -6,7 +6,6 @@
 package eu.squadd.batch.jobs;
 
 import eu.squadd.batch.BookingProcessorApplication;
-import eu.squadd.batch.config.DatabasesConfig;
 import org.springframework.batch.core.JobExecution;
 
 import org.junit.Assert;
@@ -27,7 +26,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @PropertySource("classpath:application.properties")
-//@SpringApplicationConfiguration(classes = SpringBatchTestApplication.class)
+//@SpringApplicationConfiguration(classes = BookingProcessorApplication.class)
 public class DatabaseToCsvFileJobLauncherTest {
 
     
@@ -39,7 +38,7 @@ public class DatabaseToCsvFileJobLauncherTest {
 
     @Test
     public void launchJob() throws Exception {
-//        ApplicationContext context = new AnnotationConfigApplicationContext(SpringBatchTestApplication.class, DatabasesConfig.class, DatabaseToCsvFileJobConfig.class);
+//        ApplicationContext context = new AnnotationConfigApplicationContext(BookingProcessorApplication.class, DatabaseToCsvFileJobConfig.class);
 //        JobLauncherTestUtils jobLauncherTestUtils = context.getBean(JobLauncherTestUtils.class);
 //        JobExecution jobExecution = jobLauncherTestUtils.launchJob();
 //        Assert.assertEquals(jobExecution.getStatus(), BatchStatus.COMPLETED);
