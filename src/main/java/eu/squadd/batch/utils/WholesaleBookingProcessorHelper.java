@@ -27,6 +27,7 @@ public class WholesaleBookingProcessorHelper {
 
     private BookDateCsvFileDTO dates;
     private final Map<Integer, Integer> financialEventOffset;
+    private long recordCount;
     private long zeroChargesCounter;
     private long gapsCounter;
     private long dataErrorsCounter;
@@ -39,6 +40,7 @@ public class WholesaleBookingProcessorHelper {
 
     public WholesaleBookingProcessorHelper() {
         this.financialEventOffset = new HashMap();
+        this.recordCount = 0L;
         this.zeroChargesCounter = 0;
         this.gapsCounter = 0;
         this.dataErrorsCounter = 0;
@@ -107,6 +109,9 @@ public class WholesaleBookingProcessorHelper {
 
     public void incrementCounter(String name) {
         switch (name) {
+            case Constants.RECORD_COUNT:
+                this.recordCount++;
+                break;
             case Constants.ZERO_CHARGES:
                 this.zeroChargesCounter++;
                 break;
@@ -132,6 +137,8 @@ public class WholesaleBookingProcessorHelper {
 
     public long getCounter(String name) {
         switch (name) {
+            case Constants.RECORD_COUNT:
+                return this.recordCount;
             case Constants.ZERO_CHARGES:
                 return this.zeroChargesCounter;
             case Constants.GAPS:
@@ -150,6 +157,7 @@ public class WholesaleBookingProcessorHelper {
     }
 
     public void clearCounters() {
+        this.recordCount = 0;
         this.zeroChargesCounter = 0;
         this.gapsCounter = 0;
         this.dataErrorsCounter = 0;

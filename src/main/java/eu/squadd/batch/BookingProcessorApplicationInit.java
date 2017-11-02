@@ -8,6 +8,9 @@ import javax.sql.DataSource;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Primary;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
@@ -32,19 +35,6 @@ public class BookingProcessorApplicationInit {
      */
     public CustomIdGenerator idGenerator = new CustomIdGenerator();
     
-    /**
-     * This is meta data source
-     * this source is used by Spring Batch internally to control processing
-     * connection and credentials details are configured in application.properties
-     * @return - ready to use data source 
-     */
-    @Bean(name = "metaDataSource")
-    @Primary
-    @ConfigurationProperties(prefix = "spring.datasource")
-    public DataSource metaDataSource() {
-        return DataSourceBuilder.create().build();
-    }
-    
     @Bean(name = "jobScheduler")
     public TaskScheduler jobScheduler() {
         ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
@@ -53,13 +43,15 @@ public class BookingProcessorApplicationInit {
         return scheduler;
     }
     
-//    public DataSource memoryDataSource() {
-//        EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
-//        EmbeddedDatabase db = builder
-//                .setType(EmbeddedDatabaseType.H2) //.H2 or .HSQL or .DERBY
-//                .addScript("data/meta/schema-h2.sql")
-//                .addScript("data/meta/students_table.sql")
-//                .build();
-//        return db;
-//    }
+    @Bean(name = "metaDataSource")
+    @Primary
+    public DataSource memoryDataSource() {
+        EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
+        EmbeddedDatabase db = builder
+                .setType(EmbeddedDatabaseType.H2) //.H2 or .HSQL or .DERBY
+                .addScript("data/meta/schema-h2.sql")
+                //.addScript("data/meta/students_table.sql")
+                .build();
+        return db;
+    }
 }

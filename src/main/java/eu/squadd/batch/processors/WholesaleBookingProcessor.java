@@ -6,8 +6,8 @@
 package eu.squadd.batch.processors;
 
 
+import eu.squadd.batch.config.MongoQueryManager;
 import eu.squadd.batch.utils.WholesaleBookingProcessorHelper;
-import eu.squadd.batch.config.CassandraQueryManager;
 import eu.squadd.batch.constants.Constants;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -22,13 +22,10 @@ import eu.squadd.batch.domain.MinBookingInterface;
 import eu.squadd.batch.domain.SummarySubLedgerDTO;
 import eu.squadd.batch.domain.UnbilledCsvFileDTO;
 import eu.squadd.batch.domain.WholesaleProcessingOutput;
-import eu.squadd.batch.domain.casandra.DataEvent;
-import eu.squadd.batch.domain.casandra.FinancialEventCategory;
-import eu.squadd.batch.domain.casandra.FinancialMarket;
-import eu.squadd.batch.domain.casandra.WholesalePrice;
-import eu.squadd.batch.domain.exceptions.CassandraQueryException;
-import eu.squadd.batch.domain.exceptions.MultipleRowsReturnedException;
-import eu.squadd.batch.domain.exceptions.NoResultsReturnedException;
+import eu.squadd.batch.domain.mongo.DataEvent;
+import eu.squadd.batch.domain.mongo.FinancialEventCategory;
+import eu.squadd.batch.domain.mongo.FinancialMarket;
+import eu.squadd.batch.domain.mongo.WholesalePrice;
 import eu.squadd.batch.utils.ProcessingUtils;
 import java.math.BigDecimal;
 import java.util.List;
@@ -49,7 +46,7 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
     WholesaleBookingProcessorHelper processingHelper;
 
     @Autowired
-    CassandraQueryManager queryManager;
+    MongoQueryManager queryManager;
 
     String searchServingSbid;
     String searchHomeSbid;
@@ -265,7 +262,7 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
             altBookingInd = this.isAlternateBookingApplicable((BilledCsvFileDTO) inRec);
             tmpHomeEqualsServingSbid = this.homeEqualsServingSbid ? "Y" : "N";
         }
-        FinancialEventCategory financialEventCategory = null;        
+        FinancialEventCategory financialEventCategory;
         financialEventCategory = this.getEventCategoryFromDb(this.tmpProdId, tmpHomeEqualsServingSbid, altBookingInd, iecCode, inRec.getDebitcreditindicator());
         boolean bypassBooking = this.bypassBooking(financialEventCategory, altBookingInd);
         if (bypassBooking) {
@@ -457,29 +454,30 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
 
     protected FinancialMarket getFinancialMarketFromDb(String financialMarketId) {
         FinancialMarket result = null;
-        try {
-            List<FinancialMarket> dbResult = queryManager.getFinancialMarketRecord(financialMarketId);
-            if (dbResult.size() == 1) {
-                result = dbResult.get(0);
-            }
-        } catch (MultipleRowsReturnedException | NoResultsReturnedException | CassandraQueryException ex) {
-            LOGGER.error(ex.getLocalizedMessage());
+        List<FinancialMarket> dbResult = queryManager.getFinancialMarketRecords(financialMarketId);
+        switch (dbResult.size()) {
+            case 0:
+                LOGGER.error(Constants.DB_NO_RESULT);
+                break;
+            case 1:
+                for (FinancialMarket doc : dbResult) {
+                    result = doc;
+                }   
+                break;
+            default:
+                LOGGER.error(Constants.DB_TOO_MANY_RECORDS);
+                break;
         }
         return result;
     }
 
     protected FinancialEventCategory getEventCategoryFromDb(Integer tmpProdId, String homeEqualsServingSbid,
             boolean altBookingInd, int interExchangeCarrierCode, String financialeventnormalsign) {
+        
         FinancialEventCategory result = null;
-        List<FinancialEventCategory> dbResult;
-        try {
-            dbResult = queryManager.getFinancialEventCategoryNoClusteringRecord(
+        List<FinancialEventCategory> dbResult = queryManager.getFinancialEventCategoryRecords(
                     tmpProdId, homeEqualsServingSbid, altBookingInd ? "Y" : "N", interExchangeCarrierCode, financialeventnormalsign);
-
-        } catch (MultipleRowsReturnedException | NoResultsReturnedException | CassandraQueryException ex) {
-            LOGGER.error(ex.getMessage());
-            dbResult = null;
-        }
+                
         if (dbResult == null && financialeventnormalsign.equals("DR")) {
             LOGGER.warn(Constants.FEC_NOT_FOUND_MESSAGE);
             if (this.fileSource.equals("M")) {  // for admin fees call 0 product and 1 as inter exchange cde
@@ -488,44 +486,61 @@ public class WholesaleBookingProcessor<T> implements ItemProcessor<T, WholesaleP
             } else {
                 tmpProdId = 36;                 // for the rest 2 files call 36 product
             }
-            try {
-                dbResult = queryManager.getFinancialEventCategoryNoClusteringRecord(
+            dbResult = queryManager.getFinancialEventCategoryRecords(
                         tmpProdId, homeEqualsServingSbid, altBookingInd ? "Y" : "N", interExchangeCarrierCode, financialeventnormalsign);
-
-                LOGGER.info(Constants.DEFAULT_FEC_OBTAINED);
-            } catch (MultipleRowsReturnedException | NoResultsReturnedException | CassandraQueryException ex) {
-                LOGGER.error(ex.getMessage());
+            
+            switch (dbResult.size()) {
+            case 0:
                 LOGGER.error(Constants.DEFAULT_FEC_NOT_FOUND);
-            }
+                break;
+            case 1:
+                for (FinancialEventCategory doc : dbResult) {
+                    result = doc;
+                }   
+                break;
+            default:
+                LOGGER.error(Constants.DB_TOO_MANY_RECORDS);
+                break;
+            }           
         }
-        if (dbResult.size() == 1) {
-            result = dbResult.get(0);
-        }
+        
         return result;
     }
 
     protected DataEvent getDataEventFromDb(Integer productId) {
         DataEvent result = null;
-        try {
-            List<DataEvent> dbResult = queryManager.getDataEventRecords(productId);
-            if (dbResult.size() == 1) {
-                result = dbResult.get(0);
-            }
-        } catch (MultipleRowsReturnedException | NoResultsReturnedException | CassandraQueryException ex) {
-            LOGGER.error(ex.getLocalizedMessage());
+        List<DataEvent> dbResult = queryManager.getDataEventRecords(productId);
+        switch (dbResult.size()) {
+            case 0:
+                LOGGER.error(Constants.DB_NO_RESULT);
+                break;
+            case 1:
+                for (DataEvent doc : dbResult) {
+                    result = doc;
+                }   
+                break;
+            default:
+                LOGGER.error(Constants.DB_TOO_MANY_RECORDS);
+                break;
         }
         return result;
     }
 
     protected WholesalePrice getWholesalePriceFromDb(Integer tmpProdId, String searchHomeSbid) {
         WholesalePrice result = null;
-        try {
-            List<WholesalePrice> dbResult = queryManager.getWholesalePriceRecords(tmpProdId, searchHomeSbid);
-            if (dbResult.size() == 1) {
-                result = dbResult.get(0);
-            }
-        } catch (MultipleRowsReturnedException | NoResultsReturnedException | CassandraQueryException ex) {
-            LOGGER.error(ex.getLocalizedMessage());
+        List<WholesalePrice> dbResult = queryManager.getWholesalePriceRecords(tmpProdId, searchHomeSbid);
+        switch (dbResult.size()) {
+            case 0:
+                LOGGER.error(Constants.DB_NO_RESULT);
+                break;
+            case 1:
+                for (WholesalePrice doc : dbResult) {
+                    result = doc;
+                }   
+                break;
+            default:
+                LOGGER.error(Constants.DB_TOO_MANY_RECORDS);
+                break;
         }
         return result;
     }

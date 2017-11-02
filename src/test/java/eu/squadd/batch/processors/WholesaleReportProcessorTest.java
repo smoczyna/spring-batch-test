@@ -5,23 +5,19 @@
  */
 package eu.squadd.batch.processors;
 
+import eu.squadd.batch.config.MongoQueryManager;
 import eu.squadd.batch.utils.WholesaleBookingProcessorHelper;
-import eu.squadd.batch.config.CassandraQueryManager;
 import eu.squadd.batch.domain.AdminFeeCsvFileDTO;
-import eu.squadd.batch.domain.AggregateWholesaleReportDTO;
 import eu.squadd.batch.domain.BilledCsvFileDTO;
 import eu.squadd.batch.domain.BookDateCsvFileDTO;
-import eu.squadd.batch.domain.FinancialEventOffsetDTO;
 import eu.squadd.batch.domain.SummarySubLedgerDTO;
 import eu.squadd.batch.domain.UnbilledCsvFileDTO;
 import eu.squadd.batch.domain.WholesaleProcessingOutput;
-import eu.squadd.batch.domain.casandra.DataEvent;
-import eu.squadd.batch.domain.casandra.FinancialEventCategory;
-import eu.squadd.batch.domain.casandra.FinancialMarket;
-import eu.squadd.batch.domain.casandra.WholesalePrice;
+import eu.squadd.batch.domain.mongo.DataEvent;
+import eu.squadd.batch.domain.mongo.FinancialEventCategory;
+import eu.squadd.batch.domain.mongo.FinancialMarket;
+import eu.squadd.batch.domain.mongo.WholesalePrice;
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
 import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,7 +41,7 @@ public class WholesaleReportProcessorTest {
     private WholesaleBookingProcessorHelper tempSubLedgerOuput;
 
     @Mock
-    private CassandraQueryManager queryManager;
+    private MongoQueryManager queryManager;
       
     @Mock //@InjectMocks
     private WholesaleBookingProcessor wholesaleBookingProcessor; // = new WholesaleReportProcessor();
@@ -54,11 +50,10 @@ public class WholesaleReportProcessorTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        //when(CassandraQueryManager.getCassandraSession()).thenCallRealMethod();
         
-        //when(tempSubLedgerOuput.addSubledger()).thenReturn(new SummarySubLedgerDTO());
+        when(tempSubLedgerOuput.addSubledger()).thenReturn(this.createSubledgerRecord());
         when(tempSubLedgerOuput.getDates()).thenReturn(this.createBookDateRecord());
-       // when(tempSubLedgerOuput.getFinancialEventOffset()).thenReturn(this.createFinancialEventOffset());
+        when(tempSubLedgerOuput.findOffsetFinCat(anyInt())).thenReturn(2);
         
         when(wholesaleBookingProcessor.getFinancialMarketFromDb(anyString())).thenReturn(this.createFinancialMarket());
         when(wholesaleBookingProcessor.getEventCategoryFromDb(anyInt(), anyString(), anyBoolean(), anyInt(), anyString())).thenReturn(this.createEventCategory(true));
@@ -122,14 +117,21 @@ public class WholesaleReportProcessorTest {
         return record;
     }
     
-    private Set<FinancialEventOffsetDTO> createFinancialEventOffset() {
-        Set<FinancialEventOffsetDTO> items = new HashSet();
-        FinancialEventOffsetDTO offset = new FinancialEventOffsetDTO();
-        offset.setFinancialEvent(1);
-        offset.setOffsetFinancialCategory(2);
-        items.add(offset);
-        return items;
+    private SummarySubLedgerDTO createSubledgerRecord() {
+        SummarySubLedgerDTO slRecord = new SummarySubLedgerDTO();
+        slRecord.setReportStartDate("01/11/2017");
+        slRecord.setJemsApplTransactioDate("30/11/2017");
+        return slRecord;
     }
+    
+//    private Set<FinancialEventOffsetDTO> createFinancialEventOffset() {
+//        Set<FinancialEventOffsetDTO> items = new HashSet();
+//        FinancialEventOffsetDTO offset = new FinancialEventOffsetDTO();
+//        offset.setFinancialEvent(1);
+//        offset.setOffsetFinancialCategory(2);
+//        items.add(offset);
+//        return items;
+//    }
     
     private AdminFeeCsvFileDTO createAdminFeesBookingInputRecord() {
         AdminFeeCsvFileDTO record = new AdminFeeCsvFileDTO();

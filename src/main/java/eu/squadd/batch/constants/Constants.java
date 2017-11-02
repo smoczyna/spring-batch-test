@@ -28,6 +28,7 @@ public class Constants {
     public static final String DEBIT_CODE = "DR";
     public static final String CREDIT_CODE = "CR";
     
+    public static final String RECORD_COUNT = "count";
     public static final String ZERO_CHARGES = "zero";
     public static final String GAPS ="gap";
     public static final String DATA_ERRORS = "error";
@@ -78,4 +79,7 @@ public class Constants {
     public static final String PARSING_ERROR = "Parsing error when processing line: %d";
     public static final String NULL_ENCOUNTERED = "NULL encountered but the value was expected - skipping record ...";
     public static final String RECORD_SKIP_DETECTED = "Record skipped due to processing errors !!!";
+    
+    public static final String DB_NO_RESULT = "Database returned no records";
+    public static final String DB_TOO_MANY_RECORDS = "Database returned too many records";
 }
